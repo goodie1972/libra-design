@@ -38,24 +38,24 @@
      ======================================== */
 
   /* 背景系 — 四层表面堆叠体系（参考 Linear） */
-  --bg-root:       #0d0e10;   /* 最深底 — 画布 */
-  --bg-main:       #0d0e10;   /* 主内容区背景 */
-  --bg-sidebar:    #0d0e10;   /* 侧栏背景 */
-  --bg-card:       #131416;   /* 卡片/面板 */
-  --bg-card-hover: #16171b;   /* 卡片悬停 */
-  --bg-input:      #191a1d;   /* 输入框背景 */
-  --bg-chart:      #0d0e10;   /* 图表区域背景 */
-  --bg-sub-panel:  #0d0e10;   /* 副面板背景 */
+  --bg-root:       #0c0c0e;   /* 最深底 — 画布 */
+  --bg-main:       #0c0c0e;   /* 主内容区背景 */
+  --bg-sidebar:    #0c0c0e;   /* 侧栏背景 */
+  --bg-card:       #121214;   /* 卡片/面板 */
+  --bg-card-hover: #18181b;   /* 卡片悬停 */
+  --bg-input:      #18181b;   /* 输入框背景 */
+  --bg-chart:      #0c0c0e;   /* 图表区域背景 */
+  --bg-sub-panel:  #121214;   /* 副面板背景 */
 
   /* 边框系 */
-  --border-main:   #1e1f23;   /* 主分割线/边框 */
-  --border-sub:    #1a1b1e;   /* 弱分割线 */
-  --border-input:  #1e1f23;   /* 输入框边框 */
+  --border-main:   #1e1e22;   /* 主分割线/边框 */
+  --border-sub:    #161618;   /* 弱分割线 */
+  --border-input:  #1e1e22;   /* 输入框边框 */
 
   /* 文字系 */
-  --text-primary:   #e8e8ea;  /* 主要文字 — 标题/数值 */
-  --text-secondary: #a0a1a7;  /* 次要文字 — 标签/说明 */
-  --text-tertiary:  #6b6c73;  /* 辅助文字 — 灰显/禁用 */
+  --text-primary:   #e8e8ed;  /* 主要文字 — 标题/数值 */
+  --text-secondary: #9a9aa0;  /* 次要文字 — 标签/说明 */
+  --text-tertiary:  #63636a;  /* 辅助文字 — 灰显/禁用 */
 
   /* 交互色 */
   --accent:        #4a6cf7;   /* 交互主色 — 链接/按钮 */

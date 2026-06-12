@@ -13,18 +13,25 @@
    ============================================================ */
 :root {
   --up: #ef5350; --down: #26a69a; --flat: #9e9e9e;
+  --up-bg: rgba(239,83,80,0.08); --down-bg: rgba(38,166,154,0.08);
   --ma5: #f8b500; --ma10: #4a6cf7; --ma20: #9c27b0; --ma60: #009688;
   --success: #34a853; --warning: #fbbc04; --error: #ea4335;
 
-  --bg-root: #0c0c0e; --bg-main: #0c0c0e; --bg-card: #121214;
-  --bg-card-hover: #18181b; --bg-input: #18181b;
-  --border-main: #1e1e22; --border-sub: #161618;
+  --bg-root: #0c0c0e; --bg-main: #0c0c0e; --bg-sidebar: #0c0c0e;
+  --bg-card: #121214; --bg-card-hover: #18181b; --bg-input: #18181b;
+  --bg-chart: #0c0c0e; --bg-sub-panel: #121214;
+  --border-main: #1e1e22; --border-sub: #161618; --border-input: #1e1e22;
   --text-primary: #e8e8ed; --text-secondary: #9a9aa0; --text-tertiary: #63636a;
   --accent: #4a6cf7; --accent-hover: #5d7cf9;
-  --btn-radius: 8px; --card-radius: 10px;
+
+  --grid-line: #18191c;
+  --vol-up: rgba(239,83,80,0.55); --vol-down: rgba(38,166,154,0.55);
 
   --font-body: 'Inter', -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
   --font-mono: 'JetBrains Mono', 'SF Mono', 'Cascadia Code', monospace;
+
+  --btn-radius: 8px; --card-radius: 10px;
+  --card-shadow: none; --card-border: 1px solid var(--border-main);
 
   --lang-zh: block;
   --lang-en: none;
@@ -428,7 +435,7 @@ footer a:hover { opacity: 0.8; }
         <div class="title zh">一页一主角</div>
         <div class="title en">One Sovereign Per View</div>
         <div class="body zh">每页只有一个视觉锚点。图表页主角是图表，侧栏、标题、工具栏都是配角。主角出场时，配角退后。</div>
-        <div class="body en">Every view has exactly one visual anchor. When the chart speaks, the sidebar listens. The配角 exists only to elevate the protagonist.</div>
+        <div class="body en">Every view has exactly one visual anchor. When the chart speaks, the sidebar listens. The supporting role exists only to elevate the protagonist.</div>
       </div>
       <div class="phil-card fade-in">
         <div class="num">02</div>
@@ -454,7 +461,7 @@ footer a:hover { opacity: 0.8; }
     </div>
     <div class="style-anchors">
       <span class="zh">风格锚定：<strong style="color:var(--text-primary);">Linear</strong> 的暗色克制 + <strong style="color:var(--text-primary);">Stripe</strong> 的排版精度 + <strong style="color:var(--text-primary);">日本设计</strong> 的减法美学</span>
-      <span class="en">Anchored by <strong style="color:var(--text-primary);">Linear</strong>'s dark restraint, <strong style="color:var(--text-primary);">Stripe</strong>'s typographic precision, and <strong style="color:var(--text-primary);">Japanese</strong>减法 aesthetics.</span>
+      <span class="en">Anchored by <strong style="color:var(--text-primary);">Linear</strong>'s dark restraint, <strong style="color:var(--text-primary);">Stripe</strong>'s typographic precision, and <strong style="color:var(--text-primary);">Japanese</strong> "subtraction" aesthetics.</span>
     </div>
   </div>
 </section>
@@ -493,12 +500,12 @@ footer a:hover { opacity: 0.8; }
     <p class="desc zh">在暗色与亮色之间无缝过渡，背后是 gamma-aware 颜色插值算法。三个预置点——暗色(0%)、柔光(70%)、亮色(100%)——加上任意比例手调。用上面的滑块体验从 Linear 暗到 Stripe 亮的渐变。</p>
     <p class="desc en">Seamlessly transition between dark and light via gamma-aware color interpolation. Three presets — Dark (0%), Soft (70%), Light (100%) — plus arbitrary fine-tuning. Use the slider above to experience the gradient from Linear dark to Stripe light.</p>
     <div class="code-block">
-<span class="cm">// 五次方缓出：t=0.3时已达83%目标值</span><br>
+<span class="cm"><span class="zh">// 五次方缓出：t=0.3时已达83%目标值</span><span class="en">// Quintic ease-out: t=0.3 reaches 83% of target</span></span><br>
 <span class="kw">function</span> textCurve(t) {<br>
 &nbsp;&nbsp;<span class="kw">return</span> <span class="num">1</span> - Math.<span class="kw">pow</span>(<span class="num">1</span> - t, <span class="num">5</span>);<br>
 }<br><br>
-<span class="cm">// Gamma-aware 插值：sqrt 加权，过渡柔和自然</span><br>
-<span class="kw">function</span> lerpColor(h1, h2, t) {<br>
+<span class="cm"><span class="zh">// Gamma-aware 插值：sqrt 加权，过渡柔和自然</span><span class="en">// Gamma-aware interpolation: sqrt-weighted for smooth crossfade</span></span><br>
+<span class="kw">function</span> lerpColor(hex1, hex2, t) {<br>
 &nbsp;&nbsp;<span class="kw">const</span> r = Math.<span class="kw">round</span>(Math.<span class="kw">sqrt</span>((<span class="num">1</span>-t)*r1*r1 + t*r2*r2));<br>
 &nbsp;&nbsp;<span class="kw">return</span> <span class="str">'#'</span> + ((<span class="num">1</span>&lt;&lt;<span class="num">24</span>)+(r&lt;&lt;<span class="num">16</span>)+(g&lt;&lt;<span class="num">8</span>)+b).toString(<span class="num">16</span>).slice(<span class="num">1</span>);<br>
 }
@@ -665,6 +672,50 @@ npx @libra/cli add table
   </div>
 </section>
 
+<!-- ==================== MCP SERVER ==================== -->
+<section>
+  <div class="wrap">
+    <div class="section-label zh">AI 集成</div>
+    <div class="section-label en">AI Integration</div>
+    <h2>
+      <span class="zh">给 AI 装上 Libra 的眼睛</span>
+      <span class="en">Give AI eyes for Libra</span>
+    </h2>
+    <p class="desc zh">@libra/mcp-server 将设计系统暴露为 MCP（Model Context Protocol）工具，让 Claude Code、Cursor 等 AI 编码助手直接生成符合 Libra 设计语言的 UI 代码。</p>
+    <p class="desc en">@libra/mcp-server exposes Libra's design tokens as MCP (Model Context Protocol) tools, enabling AI coding assistants like Claude Code and Cursor to generate UI code that follows Libra's design language.</p>
+
+    <h3 class="zh">提供的工具 · Available Tools</h3>
+    <div class="table-wrap" style="margin-bottom:20px;">
+      <table class="demo-table">
+        <thead><tr><th><span class="zh">工具</span><span class="en">Tool</span></th><th><span class="zh">功能</span><span class="en">Description</span></th></tr></thead>
+        <tbody>
+          <tr><td class="num" style="font-family:var(--font-mono);">get_tokens</td><td><span class="zh">返回所有 CSS 自定义属性（暗色/亮色）</span><span class="en">Return all CSS custom properties</span></td></tr>
+          <tr><td class="num" style="font-family:var(--font-mono);">get_semantic_colors</td><td><span class="zh">返回语义色板（涨跌色/均线色/功能色）</span><span class="en">Return semantic color palette</span></td></tr>
+          <tr><td class="num" style="font-family:var(--font-mono);">get_typography</td><td><span class="zh">返回字体栈和字号阶梯</span><span class="en">Return font stacks and size scale</span></td></tr>
+          <tr><td class="num" style="font-family:var(--font-mono);">get_spacing</td><td><span class="zh">返回 4px 基数间距体系</span><span class="en">Return spacing scale</span></td></tr>
+          <tr><td class="num" style="font-family:var(--font-mono);">get_components</td><td><span class="zh">返回组件规范（按钮/卡片/表格）</span><span class="en">Return component specifications</span></td></tr>
+          <tr><td class="num" style="font-family:var(--font-mono);">generate_css</td><td><span class="zh">生成完整 tokens.css</span><span class="en">Generate complete tokens.css</span></td></tr>
+          <tr><td class="num" style="font-family:var(--font-mono);">generate_component</td><td><span class="zh">生成 React 组件代码（按钮/卡片）</span><span class="en">Generate React component code</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="zh">Claude Code 配置</h3>
+    <h3 class="en">Claude Code Config</h3>
+    <div class="code-block">
+<span class="cm">~/.claude/settings.json</span><br>
+{<br>
+&nbsp;&nbsp;<span class="str">"mcpServers"</span>: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"libra"</span>: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"command"</span>: <span class="str">"npx"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"args"</span>: [<span class="str">"@libra/mcp-server"</span>]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;}<br>
+}
+    </div>
+  </div>
+</section>
+
 <footer>
   <div class="wrap">
     <a href="https://github.com/goodie1972/libra">GitHub</a> · MIT<br>
@@ -711,16 +762,22 @@ function textCurve(t) { return 1 - Math.pow(1-t, 5); }
 function borderCurve(t) { return 1 - Math.pow(1-t, 2); }
 
 var DARK = {
-  'bg-root':'#0c0c0e','bg-main':'#0c0c0e','bg-card':'#121214','bg-card-hover':'#18181b','bg-input':'#18181b',
-  'border-main':'#1e1e22','border-sub':'#161618',
+  'bg-root':'#0c0c0e','bg-main':'#0c0c0e','bg-sidebar':'#0c0c0e',
+  'bg-card':'#121214','bg-card-hover':'#18181b','bg-input':'#18181b',
+  'bg-chart':'#0c0c0e','bg-sub-panel':'#121214',
+  'border-main':'#1e1e22','border-sub':'#161618','border-input':'#1e1e22',
   'text-primary':'#e8e8ed','text-secondary':'#9a9aa0','text-tertiary':'#63636a',
-  'accent':'#4a6cf7','accent-hover':'#5d7cf9'
+  'accent':'#4a6cf7','accent-hover':'#5d7cf9',
+  'grid-line':'#18191c'
 };
 var LIGHT = {
-  'bg-root':'#f5f5f7','bg-main':'#f5f5f7','bg-card':'#ffffff','bg-card-hover':'#f0f0f2','bg-input':'#eaeaee',
-  'border-main':'#d4d4d8','border-sub':'#e8e8ec',
+  'bg-root':'#f5f5f7','bg-main':'#f5f5f7','bg-sidebar':'#f5f5f7',
+  'bg-card':'#ffffff','bg-card-hover':'#f0f0f2','bg-input':'#eaeaee',
+  'bg-chart':'#f5f5f7','bg-sub-panel':'#ffffff',
+  'border-main':'#d4d4d8','border-sub':'#e8e8ec','border-input':'#d4d4d8',
   'text-primary':'#0d0d12','text-secondary':'#6e6e78','text-tertiary':'#8e8e98',
-  'accent':'#533afd','accent-hover':'#4527e0'
+  'accent':'#533afd','accent-hover':'#4527e0',
+  'grid-line':'#e8ecf0'
 };
 
 function applyMix(t) {
@@ -728,18 +785,27 @@ function applyMix(t) {
   var tt = textCurve(t), bt = borderCurve(t);
   root.setProperty('--bg-root',       lerpColor(DARK['bg-root'], LIGHT['bg-root'], t));
   root.setProperty('--bg-main',       lerpColor(DARK['bg-main'], LIGHT['bg-main'], t));
+  root.setProperty('--bg-sidebar',    lerpColor(DARK['bg-sidebar'], LIGHT['bg-sidebar'], t));
   root.setProperty('--bg-card',       lerpColor(DARK['bg-card'], LIGHT['bg-card'], t));
   root.setProperty('--bg-card-hover', lerpColor(DARK['bg-card-hover'], LIGHT['bg-card-hover'], t));
   root.setProperty('--bg-input',      lerpColor(DARK['bg-input'], LIGHT['bg-input'], t));
+  root.setProperty('--bg-chart',      lerpColor(DARK['bg-chart'], LIGHT['bg-chart'], t));
+  root.setProperty('--bg-sub-panel',  lerpColor(DARK['bg-sub-panel'], LIGHT['bg-sub-panel'], t));
   root.setProperty('--border-main',   lerpColor(DARK['border-main'], LIGHT['border-main'], bt));
   root.setProperty('--border-sub',    lerpColor(DARK['border-sub'], LIGHT['border-sub'], bt));
+  root.setProperty('--border-input',  lerpColor(DARK['border-input'], LIGHT['border-input'], bt));
   root.setProperty('--text-primary',  lerpLinear(DARK['text-primary'], LIGHT['text-primary'], tt));
   root.setProperty('--text-secondary',lerpLinear(DARK['text-secondary'], LIGHT['text-secondary'], tt));
   root.setProperty('--text-tertiary', lerpLinear(DARK['text-tertiary'], LIGHT['text-tertiary'], tt));
   root.setProperty('--accent',        lerpLinear(DARK['accent'], LIGHT['accent'], tt));
   root.setProperty('--accent-hover',  lerpLinear(DARK['accent-hover'], LIGHT['accent-hover'], tt));
+  root.setProperty('--grid-line',     lerpColor(DARK['grid-line'], LIGHT['grid-line'], bt));
+  root.setProperty('--vol-up',        'rgba(239,83,80,' + (0.5 + t * 0.1).toFixed(2) + ')');
+  root.setProperty('--vol-down',      'rgba(38,166,154,' + (0.5 + t * 0.1).toFixed(2) + ')');
   root.setProperty('--btn-radius',    Math.round(8 + t*12) + 'px');
   root.setProperty('--card-radius',   Math.round(10 + t*2) + 'px');
+  root.setProperty('--card-shadow',   t < 0.01 ? 'none' : '0 1px 3px rgba(0,0,0,' + (t * 0.04).toFixed(2) + '), 0 3px 12px rgba(0,0,0,' + (t * 0.024).toFixed(3) + ')');
+  root.setProperty('--card-border',   t > 0.5 ? 'none' : '1px solid var(--border-main)');
 }
 
 /* ============================================================
