@@ -218,7 +218,7 @@ h3 { font-size: 13px; font-weight: 500; color: var(--text-secondary); margin-bot
   padding: 12px; border-radius: 8px;
   border: 1px solid var(--border-sub);
   display: flex; flex-direction: column; gap: 6px;
-  background: var(--bg-card);
+  background: var(--bg-input);
 }
 .color-card .swatch { height: 44px; border-radius: 5px; }
 .color-card .name { font-size: 10px; font-family: var(--font-mono); color: var(--text-secondary); letter-spacing: 0.02em; }
@@ -294,7 +294,7 @@ h3 { font-size: 13px; font-weight: 500; color: var(--text-secondary); margin-bot
 .demo-table { width: 100%; border-collapse: collapse; }
 .demo-table th {
   padding: 10px 18px; font-size: 10px; font-weight: 500;
-  color: var(--text-tertiary); letter-spacing: 0.05em; text-align: left; text-transform: uppercase;
+  color: var(--text-secondary); letter-spacing: 0.05em; text-align: left; text-transform: uppercase;
   border-bottom: 1px solid var(--border-sub);
 }
 .demo-table th.num { text-align: right; }
@@ -313,14 +313,16 @@ h3 { font-size: 13px; font-weight: 500; color: var(--text-secondary); margin-bot
    CODE
    ============================================================ */
 .code-block {
-  background: #08080a; border: 1px solid var(--border-main);
+  background: #08080a; border: 1px solid var(--border-sub);
   border-radius: 8px; padding: 20px;
   font-family: var(--font-mono); font-size: 12px; line-height: 1.9;
   overflow-x: auto; margin-top: 14px;
+  color: #e8e8ed;
 }
 .code-block .cm { color: #8e8e96; }
-.code-block .kw { color: var(--accent); }
-.code-block .str { color: var(--success); }
+.code-block .kw { color: #7b9cff; }
+.code-block .str { color: #34a853; }
+.code-block .num { color: #ffa726; }
 
 /* ============================================================
    FOOTER
