@@ -1,6 +1,10 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { resolve } from 'path';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const root = resolve(__dirname, '../../..');
 
 export default defineConfig({
   plugins: [react()],
@@ -12,6 +16,6 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: resolve(__dirname, '../../docs/react-demo'),
+    outDir: resolve(root, 'docs/react-demo'),
   },
 });
