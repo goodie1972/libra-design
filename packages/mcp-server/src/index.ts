@@ -24,6 +24,11 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
+import { readFileSync, existsSync } from 'fs';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 /* ============================================================
    TOKEN DATA
@@ -58,7 +63,7 @@ const LIGHT_TOKENS: Record<string, string> = {
 };
 
 /* ============================================================
-   COMPONENT GENERATORS
+   COMPONENT GENERATORS (从 @libra/react 源码读取)
    ============================================================ */
 
 function generateCSS(): string {
@@ -89,45 +94,35 @@ function generateCSS(): string {
 }`;
 }
 
-function generateButton(): string {
-  return `import { cva, type VariantProps } from "class-variance-authority";
-
-const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--btn-radius)] text-[13px] font-medium transition-all duration-200 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:-translate-y-[1px]",
-  {
-    variants: {
-      variant: {
-        default: "bg-[var(--accent)] text-white hover:bg-[var(--accent-hover)]",
-        secondary: "bg-transparent text-[var(--text-primary)] border border-[var(--border-main)] hover:border-[var(--accent)]",
-        ghost: "bg-transparent text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)]",
-        danger: "bg-[var(--error)] text-white hover:opacity-90",
-      },
-      size: {
-        default: "h-9 px-[18px] py-2",
-        sm: "h-8 px-3 text-[12px]",
-        lg: "h-10 px-6 text-[14px]",
-        icon: "h-8 w-8",
-      },
-    },
-    defaultVariants: { variant: "default", size: "default" },
+function getComponentSourceDir(): string {
+  const devPath = resolve(__dirname, '../../react/src/components');
+  if (existsSync(devPath)) return devPath;
+  try {
+    const pkg = resolve(require.resolve('@libra/react/package.json'), '../src/components');
+    if (existsSync(pkg)) return pkg;
+  } catch {
+    // fallback
   }
-);`;
+  return '';
 }
 
-function generateCard(): string {
-  return `import type { HTMLAttributes } from "react";
+const AVAILABLE_COMPONENTS = [
+  'button', 'card', 'table', 'badge', 'input',
+  'price-display', 'change-badge', 'stock-card',
+  'select', 'tabs', 'tag', 'modal', 'tooltip', 'switch', 'market-table',
+];
 
-function Card({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      className={cn(
-        "rounded-[var(--card-radius)] border-[var(--card-border)] bg-[var(--bg-card)] shadow-[var(--card-shadow)] p-5 hover:bg-[var(--bg-card-hover)] hover:border-[var(--accent)] transition-all duration-300",
-        className
-      )}
-      {...props}
-    />
-  );
-}`;
+function generateComponent(name: string): string {
+  const srcDir = getComponentSourceDir();
+  if (!srcDir) {
+    return `// Component source not available. Install @libra/react to generate this component.`;
+  }
+
+  const fileName = `${name}.tsx`.replace(/--/g, '-');
+  const filePath = resolve(srcDir, fileName);
+  if (!existsSync(filePath)) return `// Unknown component: ${name}`;
+
+  return readFileSync(filePath, 'utf-8');
 }
 
 /* ============================================================
@@ -183,11 +178,15 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     },
     {
       name: 'generate_component',
-      description: 'Generate a React component following Libra design language',
+      description: 'Generate a React component (@libra/react) — 15 components available',
       inputSchema: {
         type: 'object',
         properties: {
-          component: { type: 'string', enum: ['button', 'card'], description: 'Component to generate' },
+          component: {
+            type: 'string',
+            enum: AVAILABLE_COMPONENTS,
+            description: 'Component to generate',
+          },
         },
         required: ['component'],
       },
@@ -267,7 +266,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     case 'generate_component': {
       const comp = args?.component as string;
-      const code = comp === 'button' ? generateButton() : comp === 'card' ? generateCard() : 'Unknown component';
+      const code = generateComponent(comp);
       return { content: [{ type: 'text', text: code }] };
     }
 

@@ -1,169 +1,88 @@
-import { existsSync, writeFileSync, mkdirSync } from 'fs';
-import { resolve } from 'path';
+import { existsSync, writeFileSync, mkdirSync, readFileSync } from 'fs';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 /**
- * 组件清单：组件名 → 生成代码
- *
- * 消费方运行 `npx libra add button` 后，
- * CLI 将对应组件源码复制到用户项目的 src/components/ui/ 下。
+ * 组件源文件目录（从 @libra/react 源码读取）
+ * 开发环境：packages/react/src/components/
+ * 生产环境：node_modules/@libra/react/src/components/
  */
-const COMPONENTS: Record<string, (pkg: string) => string> = {
-  button: (pkg) => `import { cn } from "${pkg}/lib/utils";
-import { cva, type VariantProps } from "class-variance-authority";
+function getSourceDir(): string {
+  // 优先从 monorepo 读取（开发环境）
+  const devPath = resolve(__dirname, '../../../react/src/components');
+  if (existsSync(devPath)) return devPath;
 
-const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--btn-radius)] text-[13px] font-medium transition-colors focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
-  {
-    variants: {
-      variant: {
-        default: "bg-[var(--accent)] text-white hover:bg-[var(--accent-hover)]",
-        secondary: "bg-transparent text-[var(--text-primary)] border border-[var(--border-main)] hover:border-[var(--accent)]",
-        ghost: "bg-transparent text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)]",
-        danger: "bg-[var(--error)] text-white hover:opacity-90",
-      },
-      size: {
-        default: "h-9 px-[18px] py-2",
-        sm: "h-8 px-3 text-[12px]",
-        lg: "h-10 px-6 text-[14px]",
-        icon: "h-8 w-8",
-      },
-    },
-    defaultVariants: { variant: "default", size: "default" },
+  // 生产环境：从 @libra/react 包读取
+  try {
+    const pkg = resolve(require.resolve('@libra/react/package.json'), '../src/components');
+    if (existsSync(pkg)) return pkg;
+  } catch {
+    // fallback
   }
-);
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {}
-
-function Button({ className, variant, size, ...props }: ButtonProps) {
-  return (
-    <button
-      className={cn(buttonVariants({ variant, size, className }))}
-      {...props}
-    />
-  );
+  // 最后尝试：从 CLI 同目录的 components 读取
+  return resolve(__dirname, '../components');
 }
 
-export { Button, buttonVariants };
-`,
-
-  card: (pkg) => `import { cn } from "${pkg}/lib/utils";
-import type { HTMLAttributes } from "react";
-
-function Card({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      className={cn(
-        "rounded-[var(--card-radius)] border-[var(--card-border)] bg-[var(--bg-card)] shadow-[var(--card-shadow)]",
-        className
-      )}
-      {...props}
-    />
-  );
-}
-
-function CardHeader({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("flex flex-col gap-2 p-5 pb-3", className)} {...props} />;
-}
-
-function CardTitle({ className, ...props }: HTMLAttributes<HTMLHeadingElement>) {
-  return (
-    <h3
-      className={cn(
-        "text-[16px] font-semibold text-[var(--text-primary)] tracking-[var(--tracking-subtitle)]",
-        className
-      )}
-      {...props}
-    />
-  );
-}
-
-function CardContent({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("p-5 pt-0", className)} {...props} />;
-}
-
-export { Card, CardHeader, CardTitle, CardContent };
-`,
-
-  table: (pkg) => `import { cn } from "${pkg}/lib/utils";
-import type { HTMLAttributes, ThHTMLAttributes, TdHTMLAttributes } from "react";
-
-function Table({ className, ...props }: HTMLAttributes<HTMLTableElement>) {
-  return (
-    <div className="relative w-full overflow-auto">
-      <table
-        className={cn(
-          "w-full caption-bottom text-[13px] text-[var(--text-primary)]",
-          className
-        )}
-        {...props}
-      />
-    </div>
-  );
-}
-
-function TableHeader({ className, ...props }: HTMLAttributes<HTMLTableSectionElement>) {
-  return (
-    <thead
-      className={cn(
-        "[&_tr]:border-b [&_tr]:border-[var(--border-sub)]",
-        className
-      )}
-      {...props}
-    />
-  );
-}
-
-function TableHead({ className, ...props }: ThHTMLAttributes<HTMLTableHeaderCellElement>) {
-  return (
-    <th
-      className={cn(
-        "h-10 px-5 text-left align-middle text-[11px] font-medium text-[var(--text-tertiary)] tracking-[0.03em]",
-        className
-      )}
-      {...props}
-    />
-  );
-}
-
-function TableRow({ className, ...props }: HTMLAttributes<HTMLTableRowElement>) {
-  return (
-    <tr
-      className={cn(
-        "border-b border-[var(--border-sub)] transition-colors hover:bg-[var(--bg-card-hover)] data-[state=selected]:bg-[var(--bg-card-hover)]",
-        className
-      )}
-      {...props}
-    />
-  );
-}
-
-function TableCell({ className, ...props }: TdHTMLAttributes<HTMLTableDataCellElement>) {
-  return (
-    <td
-      className={cn(
-        "p-3 px-5 align-middle",
-        className
-      )}
-      {...props}
-    />
-  );
-}
-
-export { Table, TableHeader, TableHead, TableRow, TableCell };
-`,
+const COMPONENTS: Record<string, string> = {
+  button: 'button.tsx',
+  card: 'card.tsx',
+  table: 'table.tsx',
+  badge: 'badge.tsx',
+  input: 'input.tsx',
+  'price-display': 'price-display.tsx',
+  'change-badge': 'change-badge.tsx',
+  'stock-card': 'stock-card.tsx',
+  select: 'select.tsx',
+  tabs: 'tabs.tsx',
+  tag: 'tag.tsx',
+  modal: 'modal.tsx',
+  tooltip: 'tooltip.tsx',
+  switch: 'switch.tsx',
+  'market-table': 'market-table.tsx',
 };
 
 /**
- * 执行 libra add <name> 命令。
- * 从内置组件清单中找到对应组件源码，复制到目标项目。
+ * 读取组件源码，将内部 import 路径改写为用户的本地路径
  */
+function readComponent(name: string, pkg: string): string {
+  const srcDir = getSourceDir();
+  const filePath = resolve(srcDir, COMPONENTS[name]);
+  let source = readFileSync(filePath, 'utf-8');
+
+  // 改写 import 路径：'../lib/utils' → '${pkg}/lib/utils'
+  source = source.replace(/from ['"]\.\.\/lib\/utils['"]/g, `from "${pkg}/lib/utils"`);
+
+  return source;
+}
+
+/**
+ * 复制 cn() 工具函数
+ */
+function writeUtils(targetDir: string, pkg: string): void {
+  const srcDir = getSourceDir();
+  const utilsPath = resolve(srcDir, '../lib/utils.ts');
+  if (!existsSync(utilsPath)) return;
+
+  const libDir = resolve(targetDir, '..', 'lib');
+  if (!existsSync(libDir)) mkdirSync(libDir, { recursive: true });
+
+  const targetPath = resolve(libDir, 'utils.ts');
+  if (existsSync(targetPath)) return;
+
+  let source = readFileSync(utilsPath, 'utf-8');
+  // 保持 import 路径不变
+  writeFileSync(targetPath, source, 'utf-8');
+}
+
 export function addCommand(name: string): void {
   const cwd = process.cwd();
-  const component = COMPONENTS[name.toLowerCase()];
+  const key = name.toLowerCase();
+  const fileName = COMPONENTS[key];
 
-  if (!component) {
+  if (!fileName) {
     console.error('');
     console.error(`  ✗ 未知组件 "${name}"`);
     console.error(`  可用组件: ${Object.keys(COMPONENTS).join(', ')}`);
@@ -172,7 +91,7 @@ export function addCommand(name: string): void {
   }
 
   const targetDir = resolve(cwd, 'src/components/ui');
-  const targetPath = resolve(targetDir, `${name}.tsx`);
+  const targetPath = resolve(targetDir, fileName);
 
   if (!existsSync(targetDir)) {
     mkdirSync(targetDir, { recursive: true });
@@ -183,11 +102,15 @@ export function addCommand(name: string): void {
     process.exit(0);
   }
 
-  // 解析 @libra/tokens 在用户项目中的路径
-  // 简单处理：假设用户项目安装了 @libra/tokens 或用的是相对路径
   const pkgPath = findStockuiPath(cwd) || '@/components/ui';
 
-  writeFileSync(targetPath, component(pkgPath), 'utf-8');
+  // 写入组件源码
+  const source = readComponent(key, pkgPath);
+  writeFileSync(targetPath, source, 'utf-8');
+
+  // 写入 cn() 工具函数
+  writeUtils(targetDir, pkgPath);
+
   console.log('');
   console.log(`  ✓ 添加组件: ${name} → ${targetPath}`);
   console.log('');
@@ -197,8 +120,8 @@ export function addCommand(name: string): void {
 
 function findStockuiPath(cwd: string): string | null {
   try {
-    const pkg = resolve(cwd, 'package.json');
-    const content = JSON.parse(require('fs').readFileSync(pkg, 'utf-8'));
+    const pkgPath = resolve(cwd, 'package.json');
+    const content = JSON.parse(readFileSync(pkgPath, 'utf-8'));
     const deps = { ...content.dependencies, ...content.devDependencies };
 
     if (deps['@libra/tokens']) return '@libra/tokens';

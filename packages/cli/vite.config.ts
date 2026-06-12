@@ -9,7 +9,7 @@ export default defineConfig({
       fileName: () => 'index.js',
     },
     rollupOptions: {
-      external: ['fs', 'path', 'commander', 'fs-extra'],
+      external: ['fs', 'path', 'url', 'commander', 'fs-extra'],
     },
     // CLI 不需要压缩
     minify: false,
