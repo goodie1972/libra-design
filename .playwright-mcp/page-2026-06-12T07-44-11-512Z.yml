@@ -1,0 +1,312 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]: Libra
+    - generic [ref=e6]:
+      - button "中" [active] [ref=e333] [cursor=pointer]:
+        - generic [ref=e8]: 中
+      - generic [ref=e9]:
+        - button "🌙" [ref=e10] [cursor=pointer]
+        - button "🌤" [ref=e11] [cursor=pointer]
+        - button "☀" [ref=e12] [cursor=pointer]
+  - generic [ref=e14]:
+    - heading "⚖️ Libra — Extreme Aesthetics" [level=1] [ref=e334]
+    - generic [ref=e335]:
+      - text: Not a design system. An aesthetic manifesto.
+      - text: Darkness as bone. Whitespace as flesh. Restraint as soul.
+    - generic [ref=e17]:
+      - button "🌙 Dark" [ref=e336] [cursor=pointer]:
+        - text: 🌙
+        - generic [ref=e337]: Dark
+      - button "🌤 Soft" [ref=e338] [cursor=pointer]:
+        - text: 🌤
+        - generic [ref=e339]: Soft
+      - button "☀ Light" [ref=e340] [cursor=pointer]:
+        - text: ☀
+        - generic [ref=e341]: Light
+  - generic [ref=e26]:
+    - generic [ref=e342]: Theme Mix
+    - slider [ref=e28] [cursor=pointer]: "0.7"
+    - generic [ref=e29]: 70%
+  - generic [ref=e31]:
+    - generic [ref=e343]: Philosophy
+    - heading "Every line of code is an aesthetic choice" [level=2] [ref=e344]:
+      - generic [ref=e345]: Every line of code is an aesthetic choice
+    - generic [ref=e35]:
+      - generic [ref=e36]:
+        - generic [ref=e37]: "01"
+        - generic [ref=e346]: One Sovereign Per View
+        - generic [ref=e347]: Every view has exactly one visual anchor. When the chart speaks, the sidebar listens. The supporting role exists only to elevate the protagonist.
+      - generic [ref=e40]:
+        - generic [ref=e41]: "02"
+        - generic [ref=e348]: Details Are Dogma
+        - generic [ref=e349]: A 1px misalignment is not a bug, it's a crack in faith. Perfection is achieved not when there's nothing left to add, but when there's nothing left to take away.
+      - generic [ref=e44]:
+        - generic [ref=e45]: "03"
+        - generic [ref=e350]: Space Is Breath
+        - generic [ref=e351]: Density is anxiety. Space is confidence. Our 4px baseline ensures every breath follows the same rhythm — generous, deliberate, and consistent.
+      - generic [ref=e48]:
+        - generic [ref=e49]: "04"
+        - generic [ref=e352]: Restraint Is Power
+        - generic [ref=e353]: Only two accent colors across the entire surface. Two colors force better decisions. 90% neutral + 10% accent = 100% clarity. Constraints are not limitations; they are liberation.
+    - generic [ref=e354]:
+      - text: Anchored by
+      - strong [ref=e355]: Linear
+      - text: "'s dark restraint,"
+      - strong [ref=e356]: Stripe
+      - text: "'s typographic precision, and"
+      - strong [ref=e357]: Japanese
+      - text: "\"subtraction\" aesthetics."
+  - generic [ref=e58]:
+    - generic [ref=e358]: Color System
+    - heading "90% neutral, 10% accent" [level=2] [ref=e359]:
+      - generic [ref=e360]: 90% neutral, 10% accent
+    - heading "Up & Down — The only two chromatic colors" [level=3] [ref=e361]
+    - generic [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e66]: "--up"
+        - generic [ref=e67]: "#ef5350"
+      - generic [ref=e68]:
+        - generic [ref=e70]: "--down"
+        - generic [ref=e71]: "#26a69a"
+      - generic [ref=e72]:
+        - generic [ref=e74]: "--flat"
+        - generic [ref=e75]: "#9e9e9e"
+    - heading "Surface Stack — Four-tier elevation (a la Linear)" [level=3] [ref=e362]
+    - paragraph [ref=e363]: Depth is communicated through luminance, not shadows. Four surface tiers cover every scenario from canvas to modal.
+    - generic [ref=e78]:
+      - generic [ref=e79]:
+        - generic [ref=e81]: "--bg-root"
+        - generic [ref=e82]: "#0c0c0e"
+      - generic [ref=e83]:
+        - generic [ref=e85]: "--bg-card"
+        - generic [ref=e86]: "#121214"
+      - generic [ref=e87]:
+        - generic [ref=e89]: "--bg-card-hover"
+        - generic [ref=e90]: "#18181b"
+      - generic [ref=e91]:
+        - generic [ref=e93]: "--border-main"
+        - generic [ref=e94]: "#1e1e22"
+    - heading "Dual-Theme Blend Engine" [level=3] [ref=e364]
+    - paragraph [ref=e365]: Seamlessly transition between dark and light via gamma-aware color interpolation. Three presets — Dark (0%), Soft (70%), Light (100%) — plus arbitrary fine-tuning. Use the slider above to experience the gradient from Linear dark to Stripe light.
+    - generic [ref=e97]:
+      - generic [ref=e366]: "// Quintic ease-out: t=0.3 reaches 83% of target"
+      - text: "function textCurve(t) {"
+      - text: return 1 - Math.pow(1 - t, 5);
+      - text: "}"
+      - generic [ref=e367]: "// Gamma-aware interpolation: sqrt-weighted for smooth crossfade"
+      - text: "function lerpColor(hex1, hex2, t) {"
+      - text: const r = Math.round(Math.sqrt((1-t)*r1*r1 + t*r2*r2));
+      - text: return '#' + ((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+      - text: "}"
+  - generic [ref=e103]:
+    - generic [ref=e368]: Typography
+    - heading "Type is voice" [level=2] [ref=e369]:
+      - generic [ref=e370]: Type is voice
+    - paragraph [ref=e371]: Inter for clarity. JetBrains Mono for precision. Every numeric value uses tabular-nums — decimal points align not by accident, but by doctrine.
+    - generic [ref=e108]:
+      - generic [ref=e109]:
+        - generic [ref=e110]: "--text-4xl 40px"
+        - generic [ref=e111]: 3,382.45
+      - generic [ref=e112]:
+        - generic [ref=e113]: "--text-3xl 32px"
+        - generic [ref=e114]: +1.23%
+      - generic [ref=e115]:
+        - generic [ref=e116]: "--text-2xl 24px"
+        - generic [ref=e372]: Kweichow Moutai
+      - generic [ref=e119]:
+        - generic [ref=e120]: "--text-xl 20px"
+        - generic [ref=e373]: SSE Composite Index
+      - generic [ref=e123]:
+        - generic [ref=e124]: "--text-lg 16px"
+        - generic [ref=e374]: Sector Performance
+      - generic [ref=e127]:
+        - generic [ref=e128]: "--text-base 13px"
+        - generic [ref=e129]: sh600519 · 1,689.50 · +2.13%
+      - generic [ref=e130]:
+        - generic [ref=e131]: "--text-sm 12px"
+        - generic [ref=e375]: Code · Name · Price · Change · Volume
+      - generic [ref=e134]:
+        - generic [ref=e135]: "--text-xs 10px"
+        - generic [ref=e136]: 3,382 3,383 3,381 3,384
+  - generic [ref=e138]:
+    - generic [ref=e376]: Spacing
+    - heading "4px root, 8-step scale" [level=2] [ref=e377]:
+      - generic [ref=e378]: 4px root, 8-step scale
+    - paragraph [ref=e379]: Eight values from 4px to 64px cover every spacing need. A musical scale of whitespace ensures rhythmic consistency — from button padding to page margins, all from the same set of notes.
+    - generic [ref=e143]:
+      - generic [ref=e144]:
+        - generic [ref=e145]: "--space-1"
+        - generic [ref=e148]: 4px
+      - generic [ref=e149]:
+        - generic [ref=e150]: "--space-2"
+        - generic [ref=e153]: 8px
+      - generic [ref=e154]:
+        - generic [ref=e155]: "--space-3"
+        - generic [ref=e158]: 12px
+      - generic [ref=e159]:
+        - generic [ref=e160]: "--space-4"
+        - generic [ref=e163]: 16px
+      - generic [ref=e164]:
+        - generic [ref=e165]: "--space-5"
+        - generic [ref=e168]: 24px
+      - generic [ref=e169]:
+        - generic [ref=e170]: "--space-6"
+        - generic [ref=e173]: 32px
+      - generic [ref=e174]:
+        - generic [ref=e175]: "--space-7"
+        - generic [ref=e178]: 48px
+      - generic [ref=e179]:
+        - generic [ref=e180]: "--space-8"
+        - generic [ref=e183]: 64px
+  - generic [ref=e185]:
+    - generic [ref=e380]: Component Gallery
+    - heading "Fewer components, better care" [level=2] [ref=e381]:
+      - generic [ref=e382]: Fewer components, better care
+    - paragraph [ref=e383]: Every component is pixel-perfected. Button radius transitions from 8px to 20px with the theme mix. Card borders dissolve in light mode. These are not features; they are consequences of a coherent system.
+    - generic [ref=e191]:
+      - button "Primary" [ref=e384] [cursor=pointer]:
+        - generic [ref=e385]: Primary
+      - button "Secondary" [ref=e386] [cursor=pointer]:
+        - generic [ref=e387]: Secondary
+      - button "Ghost" [ref=e388] [cursor=pointer]:
+        - generic [ref=e389]: Ghost
+      - button "Danger" [ref=e390] [cursor=pointer]:
+        - generic [ref=e391]: Danger
+    - generic [ref=e201]:
+      - generic [ref=e202]:
+        - generic [ref=e392]: SSE Index
+        - generic [ref=e205]: 3,382.45
+        - generic [ref=e206]: +1.23%
+      - generic [ref=e207]:
+        - generic [ref=e393]: SZSE Index
+        - generic [ref=e210]: 10,876.32
+        - generic [ref=e211]: "-0.45%"
+      - generic [ref=e212]:
+        - generic [ref=e394]: ChiNext Index
+        - generic [ref=e215]: 2,154.78
+        - generic [ref=e216]: +0.88%
+    - table [ref=e219]:
+      - rowgroup [ref=e220]:
+        - row "Code Name Price Change Volume" [ref=e395]:
+          - columnheader "Code" [ref=e396]:
+            - generic [ref=e397]: Code
+          - columnheader "Name" [ref=e398]:
+            - generic [ref=e399]: Name
+          - columnheader "Price" [ref=e400]:
+            - generic [ref=e401]: Price
+          - columnheader "Change" [ref=e402]:
+            - generic [ref=e403]: Change
+          - columnheader "Volume" [ref=e404]:
+            - generic [ref=e405]: Volume
+      - rowgroup [ref=e232]:
+        - row "sh600519 Kweichow Moutai 1,689.50 +2.15% 17.23 亿" [ref=e406]:
+          - cell "sh600519" [ref=e234]
+          - cell "Kweichow Moutai" [ref=e407]:
+            - generic [ref=e408]: Kweichow Moutai
+          - cell "1,689.50" [ref=e237]
+          - cell "+2.15%" [ref=e238]
+          - cell "17.23 亿" [ref=e239]
+        - row "sz000858 Wuliangye 142.80 -1.34% 4.10 亿" [ref=e409]:
+          - cell "sz000858" [ref=e241]
+          - cell "Wuliangye" [ref=e410]:
+            - generic [ref=e411]: Wuliangye
+          - cell "142.80" [ref=e244]
+          - cell "-1.34%" [ref=e245]
+          - cell "4.10 亿" [ref=e246]
+        - row "sh601398 ICBC 5.89 +0.51% 7.33 亿" [ref=e412]:
+          - cell "sh601398" [ref=e248]
+          - cell "ICBC" [ref=e413]:
+            - generic [ref=e414]: ICBC
+          - cell "5.89" [ref=e251]
+          - cell "+0.51%" [ref=e252]
+          - cell "7.33 亿" [ref=e253]
+        - row "sz300750 CATL 196.35 -2.87% 10.25 亿" [ref=e415]:
+          - cell "sz300750" [ref=e255]
+          - cell "CATL" [ref=e416]:
+            - generic [ref=e417]: CATL
+          - cell "196.35" [ref=e258]
+          - cell "-2.87%" [ref=e259]
+          - cell "10.25 亿" [ref=e260]
+  - generic [ref=e262]:
+    - generic [ref=e418]: Getting Started
+    - heading "Three commands to embrace the extreme" [level=2] [ref=e419]:
+      - generic [ref=e420]: Three commands to embrace the extreme
+    - generic [ref=e266]:
+      - generic [ref=e421]: "# Install design tokens"
+      - text: npm install @libra/tokens
+      - generic [ref=e422]: "# Import in your entry"
+      - text: import '@libra/tokens/css'
+    - generic [ref=e271]:
+      - generic [ref=e423]: "# Theme engine (browser)"
+      - text: npm install @libra/theme
+      - text: "import { applyPreset } from '@libra/theme'"
+      - text: applyPreset('dark');
+      - generic [ref=e424]: // 🌙 Dark
+      - text: applyPreset('soft');
+      - generic [ref=e425]: // 🌤 Soft (default)
+      - text: applyPreset('light');
+      - generic [ref=e426]: // ☀ Light
+    - generic [ref=e280]:
+      - generic [ref=e427]: "# CLI components (shadcn-style)"
+      - text: npx @libra/cli init
+      - text: npx @libra/cli add button
+      - text: npx @libra/cli add card
+      - text: npx @libra/cli add table
+  - generic [ref=e284]:
+    - generic [ref=e428]: AI Integration
+    - heading "Give AI eyes for Libra" [level=2] [ref=e429]:
+      - generic [ref=e430]: Give AI eyes for Libra
+    - paragraph [ref=e431]: "@libra/mcp-server exposes Libra's design tokens as MCP (Model Context Protocol) tools, enabling AI coding assistants like Claude Code and Cursor to generate UI code that follows Libra's design language."
+    - table [ref=e291]:
+      - rowgroup [ref=e292]:
+        - row "Tool Description" [ref=e432]:
+          - columnheader "Tool" [ref=e433]:
+            - generic [ref=e434]: Tool
+          - columnheader "Description" [ref=e435]:
+            - generic [ref=e436]: Description
+      - rowgroup [ref=e298]:
+        - row "get_tokens Return all CSS custom properties" [ref=e437]:
+          - cell "get_tokens" [ref=e300]
+          - cell "Return all CSS custom properties" [ref=e438]:
+            - generic [ref=e439]: Return all CSS custom properties
+        - row "get_semantic_colors Return semantic color palette" [ref=e440]:
+          - cell "get_semantic_colors" [ref=e304]
+          - cell "Return semantic color palette" [ref=e441]:
+            - generic [ref=e442]: Return semantic color palette
+        - row "get_typography Return font stacks and size scale" [ref=e443]:
+          - cell "get_typography" [ref=e308]
+          - cell "Return font stacks and size scale" [ref=e444]:
+            - generic [ref=e445]: Return font stacks and size scale
+        - row "get_spacing Return spacing scale" [ref=e446]:
+          - cell "get_spacing" [ref=e312]
+          - cell "Return spacing scale" [ref=e447]:
+            - generic [ref=e448]: Return spacing scale
+        - row "get_components Return component specifications" [ref=e449]:
+          - cell "get_components" [ref=e316]
+          - cell "Return component specifications" [ref=e450]:
+            - generic [ref=e451]: Return component specifications
+        - row "generate_css Generate complete tokens.css" [ref=e452]:
+          - cell "generate_css" [ref=e320]
+          - cell "Generate complete tokens.css" [ref=e453]:
+            - generic [ref=e454]: Generate complete tokens.css
+        - row "generate_component Generate React component code" [ref=e455]:
+          - cell "generate_component" [ref=e324]
+          - cell "Generate React component code" [ref=e456]:
+            - generic [ref=e457]: Generate React component code
+    - heading "Claude Code Config" [level=3] [ref=e458]
+    - generic [ref=e328]:
+      - text: ~/.claude/settings.json
+      - text: "{"
+      - text: "\"mcpServers\": {"
+      - text: "\"libra\": {"
+      - text: "\"command\": \"npx\","
+      - text: "\"args\": [\"@libra/mcp-server\"]"
+      - text: "}"
+      - text: "}"
+      - text: "}"
+  - contentinfo [ref=e329]:
+    - generic [ref=e330]:
+      - link "GitHub" [ref=e331] [cursor=pointer]:
+        - /url: https://github.com/goodie1972/libra
+      - text: · MIT
+      - generic [ref=e459]: Born for extreme aesthetics

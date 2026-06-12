@@ -1,0 +1,316 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]: Libra
+    - generic [ref=e6]:
+      - button "EN" [active] [ref=e460] [cursor=pointer]:
+        - generic [ref=e8]: EN
+      - generic [ref=e9]:
+        - button "🌙" [ref=e10] [cursor=pointer]
+        - button "🌤" [ref=e11] [cursor=pointer]
+        - button "☀" [ref=e12] [cursor=pointer]
+  - generic [ref=e14]:
+    - heading "⚖️ Libra 极致审美的设计语言" [level=1] [ref=e15]
+    - generic [ref=e16]:
+      - text: 不是设计系统，是审美宣言。
+      - text: 暗色为骨，留白为肉，克制为魂。
+    - generic [ref=e17]:
+      - button "🌙 暗色" [ref=e461] [cursor=pointer]:
+        - text: 🌙
+        - generic [ref=e19]: 暗色
+      - button "🌤 柔光" [ref=e462] [cursor=pointer]:
+        - text: 🌤
+        - generic [ref=e21]: 柔光
+      - button "☀ 亮色" [ref=e463] [cursor=pointer]:
+        - text: ☀
+        - generic [ref=e23]: 亮色
+  - generic [ref=e26]:
+    - generic [ref=e27]: 主题混合
+    - slider [ref=e28] [cursor=pointer]: "0.7"
+    - generic [ref=e29]: 70%
+  - generic [ref=e31]:
+    - generic [ref=e32]: 设计哲学
+    - heading "每一行代码都是审美选择" [level=2] [ref=e464]:
+      - generic [ref=e34]: 每一行代码都是审美选择
+    - generic [ref=e35]:
+      - generic [ref=e36]:
+        - generic [ref=e37]: "01"
+        - generic [ref=e38]: 一页一主角
+        - generic [ref=e39]: 每页只有一个视觉锚点。图表页主角是图表，侧栏、标题、工具栏都是配角。主角出场时，配角退后。
+      - generic [ref=e40]:
+        - generic [ref=e41]: "02"
+        - generic [ref=e42]: 细节即信仰
+        - generic [ref=e43]: 1px 的偏差、0.5 度的灰阶差、2px 的对不齐——这些不是 bug，是信仰的裂缝。完美不是没有东西可加，而是没有东西可减。
+      - generic [ref=e44]:
+        - generic [ref=e45]: "03"
+        - generic [ref=e46]: 留白即呼吸
+        - generic [ref=e47]: 密集是焦虑的，松弛是自信的。间距不是浪费，是沉默的音符。4px 基数体系确保每一次呼吸都节奏一致。
+      - generic [ref=e48]:
+        - generic [ref=e49]: "04"
+        - generic [ref=e50]: 克制即力量
+        - generic [ref=e51]: 全界面只有红绿两种有彩色。两个颜色让你做更好的决策——90% 的中性色 + 10% 的强调色 = 100% 的清晰度。
+    - generic [ref=e53]:
+      - text: 风格锚定：
+      - strong [ref=e54]: Linear
+      - text: 的暗色克制 +
+      - strong [ref=e55]: Stripe
+      - text: 的排版精度 +
+      - strong [ref=e56]: 日本设计
+      - text: 的减法美学
+  - generic [ref=e58]:
+    - generic [ref=e59]: 色彩系统
+    - heading "90% 中性色，10% 强调色" [level=2] [ref=e465]:
+      - generic [ref=e61]: 90% 中性色，10% 强调色
+    - heading "涨跌色 — 仅有的两种有彩色" [level=3] [ref=e62]
+    - generic [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e66]: "--up"
+        - generic [ref=e67]: "#ef5350"
+      - generic [ref=e68]:
+        - generic [ref=e70]: "--down"
+        - generic [ref=e71]: "#26a69a"
+      - generic [ref=e72]:
+        - generic [ref=e74]: "--flat"
+        - generic [ref=e75]: "#9e9e9e"
+    - heading "表面体系 — 四层堆叠（参考 Linear）" [level=3] [ref=e76]
+    - paragraph [ref=e77]: 层次靠明度区分，不依赖阴影。从最深画布到最高模态，四层表面覆盖所有场景。
+    - generic [ref=e78]:
+      - generic [ref=e79]:
+        - generic [ref=e81]: "--bg-root"
+        - generic [ref=e82]: "#0c0c0e"
+      - generic [ref=e83]:
+        - generic [ref=e85]: "--bg-card"
+        - generic [ref=e86]: "#121214"
+      - generic [ref=e87]:
+        - generic [ref=e89]: "--bg-card-hover"
+        - generic [ref=e90]: "#18181b"
+      - generic [ref=e91]:
+        - generic [ref=e93]: "--border-main"
+        - generic [ref=e94]: "#1e1e22"
+    - heading "双主题混合引擎" [level=3] [ref=e95]
+    - paragraph [ref=e96]: 在暗色与亮色之间无缝过渡，背后是 gamma-aware 颜色插值算法。三个预置点——暗色(0%)、柔光(70%)、亮色(100%)——加上任意比例手调。用上面的滑块体验从 Linear 暗到 Stripe 亮的渐变。
+    - generic [ref=e97]:
+      - generic [ref=e99]: // 五次方缓出：t=0.3时已达83%目标值
+      - text: "function textCurve(t) {"
+      - text: return 1 - Math.pow(1 - t, 5);
+      - text: "}"
+      - generic [ref=e101]: // Gamma-aware 插值：sqrt 加权，过渡柔和自然
+      - text: "function lerpColor(hex1, hex2, t) {"
+      - text: const r = Math.round(Math.sqrt((1-t)*r1*r1 + t*r2*r2));
+      - text: return '#' + ((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+      - text: "}"
+  - generic [ref=e103]:
+    - generic [ref=e104]: 字体系统
+    - heading "字体即声音" [level=2] [ref=e466]:
+      - generic [ref=e106]: 字体即声音
+    - paragraph [ref=e107]: Inter 服务于正文的清晰可读，JetBrains Mono 承载数字的严谨对齐。所有数值强制等宽 + tabular-nums，小数点严格对齐——这不是功能，是态度。
+    - generic [ref=e108]:
+      - generic [ref=e109]:
+        - generic [ref=e110]: "--text-4xl 40px"
+        - generic [ref=e111]: 3,382.45
+      - generic [ref=e112]:
+        - generic [ref=e113]: "--text-3xl 32px"
+        - generic [ref=e114]: +1.23%
+      - generic [ref=e115]:
+        - generic [ref=e116]: "--text-2xl 24px"
+        - generic [ref=e118]: 贵州茅台
+      - generic [ref=e119]:
+        - generic [ref=e120]: "--text-xl 20px"
+        - generic [ref=e122]: 上证指数实时行情
+      - generic [ref=e123]:
+        - generic [ref=e124]: "--text-lg 16px"
+        - generic [ref=e126]: 板块涨跌
+      - generic [ref=e127]:
+        - generic [ref=e128]: "--text-base 13px"
+        - generic [ref=e129]: sh600519 · 1,689.50 · +2.13%
+      - generic [ref=e130]:
+        - generic [ref=e131]: "--text-sm 12px"
+        - generic [ref=e133]: 代码 名称 现价 涨幅 成交额
+      - generic [ref=e134]:
+        - generic [ref=e135]: "--text-xs 10px"
+        - generic [ref=e136]: 3,382 3,383 3,381 3,384
+  - generic [ref=e138]:
+    - generic [ref=e139]: 间距系统
+    - heading "4px 基数，8 级音阶" [level=2] [ref=e467]:
+      - generic [ref=e141]: 4px 基数，8 级音阶
+    - paragraph [ref=e142]: 从 4px 到 64px，八个间距值覆盖所有场景。音阶式的间距体系确保全界面节奏统一——不管是按钮内边距还是页面大幅留白，都出自同一套音符。
+    - generic [ref=e143]:
+      - generic [ref=e144]:
+        - generic [ref=e145]: "--space-1"
+        - generic [ref=e148]: 4px
+      - generic [ref=e149]:
+        - generic [ref=e150]: "--space-2"
+        - generic [ref=e153]: 8px
+      - generic [ref=e154]:
+        - generic [ref=e155]: "--space-3"
+        - generic [ref=e158]: 12px
+      - generic [ref=e159]:
+        - generic [ref=e160]: "--space-4"
+        - generic [ref=e163]: 16px
+      - generic [ref=e164]:
+        - generic [ref=e165]: "--space-5"
+        - generic [ref=e168]: 24px
+      - generic [ref=e169]:
+        - generic [ref=e170]: "--space-6"
+        - generic [ref=e173]: 32px
+      - generic [ref=e174]:
+        - generic [ref=e175]: "--space-7"
+        - generic [ref=e178]: 48px
+      - generic [ref=e179]:
+        - generic [ref=e180]: "--space-8"
+        - generic [ref=e183]: 64px
+  - generic [ref=e185]:
+    - generic [ref=e186]: 组件画廊
+    - heading "做的少，做的好" [level=2] [ref=e468]:
+      - generic [ref=e188]: 做的少，做的好
+    - paragraph [ref=e189]: 每个组件都经过像素级审视。按钮的圆角随主题混合比例在 8px-20px 之间过渡，卡片的边框在亮色模式下自动消失。
+    - heading "按钮 · Button" [level=3] [ref=e190]
+    - generic [ref=e191]:
+      - button "主要操作" [ref=e469] [cursor=pointer]:
+        - generic [ref=e193]: 主要操作
+      - button "次要操作" [ref=e470] [cursor=pointer]:
+        - generic [ref=e195]: 次要操作
+      - button "文字按钮" [ref=e471] [cursor=pointer]:
+        - generic [ref=e197]: 文字按钮
+      - button "危险操作" [ref=e472] [cursor=pointer]:
+        - generic [ref=e199]: 危险操作
+    - heading "卡片 · Card" [level=3] [ref=e200]
+    - generic [ref=e201]:
+      - generic [ref=e202]:
+        - generic [ref=e204]: 上证指数
+        - generic [ref=e205]: 3,382.45
+        - generic [ref=e206]: +1.23%
+      - generic [ref=e207]:
+        - generic [ref=e209]: 深证成指
+        - generic [ref=e210]: 10,876.32
+        - generic [ref=e211]: "-0.45%"
+      - generic [ref=e212]:
+        - generic [ref=e214]: 创业板指
+        - generic [ref=e215]: 2,154.78
+        - generic [ref=e216]: +0.88%
+    - heading "表格 · Table" [level=3] [ref=e217]
+    - table [ref=e219]:
+      - rowgroup [ref=e220]:
+        - row "代码 名称 现价 涨幅 成交额" [ref=e473]:
+          - columnheader "代码" [ref=e474]:
+            - generic [ref=e223]: 代码
+          - columnheader "名称" [ref=e475]:
+            - generic [ref=e225]: 名称
+          - columnheader "现价" [ref=e476]:
+            - generic [ref=e227]: 现价
+          - columnheader "涨幅" [ref=e477]:
+            - generic [ref=e229]: 涨幅
+          - columnheader "成交额" [ref=e478]:
+            - generic [ref=e231]: 成交额
+      - rowgroup [ref=e232]:
+        - row "sh600519 贵州茅台 1,689.50 +2.15% 17.23 亿" [ref=e479]:
+          - cell "sh600519" [ref=e234]
+          - cell "贵州茅台" [ref=e480]:
+            - generic [ref=e236]: 贵州茅台
+          - cell "1,689.50" [ref=e237]
+          - cell "+2.15%" [ref=e238]
+          - cell "17.23 亿" [ref=e239]
+        - row "sz000858 五粮液 142.80 -1.34% 4.10 亿" [ref=e481]:
+          - cell "sz000858" [ref=e241]
+          - cell "五粮液" [ref=e482]:
+            - generic [ref=e243]: 五粮液
+          - cell "142.80" [ref=e244]
+          - cell "-1.34%" [ref=e245]
+          - cell "4.10 亿" [ref=e246]
+        - row "sh601398 工商银行 5.89 +0.51% 7.33 亿" [ref=e483]:
+          - cell "sh601398" [ref=e248]
+          - cell "工商银行" [ref=e484]:
+            - generic [ref=e250]: 工商银行
+          - cell "5.89" [ref=e251]
+          - cell "+0.51%" [ref=e252]
+          - cell "7.33 亿" [ref=e253]
+        - row "sz300750 宁德时代 196.35 -2.87% 10.25 亿" [ref=e485]:
+          - cell "sz300750" [ref=e255]
+          - cell "宁德时代" [ref=e486]:
+            - generic [ref=e257]: 宁德时代
+          - cell "196.35" [ref=e258]
+          - cell "-2.87%" [ref=e259]
+          - cell "10.25 亿" [ref=e260]
+  - generic [ref=e262]:
+    - generic [ref=e263]: 快速开始
+    - heading "三行命令，拥抱极致" [level=2] [ref=e487]:
+      - generic [ref=e265]: 三行命令，拥抱极致
+    - generic [ref=e266]:
+      - generic [ref=e268]: "# 安装设计 Token"
+      - text: npm install @libra/tokens
+      - generic [ref=e270]: "# 在入口文件引入"
+      - text: import '@libra/tokens/css'
+    - generic [ref=e271]:
+      - generic [ref=e273]: "# 主题引擎（浏览器环境）"
+      - text: npm install @libra/theme
+      - text: "import { applyPreset } from '@libra/theme'"
+      - text: applyPreset('dark');
+      - generic [ref=e275]: // 🌙 暗色
+      - text: applyPreset('soft');
+      - generic [ref=e277]: // 🌤 柔光（默认）
+      - text: applyPreset('light');
+      - generic [ref=e279]: // ☀ 亮色
+    - generic [ref=e280]:
+      - generic [ref=e282]: "# CLI 安装组件（类似 shadcn）"
+      - text: npx @libra/cli init
+      - text: npx @libra/cli add button
+      - text: npx @libra/cli add card
+      - text: npx @libra/cli add table
+  - generic [ref=e284]:
+    - generic [ref=e285]: AI 集成
+    - heading "给 AI 装上 Libra 的眼睛" [level=2] [ref=e488]:
+      - generic [ref=e287]: 给 AI 装上 Libra 的眼睛
+    - paragraph [ref=e288]: "@libra/mcp-server 将设计系统暴露为 MCP（Model Context Protocol）工具，让 Claude Code、Cursor 等 AI 编码助手直接生成符合 Libra 设计语言的 UI 代码。"
+    - heading "提供的工具 · Available Tools" [level=3] [ref=e289]
+    - table [ref=e291]:
+      - rowgroup [ref=e292]:
+        - row "工具 功能" [ref=e489]:
+          - columnheader "工具" [ref=e490]:
+            - generic [ref=e295]: 工具
+          - columnheader "功能" [ref=e491]:
+            - generic [ref=e297]: 功能
+      - rowgroup [ref=e298]:
+        - row "get_tokens 返回所有 CSS 自定义属性（暗色/亮色）" [ref=e492]:
+          - cell "get_tokens" [ref=e300]
+          - cell "返回所有 CSS 自定义属性（暗色/亮色）" [ref=e493]:
+            - generic [ref=e302]: 返回所有 CSS 自定义属性（暗色/亮色）
+        - row "get_semantic_colors 返回语义色板（涨跌色/均线色/功能色）" [ref=e494]:
+          - cell "get_semantic_colors" [ref=e304]
+          - cell "返回语义色板（涨跌色/均线色/功能色）" [ref=e495]:
+            - generic [ref=e306]: 返回语义色板（涨跌色/均线色/功能色）
+        - row "get_typography 返回字体栈和字号阶梯" [ref=e496]:
+          - cell "get_typography" [ref=e308]
+          - cell "返回字体栈和字号阶梯" [ref=e497]:
+            - generic [ref=e310]: 返回字体栈和字号阶梯
+        - row "get_spacing 返回 4px 基数间距体系" [ref=e498]:
+          - cell "get_spacing" [ref=e312]
+          - cell "返回 4px 基数间距体系" [ref=e499]:
+            - generic [ref=e314]: 返回 4px 基数间距体系
+        - row "get_components 返回组件规范（按钮/卡片/表格）" [ref=e500]:
+          - cell "get_components" [ref=e316]
+          - cell "返回组件规范（按钮/卡片/表格）" [ref=e501]:
+            - generic [ref=e318]: 返回组件规范（按钮/卡片/表格）
+        - row "generate_css 生成完整 tokens.css" [ref=e502]:
+          - cell "generate_css" [ref=e320]
+          - cell "生成完整 tokens.css" [ref=e503]:
+            - generic [ref=e322]: 生成完整 tokens.css
+        - row "generate_component 生成 React 组件代码（按钮/卡片）" [ref=e504]:
+          - cell "generate_component" [ref=e324]
+          - cell "生成 React 组件代码（按钮/卡片）" [ref=e505]:
+            - generic [ref=e326]: 生成 React 组件代码（按钮/卡片）
+    - heading "Claude Code 配置" [level=3] [ref=e327]
+    - generic [ref=e328]:
+      - text: ~/.claude/settings.json
+      - text: "{"
+      - text: "\"mcpServers\": {"
+      - text: "\"libra\": {"
+      - text: "\"command\": \"npx\","
+      - text: "\"args\": [\"@libra/mcp-server\"]"
+      - text: "}"
+      - text: "}"
+      - text: "}"
+  - contentinfo [ref=e329]:
+    - generic [ref=e330]:
+      - link "GitHub" [ref=e331] [cursor=pointer]:
+        - /url: https://github.com/goodie1972/libra
+      - text: · MIT
+      - generic [ref=e332]: 为极致审美而生
