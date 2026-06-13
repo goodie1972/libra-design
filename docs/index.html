@@ -3,80 +3,108 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⚖️ Libra — 极致审美的设计语言</title>
+<title>⚖️ Libra Design — 极致审美的设计语言，专为Go/Rust量身定制</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-/* ============================================================
-   LIBRA DESIGN TOKENS
-   ============================================================ */
 :root {
   --up: #ef5350; --down: #26a69a; --flat: #9e9e9e;
   --up-bg: rgba(239,83,80,0.08); --down-bg: rgba(38,166,154,0.08);
   --ma5: #f8b500; --ma10: #4a6cf7; --ma20: #9c27b0; --ma60: #009688;
   --success: #34a853; --warning: #fbbc04; --error: #ea4335;
-
   --bg-root: #0c0c0e; --bg-main: #0c0c0e; --bg-sidebar: #0c0c0e;
   --bg-card: #121214; --bg-card-hover: #18181b; --bg-input: #18181b;
   --bg-chart: #0c0c0e; --bg-sub-panel: #121214;
   --border-main: #1e1e22; --border-sub: #161618; --border-input: #1e1e22;
   --text-primary: #e8e8ed; --text-secondary: #9a9aa0; --text-tertiary: #63636a;
   --accent: #4a6cf7; --accent-hover: #5d7cf9;
-
   --grid-line: #18191c;
   --vol-up: rgba(239,83,80,0.55); --vol-down: rgba(38,166,154,0.55);
-
   --font-body: 'Inter', -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
   --font-mono: 'JetBrains Mono', 'SF Mono', 'Cascadia Code', monospace;
-
   --btn-radius: 8px; --card-radius: 10px;
   --card-shadow: none; --card-border: 1px solid var(--border-main);
   --code-bg: #08080a;
-
+  --tag-bg: rgba(74,108,247,0.12);
   --lang-zh: block;
   --lang-en: none;
 }
 html[data-lang="en"] { --lang-zh: none; --lang-en: block; }
-
 .zh { display: var(--lang-zh); }
 .en { display: var(--lang-en); }
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
-  font-family: var(--font-body);
-  background: var(--bg-root);
-  color: var(--text-primary);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: var(--font-body); background: var(--bg-root); color: var(--text-primary);
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
   transition: background 0.6s ease, color 0.6s ease;
-  line-height: 1.6;
-  overflow-x: hidden;
+  line-height: 1.6; overflow-x: hidden;
 }
-
 ::selection { background: var(--accent); color: #fff; }
-
 .wrap { max-width: 1000px; margin: 0 auto; padding: 0 32px; }
 
-/* ============================================================
-   TOP BAR — lang toggle + theme
-   ============================================================ */
+/* TOP BAR */
 .top-bar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 28px;
+  padding: 10px 28px; gap: 6px;
   background: rgba(12,12,14,0.85);
   backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border-main);
   transition: background 0.6s, border-color 0.4s;
 }
 .top-bar-left { display: flex; align-items: center; gap: 10px; }
-.top-bar-logo { font-size: 15px; font-weight: 700; letter-spacing: -0.02em; display: flex; align-items: center; gap: 8px; }
+.top-bar-logo { font-size: 14px; font-weight: 700; letter-spacing: -0.02em; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
 .top-bar-logo .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); transition: background 0.3s; }
+.top-bar-right { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 
-.top-bar-right { display: flex; align-items: center; gap: 10px; }
+/* Theme Selector Dropdown */
+.theme-selector {
+  position: relative; display: inline-flex;
+}
+.theme-selector summary {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: 6px;
+  border: 1px solid var(--border-main);
+  background: transparent; color: var(--text-secondary);
+  cursor: pointer; font-size: 12px; font-family: var(--font-body);
+  transition: all 0.2s;
+  list-style: none;
+}
+.theme-selector summary:hover { background: var(--bg-card); color: var(--text-primary); border-color: var(--accent); }
+.theme-selector[open] summary { background: var(--bg-card); border-color: var(--accent); }
+.theme-selector .theme-menu {
+  position: absolute; top: 100%; right: 0; margin-top: 4px;
+  width: 240px; max-height: 360px; overflow-y: auto;
+  background: var(--bg-card); border: 1px solid var(--border-main);
+  border-radius: 8px; padding: 4px;
+  z-index: 200; box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.theme-menu button {
+  display: flex; align-items: center; gap: 8px;
+  width: 100%; padding: 7px 10px; border: none; border-radius: 5px;
+  background: transparent; color: var(--text-primary); cursor: pointer;
+  font-size: 12px; font-family: var(--font-body); text-align: left;
+  transition: background 0.15s;
+}
+.theme-menu button:hover { background: var(--bg-card-hover); }
+.theme-menu button.active { background: var(--tag-bg); }
+.theme-menu .theme-swatch {
+  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+}
+.theme-menu .theme-name { font-weight: 500; }
+.theme-menu .theme-desc { font-size: 10px; color: var(--text-tertiary); }
+
+.mix-group { display: flex; gap: 2px; padding: 2px; border-radius: 6px; background: var(--bg-input); }
+.mix-group button {
+  padding: 4px 10px; border-radius: 4px; border: none;
+  background: transparent; color: var(--text-tertiary);
+  cursor: pointer; font-size: 13px; transition: all 0.2s;
+  font-family: var(--font-body); line-height: 1;
+}
+.mix-group button:hover { color: var(--text-secondary); }
+.mix-group button.active { background: var(--bg-card); color: var(--text-primary); }
 
 .lang-btn {
   display: flex; align-items: center; gap: 6px;
@@ -84,181 +112,88 @@ body {
   border: 1px solid var(--border-main);
   background: transparent; color: var(--text-secondary);
   cursor: pointer; font-size: 12px; font-family: var(--font-body);
-  transition: all 0.2s; letter-spacing: 0.01em;
+  transition: all 0.2s;
 }
 .lang-btn:hover { background: var(--bg-card); color: var(--text-primary); border-color: var(--accent); }
 
-.theme-group { display: flex; gap: 2px; padding: 2px; border-radius: 6px; background: var(--bg-input); }
-.theme-group button {
-  padding: 4px 10px; border-radius: 4px; border: none;
-  background: transparent; color: var(--text-tertiary);
-  cursor: pointer; font-size: 13px; transition: all 0.2s;
-  font-family: var(--font-body); line-height: 1;
-}
-.theme-group button:hover { color: var(--text-secondary); }
-.theme-group button.active { background: var(--bg-card); color: var(--text-primary); }
-
-/* ============================================================
-   HERO
-   ============================================================ */
-.hero {
-  padding: 120px 0 60px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
+/* HERO */
+.hero { padding: 120px 0 50px; text-align: center; position: relative; overflow: hidden; }
 .hero::before {
-  content: '';
-  position: absolute; top: -200px; left: 50%; transform: translateX(-50%);
+  content: ''; position: absolute; top: -200px; left: 50%; transform: translateX(-50%);
   width: 800px; height: 800px;
   background: radial-gradient(ellipse, rgba(74,108,247,0.04) 0%, transparent 70%);
   pointer-events: none;
 }
-.hero h1 { font-size: 52px; font-weight: 700; letter-spacing: -0.04em; margin-bottom: 14px; }
+.hero h1 { font-size: 46px; font-weight: 700; letter-spacing: -0.04em; margin-bottom: 12px; }
 .hero h1 .accent { color: var(--accent); }
-.hero .subtitle {
-  font-size: 17px; color: var(--text-secondary);
-  max-width: 540px; margin: 0 auto 36px; line-height: 1.8;
-  font-weight: 300; letter-spacing: 0.01em;
-}
-.hero .presets { display: flex; gap: 6px; justify-content: center; }
+.hero .subtitle { font-size: 15px; color: var(--text-secondary); max-width: 560px; margin: 0 auto 20px; line-height: 1.8; font-weight: 300; }
+.hero .presets { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
 
-/* ============================================================
-   THEME SLIDER
-   ============================================================ */
-.slider-section {
-  padding: 28px 0;
-  background: var(--bg-card);
-  border-top: 1px solid var(--border-main);
-  border-bottom: 1px solid var(--border-main);
-}
+/* TAG */
+.tag { display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 4px; font-size: 11px; font-weight: 500; background: var(--tag-bg); color: var(--accent); }
+.tag.go { background: rgba(0,173,216,0.1); color: #00add8; }
+.tag.rust { background: rgba(239,84,50,0.1); color: #ef5432; }
+.tag.ts { background: rgba(49,120,198,0.1); color: #3178c6; }
+
+/* SLIDER */
+.slider-section { padding: 22px 0; background: var(--bg-card); border-top: 1px solid var(--border-main); border-bottom: 1px solid var(--border-main); }
 .slider-wrap { display: flex; align-items: center; gap: 20px; }
-.slider-wrap label { font-size: 11px; color: var(--text-secondary); min-width: 56px; letter-spacing: 0.02em; text-transform: uppercase; }
-.slider-wrap input[type=range] {
-  flex: 1; height: 3px; border-radius: 2px;
-  -webkit-appearance: none; appearance: none;
-  background: linear-gradient(to right, #0c0c0e, #f5f5f7);
-  outline: none; cursor: pointer;
-}
-.slider-wrap input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none; width: 16px; height: 16px;
-  border-radius: 50%; background: #fff;
-  border: 2px solid var(--accent); cursor: pointer;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
-  transition: transform 0.15s;
-}
-.slider-wrap input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+.slider-wrap label { font-size: 11px; color: var(--text-secondary); min-width: 56px; letter-spacing: 0.02em; text-transform: uppercase; white-space: nowrap; }
+.slider-wrap input[type=range] { flex: 1; height: 3px; border-radius: 2px; -webkit-appearance: none; appearance: none; background: linear-gradient(to right, #0c0c0e, #f5f5f7); outline: none; cursor: pointer; }
+.slider-wrap input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #fff; border: 2px solid var(--accent); cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.3); transition: transform 0.15s; }
 .slider-wrap .mix-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary); min-width: 40px; text-align: right; }
 
-/* ============================================================
-   SECTIONS
-   ============================================================ */
-section { padding: 56px 0; border-bottom: 1px solid var(--border-sub); }
+/* SECTIONS */
+section { padding: 50px 0; border-bottom: 1px solid var(--border-sub); }
 section:last-of-type { border-bottom: none; }
-
-.section-label {
-  font-size: 11px; font-weight: 500; color: var(--text-secondary);
-  letter-spacing: 0.06em; text-transform: uppercase;
-  margin-bottom: 6px;
-}
-h2 {
-  font-size: 26px; font-weight: 600; letter-spacing: -0.02em;
-  margin-bottom: 28px; line-height: 1.3;
-}
-h2 .en { font-size: 22px; font-weight: 500; }
+.section-label { font-size: 11px; font-weight: 500; color: var(--text-secondary); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+h2 { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 24px; line-height: 1.3; }
 h3 { font-size: 13px; font-weight: 500; color: var(--text-secondary); margin-bottom: 14px; letter-spacing: 0.02em; }
+.desc { font-size: 14px; color: var(--text-secondary); line-height: 1.8; max-width: 600px; margin-bottom: 24px; font-weight: 300; }
 
-.desc {
-  font-size: 14px; color: var(--text-secondary);
-  line-height: 1.8; max-width: 600px; margin-bottom: 24px;
-  font-weight: 300;
-}
+/* THEME GRID */
+.theme-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
+.theme-card { padding: 16px; border-radius: 8px; border: 1px solid var(--border-sub); background: var(--bg-input); cursor: pointer; transition: all 0.2s; }
+.theme-card:hover { border-color: var(--accent); background: var(--bg-card); }
+.theme-card .tc-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.theme-card .tc-desc { font-size: 11px; color: var(--text-tertiary); line-height: 1.5; }
+.theme-card .tc-bar { display: flex; gap: 2px; margin-top: 10px; height: 6px; border-radius: 3px; overflow: hidden; }
+.theme-card .tc-bar span { flex: 1; }
 
-/* ============================================================
-   PHILOSOPHY CARDS
-   ============================================================ */
-.philosophy-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1px;
-  background: var(--border-sub);
-  border: 1px solid var(--border-sub);
-  border-radius: 10px; overflow: hidden;
-  margin-bottom: 20px;
-}
-.phil-card {
-  background: var(--bg-root);
-  padding: 28px 30px;
-  transition: background 0.3s;
-}
+/* PHILOSOPHY */
+.philosophy-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border-sub); border: 1px solid var(--border-sub); border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
+.phil-card { background: var(--bg-root); padding: 26px 28px; transition: background 0.3s; }
 .phil-card:hover { background: var(--bg-card); }
-.phil-card .num {
-  font-family: var(--font-mono); font-size: 11px;
-  color: var(--text-tertiary); margin-bottom: 10px;
-  letter-spacing: 0.04em;
-}
-.phil-card .title {
-  font-size: 15px; font-weight: 600; letter-spacing: -0.01em;
-  margin-bottom: 8px;
-}
-.phil-card .body {
-  font-size: 13px; color: var(--text-secondary);
-  line-height: 1.7; font-weight: 300;
-}
-.style-anchors {
-  font-size: 13px; color: var(--text-secondary);
-  padding: 16px 20px; border-radius: 8px;
-  background: var(--bg-card); line-height: 1.7;
-}
+.phil-card .num { font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary); margin-bottom: 10px; letter-spacing: 0.04em; }
+.phil-card .title { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 8px; }
+.phil-card .body { font-size: 13px; color: var(--text-secondary); line-height: 1.7; font-weight: 300; }
+.style-anchors { font-size: 13px; color: var(--text-secondary); padding: 16px 20px; border-radius: 8px; background: var(--bg-card); line-height: 1.7; }
 
-/* ============================================================
-   COLOR PALETTE
-   ============================================================ */
-.color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
-.color-card {
-  padding: 12px; border-radius: 8px;
-  border: 1px solid var(--border-sub);
-  display: flex; flex-direction: column; gap: 6px;
-  background: var(--bg-input);
-}
-.color-card .swatch { height: 44px; border-radius: 5px; }
-.color-card .name { font-size: 10px; font-family: var(--font-mono); color: var(--text-secondary); letter-spacing: 0.02em; }
+/* COLOR */
+.color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
+.color-card { padding: 10px; border-radius: 8px; border: 1px solid var(--border-sub); display: flex; flex-direction: column; gap: 6px; background: var(--bg-input); }
+.color-card .swatch { height: 38px; border-radius: 5px; }
+.color-card .name { font-size: 10px; font-family: var(--font-mono); color: var(--text-secondary); }
 .color-card .code { font-size: 10px; font-family: var(--font-mono); color: var(--text-secondary); }
 
-/* ============================================================
-   TYPOGRAPHY
-   ============================================================ */
+/* TYPOGRAPHY */
 .type-grid { display: flex; flex-direction: column; gap: 6px; }
-.type-row {
-  display: flex; align-items: baseline; gap: 24px;
-  padding: 10px 16px; border-radius: 6px;
-  border: 1px solid var(--border-sub);
-  transition: background 0.2s;
-}
+.type-row { display: flex; align-items: baseline; gap: 20px; padding: 10px 16px; border-radius: 6px; border: 1px solid var(--border-sub); transition: background 0.2s; }
 .type-row:hover { background: var(--bg-card); }
-.type-row .token { width: 120px; font-size: 10px; font-family: var(--font-mono); color: var(--text-secondary); flex-shrink: 0; }
+.type-row .token { width: 104px; font-size: 10px; font-family: var(--font-mono); color: var(--text-secondary); flex-shrink: 0; }
 .type-row .demo { flex: 1; min-width: 0; }
 
-/* ============================================================
-   SPACING
-   ============================================================ */
+/* SPACING */
 .space-grid { display: flex; flex-direction: column; gap: 3px; }
 .space-row { display: flex; align-items: center; gap: 14px; }
-.space-row .label { width: 90px; font-size: 10px; font-family: var(--font-mono); color: var(--text-secondary); flex-shrink: 0; }
+.space-row .label { width: 80px; font-size: 10px; font-family: var(--font-mono); color: var(--text-secondary); flex-shrink: 0; }
 .space-row .bar-wrap { flex: 1; max-width: 400px; }
 .space-row .bar { height: 10px; border-radius: 3px; background: var(--accent); opacity: 0.7; transition: background 0.3s, width 0.4s; }
 .space-row .val { font-size: 10px; font-family: var(--font-mono); color: var(--text-secondary); }
 
-/* ============================================================
-   COMPONENTS
-   ============================================================ */
+/* COMPONENTS */
 .comp-group { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 28px; }
-.btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 7px 18px; border-radius: var(--btn-radius);
-  font-size: 13px; font-family: var(--font-body); font-weight: 500;
-  cursor: pointer; transition: all 0.2s; border: none; text-decoration: none;
-}
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 18px; border-radius: var(--btn-radius); font-size: 13px; font-family: var(--font-body); font-weight: 500; cursor: pointer; transition: all 0.2s; border: none; text-decoration: none; }
 .btn-primary { background: var(--accent); color: #fff; }
 .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
 .btn-secondary { background: transparent; color: var(--text-primary); border: 1px solid var(--border-main); }
@@ -266,43 +201,20 @@ h3 { font-size: 13px; font-weight: 500; color: var(--text-secondary); margin-bot
 .btn-ghost { background: transparent; color: var(--text-secondary); }
 .btn-ghost:hover { color: var(--text-primary); background: var(--bg-card-hover); }
 .btn-danger { background: var(--error); color: #fff; }
-.btn-danger:hover { opacity: 0.9; transform: translateY(-1px); }
-
+.btn-danger:hover { opacity: 0.9; }
 .card-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 28px; }
-.demo-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-main);
-  border-radius: var(--card-radius);
-  padding: 22px 26px;
-  min-width: 180px; flex: 1;
-  display: flex; flex-direction: column; gap: 6px;
-  transition: background 0.3s, border-color 0.3s;
-}
+.demo-card { background: var(--bg-card); border: var(--card-border); border-radius: var(--card-radius); padding: 22px 26px; min-width: 170px; flex: 1; display: flex; flex-direction: column; gap: 6px; transition: background 0.3s, border-color 0.3s; box-shadow: var(--card-shadow); }
 .demo-card:hover { background: var(--bg-card-hover); border-color: var(--accent); }
 .demo-card .card-label { font-size: 10px; color: var(--text-secondary); letter-spacing: 0.04em; text-transform: uppercase; }
-.demo-card .card-value { font-size: 30px; font-weight: 700; font-family: var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: -0.04em; }
+.demo-card .card-value { font-size: 28px; font-weight: 700; font-family: var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: -0.04em; }
 .demo-card .card-delta { font-size: 14px; font-weight: 500; }
 .demo-card .card-delta.up { color: var(--up); }
 .demo-card .card-delta.down { color: var(--down); }
-
-.table-wrap {
-  background: var(--bg-card);
-  border: 1px solid var(--border-main);
-  border-radius: var(--card-radius);
-  overflow: hidden;
-  transition: background 0.3s, border-color 0.3s;
-}
+.table-wrap { background: var(--bg-card); border: 1px solid var(--border-main); border-radius: var(--card-radius); overflow: hidden; transition: background 0.3s, border-color 0.3s; }
 .demo-table { width: 100%; border-collapse: collapse; }
-.demo-table th {
-  padding: 10px 18px; font-size: 10px; font-weight: 500;
-  color: var(--text-secondary); letter-spacing: 0.05em; text-align: left; text-transform: uppercase;
-  border-bottom: 1px solid var(--border-sub);
-}
+.demo-table th { padding: 10px 18px; font-size: 10px; font-weight: 500; color: var(--text-secondary); letter-spacing: 0.05em; text-align: left; text-transform: uppercase; border-bottom: 1px solid var(--border-sub); }
 .demo-table th.num { text-align: right; }
-.demo-table td {
-  padding: 10px 18px; font-size: 13px;
-  border-bottom: 1px solid var(--border-sub);
-}
+.demo-table td { padding: 10px 18px; font-size: 13px; border-bottom: 1px solid var(--border-sub); }
 .demo-table td.num { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 .demo-table tbody tr:last-child td { border-bottom: none; }
 .demo-table tbody tr { transition: background 0.15s; }
@@ -310,62 +222,37 @@ h3 { font-size: 13px; font-weight: 500; color: var(--text-secondary); margin-bot
 .demo-table .up { color: var(--up); }
 .demo-table .down { color: var(--down); }
 
-/* ============================================================
-   CODE
-   ============================================================ */
-.code-block {
-  background: var(--code-bg); border: 1px solid var(--border-sub);
-  border-radius: 8px; padding: 20px;
-  font-family: var(--font-mono); font-size: 12px; line-height: 1.9;
-  overflow-x: auto; margin-top: 14px;
-  color: #e8e8ed;
-}
-.code-block .cm { color: #8e8e96; }
+/* CODE */
+.code-block { background: var(--code-bg); border: 1px solid var(--border-sub); border-radius: 8px; padding: 18px 20px; font-family: var(--font-mono); font-size: 12px; line-height: 1.9; overflow-x: auto; margin-top: 14px; color: #e8e8ed; }
+.code-block .cm { color: #8e8e96; user-select: none; }
 .code-block .kw { color: #7b9cff; }
 .code-block .str { color: #34a853; }
 .code-block .num { color: #ffa726; }
 
-/* ============================================================
-   FOOTER
-   ============================================================ */
-footer {
-  padding: 36px 0;
-  text-align: center; font-size: 12px; color: var(--text-tertiary);
-  border-top: 1px solid var(--border-main);
-}
+/* FOOTER */
+footer { padding: 36px 0; text-align: center; font-size: 12px; color: var(--text-tertiary); border-top: 1px solid var(--border-main); }
 footer a { color: var(--accent); text-decoration: none; transition: opacity 0.2s; }
 footer a:hover { opacity: 0.8; }
 
-/* ============================================================
-   SCROLLBAR
-   ============================================================ */
+/* SCROLLBAR */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border-main); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
 
-/* ============================================================
-   ANIMATIONS
-   ============================================================ */
+/* ANIMATIONS */
 .fade-in { opacity: 0; transform: translateY(12px); animation: fadeUp 0.6s ease forwards; }
 .fade-in:nth-child(1) { animation-delay: 0.05s; }
 .fade-in:nth-child(2) { animation-delay: 0.1s; }
 .fade-in:nth-child(3) { animation-delay: 0.15s; }
 .fade-in:nth-child(4) { animation-delay: 0.2s; }
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
 
-@keyframes fadeUp {
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
+/* RESPONSIVE */
 @media (max-width: 640px) {
   .wrap { padding: 0 20px; }
-  .hero h1 { font-size: 34px; }
+  .hero h1 { font-size: 30px; }
   .philosophy-grid { grid-template-columns: 1fr; }
-  .top-bar { padding: 10px 16px; flex-wrap: wrap; gap: 8px; }
-  .theme-group { order: 3; width: 100%; justify-content: center; }
+  .top-bar { padding: 10px 16px; }
   .type-row { flex-wrap: wrap; gap: 6px; }
   .type-row .token { width: auto; }
 }
@@ -376,34 +263,43 @@ footer a:hover { opacity: 0.8; }
 <!-- ==================== TOP BAR ==================== -->
 <header class="top-bar">
   <div class="top-bar-left">
-    <div class="top-bar-logo"><span class="dot"></span> Libra</div>
+    <div class="top-bar-logo"><span class="dot"></span> Libra&nbsp;<span style="font-weight:400;letter-spacing:0;color:var(--text-secondary);font-size:12px;">Design</span></div>
   </div>
   <div class="top-bar-right">
-    <button class="lang-btn" id="langToggle" onclick="toggleLang()">
-      <span id="langIndicator">EN</span>
-    </button>
-    <div class="theme-group" id="presetGroup">
+    <details class="theme-selector" id="themeSelector">
+      <summary><span id="currentThemeLabel">Terminal</span></summary>
+      <div class="theme-menu" id="themeMenu"></div>
+    </details>
+    <div class="mix-group" id="presetGroup">
       <button data-mix="0">🌙</button>
       <button data-mix="0.7" class="active">🌤</button>
       <button data-mix="1">☀</button>
     </div>
+    <button class="lang-btn" id="langToggle" onclick="toggleLang()">
+      <span id="langIndicator">EN</span>
+    </button>
   </div>
 </header>
 
 <!-- ==================== HERO ==================== -->
 <div class="hero">
   <div class="wrap">
-    <h1 class="zh">⚖️ Libra <span class="accent">极致审美</span>的设计语言</h1>
-    <h1 class="en">⚖️ Libra — <span class="accent">Extreme</span> Aesthetics</h1>
+    <h1 class="zh">⚖️ Libra <span class="accent">Design</span></h1>
+    <h1 class="en">⚖️ Libra <span class="accent">Design</span></h1>
     <div class="subtitle zh">
-      不是设计系统，是审美宣言。<br>
-      暗色为骨，留白为肉，克制为魂。
+      <strong>极致审美的设计语言，专为 Go/Rust 量身定制。</strong><br>
+      多语言金融设计系统 — 一份令牌，全语言消费
     </div>
     <div class="subtitle en">
-      Not a design system. An aesthetic manifesto.<br>
-      Darkness as bone. Whitespace as flesh. Restraint as soul.
+      <strong>Extreme aesthetics, tailored for Go and Rust.</strong><br>
+      Multi-language financial design system — one token set, all languages.
     </div>
     <div class="presets">
+      <span class="tag go">Go Native</span>
+      <span class="tag rust">Rust (Coming)</span>
+      <span class="tag ts">TypeScript</span>
+    </div>
+    <div class="presets" style="margin-top:14px;">
       <button data-mix="0" class="btn btn-secondary" style="padding:7px 18px;font-size:12px;">🌙 <span class="zh">暗色</span><span class="en">Dark</span></button>
       <button data-mix="0.7" class="btn btn-primary" style="padding:7px 18px;font-size:12px;">🌤 <span class="zh">柔光</span><span class="en">Soft</span></button>
       <button data-mix="1" class="btn btn-secondary" style="padding:7px 18px;font-size:12px;">☀ <span class="zh">亮色</span><span class="en">Light</span></button>
@@ -415,56 +311,64 @@ footer a:hover { opacity: 0.8; }
 <div class="slider-section">
   <div class="wrap">
     <div class="slider-wrap">
-      <label class="zh">主题混合</label>
-      <label class="en">Theme Mix</label>
+      <label class="zh">暗⸺亮</label>
+      <label class="en">Dark⸺Light</label>
       <input type="range" id="mixSlider" min="0" max="1" step="0.01" value="0.7">
       <span class="mix-label" id="mixLabel">70%</span>
     </div>
   </div>
 </div>
 
+<!-- ==================== THEMES SHOWCASE ==================== -->
+<section>
+  <div class="wrap">
+    <div class="section-label zh">主题预设</div>
+    <div class="section-label en">Theme Presets</div>
+    <h2>
+      <span class="zh">10 套金融术语主题</span>
+      <span class="en">10 financial-terms themes</span>
+    </h2>
+    <p class="desc zh">每套主题 = 17 暗色端点色 + 17 亮色端点色。点击下方卡片切换到该主题的默认混合比例。</p>
+    <p class="desc en">Each theme = 17 dark + 17 light endpoint colors. Click a card to preview.</p>
+    <div class="theme-grid" id="themeGrid"></div>
+  </div>
+</section>
+
 <!-- ==================== PHILOSOPHY ==================== -->
 <section>
   <div class="wrap">
     <div class="section-label zh">设计哲学</div>
     <div class="section-label en">Philosophy</div>
-    <h2>
-      <span class="zh">每一行代码都是审美选择</span>
-      <span class="en">Every line of code is an aesthetic choice</span>
-    </h2>
+    <h2><span class="zh">每一行代码都是审美选择</span><span class="en">Every line of code is an aesthetic choice</span></h2>
     <div class="philosophy-grid">
       <div class="phil-card fade-in">
         <div class="num">01</div>
-        <div class="title zh">一页一主角</div>
-        <div class="title en">One Sovereign Per View</div>
-        <div class="body zh">每页只有一个视觉锚点。图表页主角是图表，侧栏、标题、工具栏都是配角。主角出场时，配角退后。</div>
-        <div class="body en">Every view has exactly one visual anchor. When the chart speaks, the sidebar listens. The supporting role exists only to elevate the protagonist.</div>
+        <div class="title zh">一页一主角</div><div class="title en">One Sovereign Per View</div>
+        <div class="body zh">每页只有一个视觉锚点。图表页主角是图表，侧栏、标题、工具栏都是配角。</div>
+        <div class="body en">Every view has exactly one visual anchor. When the chart speaks, the sidebar listens.</div>
       </div>
       <div class="phil-card fade-in">
         <div class="num">02</div>
-        <div class="title zh">细节即信仰</div>
-        <div class="title en">Details Are Dogma</div>
-        <div class="body zh">1px 的偏差、0.5 度的灰阶差、2px 的对不齐——这些不是 bug，是信仰的裂缝。完美不是没有东西可加，而是没有东西可减。</div>
-        <div class="body en">A 1px misalignment is not a bug, it's a crack in faith. Perfection is achieved not when there's nothing left to add, but when there's nothing left to take away.</div>
+        <div class="title zh">细节即信仰</div><div class="title en">Details Are Dogma</div>
+        <div class="body zh">1px 的偏差不是 bug，是信仰的裂缝。完美不是没有东西可加，而是没有东西可减。</div>
+        <div class="body en">A 1px misalignment is not a bug, it's a crack in faith. Perfection is achieved when nothing remains to remove.</div>
       </div>
       <div class="phil-card fade-in">
         <div class="num">03</div>
-        <div class="title zh">留白即呼吸</div>
-        <div class="title en">Space Is Breath</div>
-        <div class="body zh">密集是焦虑的，松弛是自信的。间距不是浪费，是沉默的音符。4px 基数体系确保每一次呼吸都节奏一致。</div>
-        <div class="body en">Density is anxiety. Space is confidence. Our 4px baseline ensures every breath follows the same rhythm — generous, deliberate, and consistent.</div>
+        <div class="title zh">留白即呼吸</div><div class="title en">Space Is Breath</div>
+        <div class="body zh">密集是焦虑的，松弛是自信的。4px 基数体系确保每一次呼吸都节奏一致。</div>
+        <div class="body en">Density is anxiety. Space is confidence. Our 4px baseline ensures every breath follows the same rhythm.</div>
       </div>
       <div class="phil-card fade-in">
         <div class="num">04</div>
-        <div class="title zh">克制即力量</div>
-        <div class="title en">Restraint Is Power</div>
-        <div class="body zh">全界面只有红绿两种有彩色。两个颜色让你做更好的决策——90% 的中性色 + 10% 的强调色 = 100% 的清晰度。</div>
-        <div class="body en">Only two accent colors across the entire surface. Two colors force better decisions. 90% neutral + 10% accent = 100% clarity. Constraints are not limitations; they are liberation.</div>
+        <div class="title zh">克制即力量</div><div class="title en">Restraint Is Power</div>
+        <div class="body zh">全界面只有两种有彩色。90% 中性色 + 10% 强调色 = 100% 清晰。</div>
+        <div class="body en">Two accent colors across the entire surface. 90% neutral + 10% accent = 100% clarity.</div>
       </div>
     </div>
     <div class="style-anchors">
-      <span class="zh">风格锚定：<strong style="color:var(--text-primary);">Linear</strong> 的暗色克制 + <strong style="color:var(--text-primary);">Stripe</strong> 的排版精度 + <strong style="color:var(--text-primary);">日本设计</strong> 的减法美学</span>
-      <span class="en">Anchored by <strong style="color:var(--text-primary);">Linear</strong>'s dark restraint, <strong style="color:var(--text-primary);">Stripe</strong>'s typographic precision, and <strong style="color:var(--text-primary);">Japanese</strong> "subtraction" aesthetics.</span>
+      <span class="zh">风格锚定：<strong style="color:var(--text-primary);">Linear</strong> 的暗色克制 + <strong style="color:var(--text-primary);">Stripe</strong> 的排版精度 + <strong style="color:var(--text-primary);">Bloomberg Terminal</strong> 的金融基因</span>
+      <span class="en">Anchored by <strong style="color:var(--text-primary);">Linear</strong>'s dark restraint, <strong style="color:var(--text-primary);">Stripe</strong>'s typographic precision, <strong style="color:var(--text-primary);">Bloomberg Terminal</strong>'s financial DNA.</span>
     </div>
   </div>
 </section>
@@ -472,46 +376,21 @@ footer a:hover { opacity: 0.8; }
 <!-- ==================== COLOR SYSTEM ==================== -->
 <section>
   <div class="wrap">
-    <div class="section-label zh">色彩系统</div>
-    <div class="section-label en">Color System</div>
-    <h2>
-      <span class="zh">90% 中性色，10% 强调色</span>
-      <span class="en">90% neutral, 10% accent</span>
-    </h2>
-
-    <h3 class="zh">涨跌色 — 仅有的两种有彩色</h3>
-    <h3 class="en">Up & Down — The only two chromatic colors</h3>
+    <div class="section-label zh">色彩系统</div><div class="section-label en">Color System</div>
+    <h2><span class="zh">90% 中性色，10% 强调色</span><span class="en">90% neutral, 10% accent</span></h2>
+    <h3 class="zh">涨跌色 — 仅有的两种有彩色</h3><h3 class="en">Up & Down — The only two chromatic colors</h3>
     <div class="color-grid" style="margin-bottom:20px;">
       <div class="color-card"><div class="swatch" style="background:#ef5350;"></div><div class="name">--up</div><div class="code">#ef5350</div></div>
       <div class="color-card"><div class="swatch" style="background:#26a69a;"></div><div class="name">--down</div><div class="code">#26a69a</div></div>
       <div class="color-card"><div class="swatch" style="background:#9e9e9e;"></div><div class="name">--flat</div><div class="code">#9e9e9e</div></div>
     </div>
-
-    <h3 class="zh">表面体系 — 四层堆叠（参考 Linear）</h3>
-    <h3 class="en">Surface Stack — Four-tier elevation (a la Linear)</h3>
-    <p class="desc zh">层次靠明度区分，不依赖阴影。从最深画布到最高模态，四层表面覆盖所有场景。</p>
-    <p class="desc en">Depth is communicated through luminance, not shadows. Four surface tiers cover every scenario from canvas to modal.</p>
+    <h3 class="zh">表面体系 — 四层堆叠</h3><h3 class="en">Surface Stack — Four-tier elevation</h3>
+    <p class="desc zh">层次靠明度区分，不依赖阴影。</p><p class="desc en">Depth through luminance, not shadows.</p>
     <div class="color-grid" style="margin-bottom:20px;">
-      <div class="color-card"><div class="swatch" style="background:#0c0c0e;"></div><div class="name">--bg-root</div><div class="code">#0c0c0e</div></div>
-      <div class="color-card"><div class="swatch" style="background:#121214;"></div><div class="name">--bg-card</div><div class="code">#121214</div></div>
-      <div class="color-card"><div class="swatch" style="background:#18181b;"></div><div class="name">--bg-card-hover</div><div class="code">#18181b</div></div>
-      <div class="color-card"><div class="swatch" style="background:#1e1e22;"></div><div class="name">--border-main</div><div class="code">#1e1e22</div></div>
-    </div>
-
-    <h3 class="zh">双主题混合引擎</h3>
-    <h3 class="en">Dual-Theme Blend Engine</h3>
-    <p class="desc zh">在暗色与亮色之间无缝过渡，背后是 gamma-aware 颜色插值算法。三个预置点——暗色(0%)、柔光(70%)、亮色(100%)——加上任意比例手调。用上面的滑块体验从 Linear 暗到 Stripe 亮的渐变。</p>
-    <p class="desc en">Seamlessly transition between dark and light via gamma-aware color interpolation. Three presets — Dark (0%), Soft (70%), Light (100%) — plus arbitrary fine-tuning. Use the slider above to experience the gradient from Linear dark to Stripe light.</p>
-    <div class="code-block">
-<span class="cm"><span class="zh">// 五次方缓出：t=0.3时已达83%目标值</span><span class="en">// Quintic ease-out: t=0.3 reaches 83% of target</span></span><br>
-<span class="kw">function</span> textCurve(t) {<br>
-&nbsp;&nbsp;<span class="kw">return</span> <span class="num">1</span> - Math.<span class="kw">pow</span>(<span class="num">1</span> - t, <span class="num">5</span>);<br>
-}<br><br>
-<span class="cm"><span class="zh">// Gamma-aware 插值：sqrt 加权，过渡柔和自然</span><span class="en">// Gamma-aware interpolation: sqrt-weighted for smooth crossfade</span></span><br>
-<span class="kw">function</span> lerpColor(hex1, hex2, t) {<br>
-&nbsp;&nbsp;<span class="kw">const</span> r = Math.<span class="kw">round</span>(Math.<span class="kw">sqrt</span>((<span class="num">1</span>-t)*r1*r1 + t*r2*r2));<br>
-&nbsp;&nbsp;<span class="kw">return</span> <span class="str">'#'</span> + ((<span class="num">1</span>&lt;&lt;<span class="num">24</span>)+(r&lt;&lt;<span class="num">16</span>)+(g&lt;&lt;<span class="num">8</span>)+b).toString(<span class="num">16</span>).slice(<span class="num">1</span>);<br>
-}
+      <div class="color-card"><div class="swatch" style="background:#0c0c0e;"></div><div class="name">--bg-root</div><div class="code" id="demo-bg-root">#0c0c0e</div></div>
+      <div class="color-card"><div class="swatch" style="background:#121214;"></div><div class="name">--bg-card</div><div class="code" id="demo-bg-card">#121214</div></div>
+      <div class="color-card"><div class="swatch" style="background:#18181b;"></div><div class="name">--bg-card-hover</div><div class="code" id="demo-bg-hover">#18181b</div></div>
+      <div class="color-card"><div class="swatch" style="background:#1e1e22;"></div><div class="name">--border-main</div><div class="code" id="demo-border">#1e1e22</div></div>
     </div>
   </div>
 </section>
@@ -519,71 +398,17 @@ footer a:hover { opacity: 0.8; }
 <!-- ==================== TYPOGRAPHY ==================== -->
 <section>
   <div class="wrap">
-    <div class="section-label zh">字体系统</div>
-    <div class="section-label en">Typography</div>
-    <h2>
-      <span class="zh">字体即声音</span>
-      <span class="en">Type is voice</span>
-    </h2>
-    <p class="desc zh">Inter 服务于正文的清晰可读，JetBrains Mono 承载数字的严谨对齐。所有数值强制等宽 + tabular-nums，小数点严格对齐——这不是功能，是态度。</p>
-    <p class="desc en">Inter for clarity. JetBrains Mono for precision. Every numeric value uses tabular-nums — decimal points align not by accident, but by doctrine.</p>
+    <div class="section-label zh">字体系统</div><div class="section-label en">Typography</div>
+    <h2><span class="zh">字体即声音</span><span class="en">Type is voice</span></h2>
+    <p class="desc zh">Inter 服务于正文清晰可读，JetBrains Mono 承载数字严谨对齐。所有数值强制等宽 + tabular-nums。</p>
+    <p class="desc en">Inter for clarity. JetBrains Mono for precision. Every numeric value uses tabular-nums.</p>
     <div class="type-grid">
-      <div class="type-row">
-        <span class="token">--text-4xl <span style="color:var(--text-tertiary);">40px</span></span>
-        <span class="demo" style="font-size:40px;font-weight:700;font-family:var(--font-mono);letter-spacing:-0.04em;">3,382.45</span>
-      </div>
-      <div class="type-row">
-        <span class="token">--text-3xl <span style="color:var(--text-tertiary);">32px</span></span>
-        <span class="demo" style="font-size:32px;font-weight:700;font-family:var(--font-mono);letter-spacing:-0.04em;">+1.23%</span>
-      </div>
-      <div class="type-row">
-        <span class="token">--text-2xl <span style="color:var(--text-tertiary);">24px</span></span>
-        <span class="demo" style="font-size:24px;font-weight:600;letter-spacing:-0.03em;"><span class="zh">贵州茅台</span><span class="en">Kweichow Moutai</span></span>
-      </div>
-      <div class="type-row">
-        <span class="token">--text-xl <span style="color:var(--text-tertiary);">20px</span></span>
-        <span class="demo" style="font-size:20px;font-weight:600;letter-spacing:-0.03em;"><span class="zh">上证指数实时行情</span><span class="en">SSE Composite Index</span></span>
-      </div>
-      <div class="type-row">
-        <span class="token">--text-lg <span style="color:var(--text-tertiary);">16px</span></span>
-        <span class="demo" style="font-size:16px;font-weight:600;letter-spacing:-0.02em;"><span class="zh">板块涨跌</span><span class="en">Sector Performance</span></span>
-      </div>
-      <div class="type-row">
-        <span class="token">--text-base <span style="color:var(--text-tertiary);">13px</span></span>
-        <span class="demo" style="font-size:13px;">sh600519 · 1,689.50 · <span style="color:var(--up);">+2.13%</span></span>
-      </div>
-      <div class="type-row">
-        <span class="token">--text-sm <span style="color:var(--text-tertiary);">12px</span></span>
-        <span class="demo" style="font-size:12px;color:var(--text-secondary);"><span class="zh">代码 名称 现价 涨幅 成交额</span><span class="en">Code · Name · Price · Change · Volume</span></span>
-      </div>
-      <div class="type-row">
-        <span class="token">--text-xs <span style="color:var(--text-tertiary);">10px</span></span>
-        <span class="demo" style="font-size:10px;color:var(--text-tertiary);font-family:var(--font-mono);">3,382 &nbsp; 3,383 &nbsp; 3,381 &nbsp; 3,384</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ==================== SPACING ==================== -->
-<section>
-  <div class="wrap">
-    <div class="section-label zh">间距系统</div>
-    <div class="section-label en">Spacing</div>
-    <h2>
-      <span class="zh">4px 基数，8 级音阶</span>
-      <span class="en">4px root, 8-step scale</span>
-    </h2>
-    <p class="desc zh">从 4px 到 64px，八个间距值覆盖所有场景。音阶式的间距体系确保全界面节奏统一——不管是按钮内边距还是页面大幅留白，都出自同一套音符。</p>
-    <p class="desc en">Eight values from 4px to 64px cover every spacing need. A musical scale of whitespace ensures rhythmic consistency — from button padding to page margins, all from the same set of notes.</p>
-    <div class="space-grid">
-      <div class="space-row"><span class="label">--space-1</span><div class="bar-wrap"><div class="bar" style="width:4px;"></div></div><span class="val">4px</span></div>
-      <div class="space-row"><span class="label">--space-2</span><div class="bar-wrap"><div class="bar" style="width:8px;"></div></div><span class="val">8px</span></div>
-      <div class="space-row"><span class="label">--space-3</span><div class="bar-wrap"><div class="bar" style="width:12px;"></div></div><span class="val">12px</span></div>
-      <div class="space-row"><span class="label">--space-4</span><div class="bar-wrap"><div class="bar" style="width:16px;"></div></div><span class="val">16px</span></div>
-      <div class="space-row"><span class="label">--space-5</span><div class="bar-wrap"><div class="bar" style="width:24px;"></div></div><span class="val">24px</span></div>
-      <div class="space-row"><span class="label">--space-6</span><div class="bar-wrap"><div class="bar" style="width:32px;"></div></div><span class="val">32px</span></div>
-      <div class="space-row"><span class="label">--space-7</span><div class="bar-wrap"><div class="bar" style="width:48px;"></div></div><span class="val">48px</span></div>
-      <div class="space-row"><span class="label">--space-8</span><div class="bar-wrap"><div class="bar" style="width:64px;"></div></div><span class="val">64px</span></div>
+      <div class="type-row"><span class="token">--text-4xl <span style="color:var(--text-tertiary);">40px</span></span><span class="demo" style="font-size:40px;font-weight:700;font-family:var(--font-mono);letter-spacing:-0.04em;">3,382.45</span></div>
+      <div class="type-row"><span class="token">--text-3xl <span style="color:var(--text-tertiary);">32px</span></span><span class="demo" style="font-size:32px;font-weight:700;font-family:var(--font-mono);letter-spacing:-0.04em;">+1.23%</span></div>
+      <div class="type-row"><span class="token">--text-2xl <span style="color:var(--text-tertiary);">24px</span></span><span class="demo" style="font-size:24px;font-weight:600;letter-spacing:-0.03em;"><span class="zh">贵州茅台</span><span class="en">Kweichow Moutai</span></span></div>
+      <div class="type-row"><span class="token">--text-base <span style="color:var(--text-tertiary);">13px</span></span><span class="demo" style="font-size:13px;">sh600519 · 1,689.50 · <span style="color:var(--up);">+2.13%</span></span></div>
+      <div class="type-row"><span class="token">--text-sm <span style="color:var(--text-tertiary);">12px</span></span><span class="demo" style="font-size:12px;color:var(--text-secondary);"><span class="zh">代码 名称 现价 涨幅 成交额</span><span class="en">Code · Name · Price · Change · Volume</span></span></div>
+      <div class="type-row"><span class="token">--text-xs <span style="color:var(--text-tertiary);">10px</span></span><span class="demo" style="font-size:10px;color:var(--text-tertiary);font-family:var(--font-mono);">3,382 &nbsp; 3,383 &nbsp; 3,381 &nbsp; 3,384</span></div>
     </div>
   </div>
 </section>
@@ -591,15 +416,8 @@ footer a:hover { opacity: 0.8; }
 <!-- ==================== COMPONENTS ==================== -->
 <section>
   <div class="wrap">
-    <div class="section-label zh">组件画廊</div>
-    <div class="section-label en">Component Gallery</div>
-    <h2>
-      <span class="zh">做的少，做的好</span>
-      <span class="en">Fewer components, better care</span>
-    </h2>
-    <p class="desc zh">每个组件都经过像素级审视。按钮的圆角随主题混合比例在 8px-20px 之间过渡，卡片的边框在亮色模式下自动消失。</p>
-    <p class="desc en">Every component is pixel-perfected. Button radius transitions from 8px to 20px with the theme mix. Card borders dissolve in light mode. These are not features; they are consequences of a coherent system.</p>
-
+    <div class="section-label zh">组件画廊</div><div class="section-label en">Component Gallery</div>
+    <h2><span class="zh">做的少，做的好</span><span class="en">Fewer components, better care</span></h2>
     <h3 class="zh">按钮 · Button</h3>
     <div class="comp-group">
       <button class="btn btn-primary"><span class="zh">主要操作</span><span class="en">Primary</span></button>
@@ -607,30 +425,16 @@ footer a:hover { opacity: 0.8; }
       <button class="btn btn-ghost"><span class="zh">文字按钮</span><span class="en">Ghost</span></button>
       <button class="btn btn-danger"><span class="zh">危险操作</span><span class="en">Danger</span></button>
     </div>
-
-    <h3 class="zh">卡片 · Card</h3>
+    <h3 class="zh">金融卡片 · Financial Cards</h3>
     <div class="card-row">
-      <div class="demo-card">
-        <div class="card-label"><span class="zh">上证指数</span><span class="en">SSE Index</span></div>
-        <div class="card-value" style="color:var(--up);">3,382.45</div>
-        <div class="card-delta up">+1.23%</div>
-      </div>
-      <div class="demo-card">
-        <div class="card-label"><span class="zh">深证成指</span><span class="en">SZSE Index</span></div>
-        <div class="card-value" style="color:var(--down);">10,876.32</div>
-        <div class="card-delta down">-0.45%</div>
-      </div>
-      <div class="demo-card">
-        <div class="card-label"><span class="zh">创业板指</span><span class="en">ChiNext Index</span></div>
-        <div class="card-value" style="color:var(--up);">2,154.78</div>
-        <div class="card-delta up">+0.88%</div>
-      </div>
+      <div class="demo-card"><div class="card-label"><span class="zh">上证指数</span><span class="en">SSE Index</span></div><div class="card-value" style="color:var(--up);">3,382.45</div><div class="card-delta up">+1.23%</div></div>
+      <div class="demo-card"><div class="card-label"><span class="zh">深证成指</span><span class="en">SZSE Index</span></div><div class="card-value" style="color:var(--down);">10,876.32</div><div class="card-delta down">-0.45%</div></div>
+      <div class="demo-card"><div class="card-label"><span class="zh">创业板指</span><span class="en">ChiNext Index</span></div><div class="card-value" style="color:var(--up);">2,154.78</div><div class="card-delta up">+0.88%</div></div>
     </div>
-
     <h3 class="zh">表格 · Table</h3>
     <div class="table-wrap">
       <table class="demo-table">
-        <thead><tr><th><span class="zh">代码</span><span class="en">Code</span></th><th><span class="zh">名称</span><span class="en">Name</span></th><th class="num"><span class="zh">现价</span><span class="en">Price</span></th><th class="num"><span class="zh">涨幅</span><span class="en">Change</span></th><th class="num"><span class="zh">成交额</span><span class="en">Volume</span></th></tr></thead>
+        <thead><tr><th><span class="zh">代码</span><span class="en">Code</span></th><th><span class="zh">名称</span><span class="en">Name</span></th><th class="num"><span class="zh">现价</span><span class="en">Price</span></th><th class="num"><span class="zh">涨幅</span><span class="en">%</span></th><th class="num"><span class="zh">成交额</span><span class="en">Volume</span></th></tr></thead>
         <tbody>
           <tr><td>sh600519</td><td><span class="zh">贵州茅台</span><span class="en">Kweichow Moutai</span></td><td class="num">1,689.50</td><td class="num up">+2.15%</td><td class="num">17.23 亿</td></tr>
           <tr><td>sz000858</td><td><span class="zh">五粮液</span><span class="en">Wuliangye</span></td><td class="num">142.80</td><td class="num down">-1.34%</td><td class="num">4.10 亿</td></tr>
@@ -642,148 +446,142 @@ footer a:hover { opacity: 0.8; }
   </div>
 </section>
 
-<!-- ==================== GETTING STARTED ==================== -->
+<!-- ==================== GO/RUST NATIVE ==================== -->
 <section>
   <div class="wrap">
-    <div class="section-label zh">快速开始</div>
-    <div class="section-label en">Getting Started</div>
-    <h2>
-      <span class="zh">三行命令，拥抱极致</span>
-      <span class="en">Three commands to embrace the extreme</span>
-    </h2>
+    <div class="section-label zh">Go/Rust 原生</div><div class="section-label en">Go/Rust Native</div>
+    <h2><span class="zh">零 npm 依赖的色值引擎</span><span class="en">Zero npm dependency color engine</span></h2>
+    <p class="desc zh">Go 后端开发者不应该为了用一套色值而引入 Node 生态。直接 `go get`，在 main.go 里 import，不需要 package.json。</p>
+    <p class="desc en">Go developers shouldn't import Node's ecosystem just to use a set of colors. Just `go get` and import in your main.go. No package.json needed.</p>
+
+    <h3 class="zh">Go — 色值常量 + LerpColor + CSS 生成</h3>
     <div class="code-block">
-<span class="cm"><span class="zh"># 安装设计 Token</span><span class="en"># Install design tokens</span></span><br>
-npm install @libra/tokens<br><br>
-<span class="cm"><span class="zh"># 在入口文件引入</span><span class="en"># Import in your entry</span></span><br>
-<span class="kw">import</span> <span class="str">'@libra/tokens/css'</span>
+<span class="cm">// go get github.com/libra/go-tokens</span><br>
+<span class="kw">import</span> <span class="str">"github.com/libra/go-tokens"</span><br><br>
+<span class="cm">// 涨跌色常量</span><br>upColor := tokens.ColorUp    <span class="cm">// "#ef5350"</span><br>downColor := tokens.ColorDown  <span class="cm">// "#26a69a"</span><br><br>
+<span class="cm">// 颜色插值（gamma-aware）</span><br>mid := tokens.LerpColor(<span class="str">"#0c0c0e"</span>, <span class="str">"#ffffff"</span>, 0.5)<br><br>
+<span class="cm">// 生成完整 tokens.css（78 个 CSS 变量）</span><br>css := tokens.GenerateCSS()<br>os.WriteFile(<span class="str">"tokens.css"</span>, []byte(css), 0644)
     </div>
-    <div class="code-block" style="margin-top:12px;">
-<span class="cm"><span class="zh"># 主题引擎（浏览器环境）</span><span class="en"># Theme engine (browser)</span></span><br>
-npm install @libra/theme<br><br>
-<span class="kw">import</span> { applyPreset } <span class="kw">from</span> <span class="str">'@libra/theme'</span><br>
-applyPreset(<span class="str">'dark'</span>);  <span class="cm"><span class="zh">// 🌙 暗色</span><span class="en">// 🌙 Dark</span></span><br>
-applyPreset(<span class="str">'soft'</span>);  <span class="cm"><span class="zh">// 🌤 柔光（默认）</span><span class="en">// 🌤 Soft (default)</span></span><br>
-applyPreset(<span class="str">'light'</span>); <span class="cm"><span class="zh">// ☀ 亮色</span><span class="en">// ☀ Light</span></span>
+
+    <h3 class="zh" style="margin-top:24px;">CLI — 单二进制，零依赖</h3>
+    <div class="code-block">
+<span class="cm"># go install</span><br>go install github.com/libra/go-cli/cmd/libra@latest<br>libra init <span class="cm"># → tokens.css (4289 bytes, 78 CSS vars)</span>
     </div>
-    <div class="code-block" style="margin-top:12px;">
-<span class="cm"><span class="zh"># CLI 安装组件（类似 shadcn）</span><span class="en"># CLI components (shadcn-style)</span></span><br>
-npx @libra/cli init<br>
-npx @libra/cli add button<br>
-npx @libra/cli add card<br>
-npx @libra/cli add table
+
+    <h3 class="zh" style="margin-top:24px;">MCP Server — AI Agent 设计令牌消费</h3>
+    <div class="code-block">
+<span class="cm"># 安装 Go 原生 MCP Server（单二进制，10ms 冷启动）</span><br>go install github.com/libra/go-mcp@latest<br><br>
+<span class="cm"># 3 tools + 2 resources</span><br>get_design_tokens  <span class="cm">// 完整设计令牌 JSON</span><br>generate_css       <span class="cm">// 生成 tokens.css</span><br>lerp_color         <span class="cm">// hex 颜色线性插值</span>
     </div>
   </div>
 </section>
 
-<!-- ==================== MCP SERVER ==================== -->
+<!-- ==================== GETTING STARTED ==================== -->
 <section>
   <div class="wrap">
-    <div class="section-label zh">AI 集成</div>
-    <div class="section-label en">AI Integration</div>
-    <h2>
-      <span class="zh">给 AI 装上 Libra 的眼睛</span>
-      <span class="en">Give AI eyes for Libra</span>
-    </h2>
-    <p class="desc zh">@libra/mcp-server 将设计系统暴露为 MCP（Model Context Protocol）工具，让 Claude Code、Cursor 等 AI 编码助手直接生成符合 Libra 设计语言的 UI 代码。</p>
-    <p class="desc en">@libra/mcp-server exposes Libra's design tokens as MCP (Model Context Protocol) tools, enabling AI coding assistants like Claude Code and Cursor to generate UI code that follows Libra's design language.</p>
-
-    <h3 class="zh">提供的工具 · Available Tools</h3>
-    <div class="table-wrap" style="margin-bottom:20px;">
-      <table class="demo-table">
-        <thead><tr><th><span class="zh">工具</span><span class="en">Tool</span></th><th><span class="zh">功能</span><span class="en">Description</span></th></tr></thead>
-        <tbody>
-          <tr><td class="num" style="font-family:var(--font-mono);">get_tokens</td><td><span class="zh">返回所有 CSS 自定义属性（暗色/亮色）</span><span class="en">Return all CSS custom properties</span></td></tr>
-          <tr><td class="num" style="font-family:var(--font-mono);">get_semantic_colors</td><td><span class="zh">返回语义色板（涨跌色/均线色/功能色）</span><span class="en">Return semantic color palette</span></td></tr>
-          <tr><td class="num" style="font-family:var(--font-mono);">get_typography</td><td><span class="zh">返回字体栈和字号阶梯</span><span class="en">Return font stacks and size scale</span></td></tr>
-          <tr><td class="num" style="font-family:var(--font-mono);">get_spacing</td><td><span class="zh">返回 4px 基数间距体系</span><span class="en">Return spacing scale</span></td></tr>
-          <tr><td class="num" style="font-family:var(--font-mono);">get_components</td><td><span class="zh">返回组件规范（按钮/卡片/表格）</span><span class="en">Return component specifications</span></td></tr>
-          <tr><td class="num" style="font-family:var(--font-mono);">generate_css</td><td><span class="zh">生成完整 tokens.css</span><span class="en">Generate complete tokens.css</span></td></tr>
-          <tr><td class="num" style="font-family:var(--font-mono);">generate_component</td><td><span class="zh">生成 React 组件代码（按钮/卡片）</span><span class="en">Generate React component code</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h3 class="zh">Claude Code 配置</h3>
-    <h3 class="en">Claude Code Config</h3>
+    <div class="section-label zh">快速开始</div><div class="section-label en">Getting Started</div>
+    <h2><span class="zh">三行命令，拥抱极致</span><span class="en">Three commands to embrace the extreme</span></h2>
     <div class="code-block">
-<span class="cm">~/.claude/settings.json</span><br>
-{<br>
-&nbsp;&nbsp;<span class="str">"mcpServers"</span>: {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"libra"</span>: {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"command"</span>: <span class="str">"npx"</span>,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"args"</span>: [<span class="str">"@libra/mcp-server"</span>]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;}<br>
-&nbsp;&nbsp;}<br>
-}
+<span class="cm"><span class="zh"># 安装设计 Token</span><span class="en"># Install design tokens</span></span><br>npm install @libra-design/tokens<br><br>
+<span class="cm"><span class="zh"># 在入口文件引入</span><span class="en"># Import in your entry</span></span><br><span class="kw">import</span> <span class="str">'@libra-design/tokens/css'</span>
+    </div>
+    <div class="code-block" style="margin-top:12px;">
+<span class="cm"><span class="zh"># 主题引擎（浏览器环境）</span><span class="en"># Theme engine (browser)</span></span><br>npm install @libra-design/theme<br><br>
+<span class="kw">import</span> { applyPreset } <span class="kw">from</span> <span class="str">'@libra-design/theme'</span><br>applyPreset(<span class="str">'terminal'</span>);  <span class="cm"><span class="zh">// 📈 Terminal 主题</span><span class="en">// 📈 Terminal</span></span><br>applyPreset(<span class="str">'claude'</span>);    <span class="cm"><span class="zh">// 🎨 任选命名主题</span><span class="en">// 🎨 Named themes</span></span>
+    </div>
+    <div class="code-block" style="margin-top:12px;">
+<span class="cm"><span class="zh"># React 组件库（44+ 组件，含金融组件）</span><span class="en"># React component library (44+ components)</span></span><br>npm install @libra-design/react<br><br>
+<span class="kw">import</span> { KLineChart, OrderBook, HeatmapSector, Button, Card } <span class="kw">from</span> <span class="str">'@libra-design/react'</span>
+    </div>
+    <div class="code-block" style="margin-top:12px;">
+<span class="cm"><span class="zh"># CLI 安装组件（类似 shadcn）</span><span class="en"># CLI components (shadcn-style)</span></span><br>npx @libra-design/cli init<br>npx @libra-design/cli add button card table
+    </div>
+  </div>
+</section>
+
+<!-- ==================== MCP ==================== -->
+<section>
+  <div class="wrap">
+    <div class="section-label zh">AI 集成</div><div class="section-label en">AI Integration</div>
+    <h2><span class="zh">给 AI 装上 Libra 的眼睛</span><span class="en">Give AI eyes for Libra</span></h2>
+    <p class="desc zh">@libra-design/mcp-server 将设计系统暴露为 MCP 工具，Go 原生二进制 10ms 冷启动。</p>
+    <p class="desc en">@libra-design/mcp-server exposes Libra as MCP tools. Go native binary, 10ms cold start.</p>
+    <div class="code-block">
+<span class="cm">~/.claude/settings.json</span><br>{<br>&nbsp;&nbsp;<span class="str">"mcpServers"</span>: {<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"libra"</span>: {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"command"</span>: <span class="str">"libra-mcp"</span><br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;}<br>}
     </div>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
-    <a href="https://github.com/goodie1972/libra">GitHub</a> · MIT<br>
-    <span class="zh" style="font-size:11px;">为极致审美而生</span>
-    <span class="en" style="font-size:11px;">Born for extreme aesthetics</span>
+    <a href="https://github.com/goodie1972/libra-design">GitHub</a> · <a href="https://www.npmjs.com/org/libra-design">npm</a> · MIT<br>
+    <span class="zh" style="font-size:11px;">极致审美的设计语言，专为 Go/Rust 量身定制</span>
+    <span class="en" style="font-size:11px;">Extreme aesthetics, tailored for Go and Rust</span>
   </div>
 </footer>
 
 <script>
-/* ============================================================
-   LANGUAGE TOGGLE
-   ============================================================ */
-function toggleLang() {
-  var html = document.documentElement;
-  var current = html.getAttribute('data-lang');
-  var next = current === 'zh' ? 'en' : 'zh';
-  html.setAttribute('data-lang', next);
-  document.getElementById('langIndicator').textContent = next === 'zh' ? 'EN' : '中';
-}
-document.getElementById('langIndicator').textContent = 'EN';
+// ============================================================
+// ALL THEME DEFINITIONS (10 named themes)
+// ============================================================
+var THEMES = [
+  {id:"terminal",name:"Terminal",desc:"Bloomberg Terminal 风格。黑底琥珀字",dark:{bg:"#0c0c0e",c:"#151518",h:"#1c1c20",b:"#252528",t:"#e8e8ed",a:"#f59e0b"},light:{bg:"#faf8f5",c:"#ffffff",h:"#f5f0e8",b:"#d4c8b0",t:"#1a1814",a:"#d97706"}},
+  {id:"ticker",name:"Ticker",desc:"交易所大屏。深蓝底亮白字",dark:{bg:"#0a1628",c:"#0f1f3d",h:"#142850",b:"#1a3560",t:"#e8f0fe",a:"#3b82f6"},light:{bg:"#f0f4fa",c:"#ffffff",h:"#e8edf5",b:"#c0cce0",t:"#0f1a30",a:"#2563eb"}},
+  {id:"vault",name:"Vault",desc:"私人银行金库。暖暗金棕",dark:{bg:"#161412",c:"#1c1a16",h:"#242118",b:"#2c2820",t:"#e8e0d0",a:"#c9a84c"},light:{bg:"#f8f6f2",c:"#ffffff",h:"#f0ece4",b:"#d0c8b8",t:"#1a1612",a:"#a08030"}},
+  {id:"margin",name:"Margin",desc:"保证金交易。极致暗红",dark:{bg:"#08080a",c:"#0e0e12",h:"#141418",b:"#1a1a20",t:"#f0f0f4",a:"#ef4444"},light:{bg:"#fafafa",c:"#ffffff",h:"#f4f4f4",b:"#d0d0d0",t:"#0a0a0c",a:"#dc2626"}},
+  {id:"ledger",name:"Ledger",desc:"账簿票据。暖纸白会计蓝",dark:{bg:"#1a1814",c:"#201e18",h:"#28261e",b:"#302e24",t:"#e8e4d8",a:"#1e3a8a"},light:{bg:"#faf8f3",c:"#ffffff",h:"#f4f0e8",b:"#d4cec0",t:"#1a1612",a:"#1e40af"}},
+  {id:"prospectus",name:"Prospectus",desc:"招股书。纯白深蓝黑",dark:{bg:"#0f1117",c:"#161820",h:"#1c1e28",b:"#242630",t:"#e4e6ec",a:"#1a1a2e"},light:{bg:"#ffffff",c:"#ffffff",h:"#f4f5f8",b:"#d0d2d8",t:"#0f1117",a:"#e63946"}},
+  {id:"arbitrage",name:"Arbitrage",desc:"量化套利。高对比赛紫",dark:{bg:"#050508",c:"#0a0a10",h:"#101018",b:"#1a1a28",t:"#f0f0f8",a:"#7c3aed"},light:{bg:"#f8f8fc",c:"#ffffff",h:"#f0f0f8",b:"#c8c8d8",t:"#08080c",a:"#6d28d9"}},
+  {id:"circuit",name:"Circuit",desc:"80年代CRT。绿字黑底",dark:{bg:"#0a0a0a",c:"#0e0e0e",h:"#141414",b:"#1a3a1a",t:"#22c55e",a:"#22c55e"},light:{bg:"#f0faf0",c:"#ffffff",h:"#e8f5e8",b:"#b0d0b0",t:"#0a1a0a",a:"#15803d"}},
+  {id:"candlestick",name:"Candlestick",desc:"K线图表。深灰金黄",dark:{bg:"#0d0e10",c:"#131416",h:"#191a1c",b:"#1e1e22",t:"#e4e4e8",a:"#f8b500"},light:{bg:"#f5f5f7",c:"#ffffff",h:"#f0f0f2",b:"#d0d0d4",t:"#0d0e10",a:"#d4a000"}},
+  {id:"clearing",name:"Clearing",desc:"清算所B2B。灰白克制",dark:{bg:"#18181b",c:"#1e1e22",h:"#242428",b:"#2a2a30",t:"#e4e4e8",a:"#52525b"},light:{bg:"#f5f5f5",c:"#ffffff",h:"#f0f0f0",b:"#c8c8cc",t:"#18181b",a:"#52525b"}}
+];
 
-/* ============================================================
-   THEME ENGINE
-   ============================================================ */
-function lerpColor(h1, h2, t) {
-  var c1 = parseInt(h1.slice(1), 16), c2 = parseInt(h2.slice(1), 16);
-  var r1 = (c1>>16)&0xff, g1 = (c1>>8)&0xff, b1 = c1&0xff;
-  var r2 = (c2>>16)&0xff, g2 = (c2>>8)&0xff, b2 = c2&0xff;
-  var r = Math.round(Math.sqrt((1-t)*r1*r1 + t*r2*r2));
-  var g = Math.round(Math.sqrt((1-t)*g1*g1 + t*g2*g2));
-  var b = Math.round(Math.sqrt((1-t)*b1*b1 + t*b2*b2));
-  return '#' + ((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
-}
-function lerpLinear(h1, h2, t) {
-  var c1 = parseInt(h1.slice(1), 16), c2 = parseInt(h2.slice(1), 16);
-  var r1 = (c1>>16)&0xff, g1 = (c1>>8)&0xff, b1 = c1&0xff;
-  var r2 = (c2>>16)&0xff, g2 = (c2>>8)&0xff, b2 = c2&0xff;
-  var r = Math.round(r1 + (r2-r1)*t);
-  var g = Math.round(g1 + (g2-g1)*t);
-  var b = Math.round(b1 + (b2-b1)*t);
-  return '#' + ((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
-}
-function textCurve(t) { return 1 - Math.pow(1-t, 5); }
-function borderCurve(t) { return 1 - Math.pow(1-t, 2); }
+// ============================================================
+// FULL DARK/LIGHT ENDPOINTS (loaded from current theme)
+// ============================================================
+var CURRENT_THEME = null;
 
+// Default endpoints (Terminal theme)
 var DARK = {
   'bg-root':'#0c0c0e','bg-main':'#0c0c0e','bg-sidebar':'#0c0c0e',
-  'bg-card':'#121214','bg-card-hover':'#18181b','bg-input':'#18181b',
-  'bg-chart':'#0c0c0e','bg-sub-panel':'#121214',
-  'border-main':'#1e1e22','border-sub':'#161618','border-input':'#1e1e22',
-  'text-primary':'#e8e8ed','text-secondary':'#9a9aa0','text-tertiary':'#63636a',
-  'accent':'#4a6cf7','accent-hover':'#5d7cf9',
-  'grid-line':'#18191c',
-  'code-bg':'#08080a'
+  'bg-card':'#151518','bg-card-hover':'#1c1c20','bg-input':'#1c1c20',
+  'bg-chart':'#0c0c0e','bg-sub-panel':'#151518',
+  'border-main':'#252528','border-sub':'#1c1c20','border-input':'#252528',
+  'text-primary':'#e8e8ed','text-secondary':'#a1a1a8','text-tertiary':'#6b6b72',
+  'accent':'#f59e0b','accent-hover':'#fbbf24',
+  'grid-line':'#1a1a1e','code-bg':'#08080a'
 };
 var LIGHT = {
-  'bg-root':'#f5f5f7','bg-main':'#f5f5f7','bg-sidebar':'#f5f5f7',
-  'bg-card':'#ffffff','bg-card-hover':'#f0f0f2','bg-input':'#eaeaee',
-  'bg-chart':'#f5f5f7','bg-sub-panel':'#ffffff',
-  'border-main':'#d4d4d8','border-sub':'#e8e8ec','border-input':'#d4d4d8',
-  'text-primary':'#0d0d12','text-secondary':'#555566','text-tertiary':'#8e8e98',
-  'accent':'#533afd','accent-hover':'#4527e0',
-  'grid-line':'#e8ecf0',
-  'code-bg':'#1a1a1e'
+  'bg-root':'#faf8f5','bg-main':'#faf8f5','bg-sidebar':'#faf8f5',
+  'bg-card':'#ffffff','bg-card-hover':'#f5f0e8','bg-input':'#f0ebe0',
+  'bg-chart':'#faf8f5','bg-sub-panel':'#ffffff',
+  'border-main':'#d4c8b0','border-sub':'#e8dcc8','border-input':'#d4c8b0',
+  'text-primary':'#1a1814','text-secondary':'#5c5548','text-tertiary':'#8c8470',
+  'accent':'#d97706','accent-hover':'#b45309',
+  'grid-line':'#f0ebe0','code-bg':'#1a1a1e'
 };
+
+// ============================================================
+// THEME ENGINE
+// ============================================================
+function lerpColor(h1, h2, t) {
+  var c1=parseInt(h1.slice(1),16),c2=parseInt(h2.slice(1),16);
+  var r1=(c1>>16)&0xff,g1=(c1>>8)&0xff,b1=c1&0xff;
+  var r2=(c2>>16)&0xff,g2=(c2>>8)&0xff,b2=c2&0xff;
+  var r=Math.round(Math.sqrt((1-t)*r1*r1+t*r2*r2));
+  var g=Math.round(Math.sqrt((1-t)*g1*g1+t*g2*g2));
+  var b=Math.round(Math.sqrt((1-t)*b1*b1+t*b2*b2));
+  return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+}
+function lerpLinear(h1, h2, t) {
+  var c1=parseInt(h1.slice(1),16),c2=parseInt(h2.slice(1),16);
+  var r1=(c1>>16)&0xff,g1=(c1>>8)&0xff,b1=c1&0xff;
+  var r2=(c2>>16)&0xff,g2=(c2>>8)&0xff,b2=c2&0xff;
+  return '#'+((1<<24)+(Math.round(r1+(r2-r1)*t)<<16)+(Math.round(g1+(g2-g1)*t)<<8)+Math.round(b1+(b2-b1)*t)).toString(16).slice(1);
+}
+function textCurve(t){return 1-Math.pow(1-t,5);}
+function borderCurve(t){return 1-Math.pow(1-t,2);}
 
 function applyMix(t) {
   var root = document.documentElement.style;
@@ -806,21 +604,146 @@ function applyMix(t) {
   root.setProperty('--accent-hover',  lerpLinear(DARK['accent-hover'], LIGHT['accent-hover'], tt));
   root.setProperty('--grid-line',     lerpColor(DARK['grid-line'], LIGHT['grid-line'], bt));
   root.setProperty('--code-bg',       lerpColor(DARK['code-bg'], LIGHT['code-bg'], t));
-  root.setProperty('--vol-up',        'rgba(239,83,80,' + (0.5 + t * 0.1).toFixed(2) + ')');
-  root.setProperty('--vol-down',      'rgba(38,166,154,' + (0.5 + t * 0.1).toFixed(2) + ')');
-  root.setProperty('--btn-radius',    Math.round(8 + t*12) + 'px');
-  root.setProperty('--card-radius',   Math.round(10 + t*2) + 'px');
-  root.setProperty('--card-shadow',   t < 0.01 ? 'none' : '0 1px 3px rgba(0,0,0,' + (t * 0.04).toFixed(2) + '), 0 3px 12px rgba(0,0,0,' + (t * 0.024).toFixed(3) + ')');
-  root.setProperty('--card-border',   t > 0.5 ? 'none' : '1px solid var(--border-main)');
+  root.setProperty('--vol-up',        'rgba(239,83,80,'+(0.5+t*0.1).toFixed(2)+')');
+  root.setProperty('--vol-down',      'rgba(38,166,154,'+(0.5+t*0.1).toFixed(2)+')');
+  root.setProperty('--btn-radius',    Math.round(8+t*12)+'px');
+  root.setProperty('--card-radius',   Math.round(10+t*2)+'px');
+  root.setProperty('--card-shadow',   t<0.01?'none':'0 1px 3px rgba(0,0,0,'+(t*0.04).toFixed(2)+'), 0 3px 12px rgba(0,0,0,'+(t*0.024).toFixed(3)+')');
+  root.setProperty('--card-border',   t>0.5?'none':'1px solid var(--border-main)');
+  document.getElementById('demo-bg-root').textContent = lerpColor(DARK['bg-root'], LIGHT['bg-root'], t);
+  document.getElementById('demo-bg-card').textContent = lerpColor(DARK['bg-card'], LIGHT['bg-card'], t);
+  document.getElementById('demo-bg-hover').textContent = lerpColor(DARK['bg-card-hover'], LIGHT['bg-card-hover'], t);
+  document.getElementById('demo-border').textContent = lerpColor(DARK['border-main'], LIGHT['border-main'], bt);
 }
 
-/* ============================================================
-   CONTROLS
-   ============================================================ */
+// ============================================================
+// LOAD FULL THEME FROM JSON
+// ============================================================
+function loadTheme(themeId) {
+  var url = '../tokens/themes/' + themeId + '.json';
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url, true);
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      var t = JSON.parse(xhr.responseText);
+      applyFullTheme(t);
+    } else {
+      // fallback: use local DARK/LIGHT
+      var t = THEMES.find(function(th){return th.id===themeId;});
+      if (t) {
+        DARK['bg-root']=t.dark.bg;DARK['bg-main']=t.dark.bg;DARK['bg-sidebar']=t.dark.bg;
+        DARK['bg-card']=t.dark.c;DARK['bg-card-hover']=t.dark.h;DARK['bg-input']=t.dark.h;
+        DARK['bg-chart']=t.dark.bg;DARK['bg-sub-panel']=t.dark.c;
+        DARK['border-main']=t.dark.b;DARK['border-sub']=t.dark.h;DARK['border-input']=t.dark.b;
+        DARK['text-primary']=t.dark.t;DARK['text-secondary']='#a1a1a8';DARK['text-tertiary']='#6b6b72';
+        DARK['accent']=t.dark.a;DARK['accent-hover']='#fbbf24';DARK['grid-line']=t.dark.h;
+        LIGHT['bg-root']=t.light.bg;LIGHT['bg-main']=t.light.bg;LIGHT['bg-sidebar']=t.light.bg;
+        LIGHT['bg-card']=t.light.c;LIGHT['bg-card-hover']=t.light.h;LIGHT['bg-input']=t.light.h;
+        LIGHT['bg-chart']=t.light.bg;LIGHT['bg-sub-panel']=t.light.c;
+        LIGHT['border-main']=t.light.b;LIGHT['border-sub']=t.light.h;LIGHT['border-input']=t.light.b;
+        LIGHT['text-primary']=t.light.t;LIGHT['text-secondary']='#555566';LIGHT['text-tertiary']='#8e8e98';
+        LIGHT['accent']=t.light.a;LIGHT['accent-hover']='#4527e0';LIGHT['grid-line']=t.light.h;
+        CURRENT_THEME = t;
+        applyMix(parseFloat(document.getElementById('mixSlider').value));
+      }
+    }
+  };
+  xhr.send();
+}
+
+function applyFullTheme(t) {
+  var d = t.dark, l = t.light;
+  // Copy all 17 dark + 17 light values
+  var keys = ['bg-root','bg-main','bg-sidebar','bg-card','bg-card-hover','bg-input','bg-chart','bg-sub-panel','border-main','border-sub','border-input','text-primary','text-secondary','text-tertiary','accent','accent-hover','grid-line'];
+  keys.forEach(function(k) { DARK[k] = d[k]; LIGHT[k] = l[k]; });
+  DARK['code-bg'] = '#08080a'; LIGHT['code-bg'] = '#1a1a1e';
+  CURRENT_THEME = t;
+  applyMix(parseFloat(document.getElementById('mixSlider').value));
+}
+
+function setTheme(themeId) {
+  var t = THEMES.find(function(th){return th.id===themeId;});
+  if (!t) return;
+  document.getElementById('currentThemeLabel').textContent = t.name;
+  document.getElementById('themeSelector').removeAttribute('open');
+  loadTheme(themeId);
+  // Update active state in menu
+  document.querySelectorAll('#themeMenu button').forEach(function(b) {
+    b.classList.toggle('active', b.dataset.theme === themeId);
+  });
+  // Update theme grid cards
+  document.querySelectorAll('#themeGrid .theme-card').forEach(function(c) {
+    c.style.borderColor = c.dataset.theme === themeId ? 'var(--accent)' : '';
+  });
+}
+
+// ============================================================
+// RENDER THEME MENU + THEME GRID
+// ============================================================
+function renderThemes() {
+  var menu = document.getElementById('themeMenu');
+  var grid = document.getElementById('themeGrid');
+  THEMES.forEach(function(t) {
+    // Dropdown menu item
+    var btn = document.createElement('button');
+    btn.dataset.theme = t.id;
+    btn.onclick = function(){setTheme(t.id);};
+    var swatch = document.createElement('span');
+    swatch.className = 'theme-swatch';
+    swatch.style.background = t.dark.a;
+    btn.appendChild(swatch);
+    var nameSpan = document.createElement('span');
+    nameSpan.className = 'theme-name';
+    nameSpan.textContent = t.name;
+    btn.appendChild(nameSpan);
+    menu.appendChild(btn);
+
+    // Grid card
+    var card = document.createElement('div');
+    card.className = 'theme-card';
+    card.dataset.theme = t.id;
+    card.onclick = function(){setTheme(t.id);};
+    var cName = document.createElement('div');
+    cName.className = 'tc-name';
+    cName.textContent = t.name;
+    card.appendChild(cName);
+    var cDesc = document.createElement('div');
+    cDesc.className = 'tc-desc';
+    cDesc.textContent = t.desc;
+    card.appendChild(cDesc);
+    // Color bar
+    var bar = document.createElement('div');
+    bar.className = 'tc-bar';
+    var colors = [t.dark.bg,t.dark.c,t.dark.h,t.dark.b,t.dark.a,t.dark.t,t.light.bg,t.light.c,t.light.h,t.light.b,t.light.a,t.light.t];
+    colors.forEach(function(c) {
+      var s = document.createElement('span');
+      s.style.background = c;
+      bar.appendChild(s);
+    });
+    card.appendChild(bar);
+    grid.appendChild(card);
+  });
+}
+
+// ============================================================
+// LANGUAGE TOGGLE
+// ============================================================
+function toggleLang() {
+  var html = document.documentElement;
+  var current = html.getAttribute('data-lang');
+  var next = current === 'zh' ? 'en' : 'zh';
+  html.setAttribute('data-lang', next);
+  document.getElementById('langIndicator').textContent = next === 'zh' ? 'EN' : '中';
+}
+document.getElementById('langIndicator').textContent = 'EN';
+
+// ============================================================
+// CONTROLS
+// ============================================================
 var slider = document.getElementById('mixSlider');
 var label = document.getElementById('mixLabel');
 var presetBtns = document.querySelectorAll('#presetGroup button');
-var heroBtns = document.querySelectorAll('.hero .presets button');
+var heroBtns = document.querySelectorAll('.hero .presets button:not(.tag)');
 
 function setMix(t) {
   applyMix(t);
@@ -841,8 +764,8 @@ heroBtns.forEach(function(b) {
   b.addEventListener('click', function() { setMix(parseFloat(this.dataset.mix)); });
 });
 
-setMix(0.7);
+renderThemes();
+setTheme('terminal');
 </script>
-
 </body>
 </html>
