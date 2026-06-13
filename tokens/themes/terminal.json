@@ -1,0 +1,7 @@
+{
+  "id": "terminal",
+  "name": "Terminal",
+  "description": "Bloomberg Terminal 风格。黑底琥珀字——为交易而生的配色。暗色橙琥珀强调，亮色暖纸白底。",
+  "dark": {"bg-root":"#0c0c0e","bg-main":"#0c0c0e","bg-sidebar":"#0c0c0e","bg-card":"#151518","bg-card-hover":"#1c1c20","bg-input":"#1c1c20","bg-chart":"#0c0c0e","bg-sub-panel":"#151518","border-main":"#252528","border-sub":"#1c1c20","border-input":"#252528","text-primary":"#e8e8ed","text-secondary":"#a1a1a8","text-tertiary":"#6b6b72","accent":"#f59e0b","accent-hover":"#fbbf24","grid-line":"#1a1a1e"},
+  "light": {"bg-root":"#faf8f5","bg-main":"#faf8f5","bg-sidebar":"#faf8f5","bg-card":"#ffffff","bg-card-hover":"#f5f0e8","bg-input":"#f0ebe0","bg-chart":"#faf8f5","bg-sub-panel":"#ffffff","border-main":"#d4c8b0","border-sub":"#e8dcc8","border-input":"#d4c8b0","text-primary":"#1a1814","text-secondary":"#5c5548","text-tertiary":"#8c8470","accent":"#d97706","accent-hover":"#b45309","grid-line":"#f0ebe0"}
+}
