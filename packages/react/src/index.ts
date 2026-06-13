@@ -150,3 +150,10 @@ export type { LayoutProps, LayoutHeaderProps, LayoutSiderProps, LayoutContentPro
 
 export { Watermark } from './components/watermark';
 export type { WatermarkProps } from './components/watermark';
+
+// Phase 6 — Feedback & Data Display
+export { Steps } from './components/steps';
+export type { StepsProps, StepData } from './components/steps';
+
+export { Timeline } from './components/timeline';
+export type { TimelineProps, TimelineItemData } from './components/timeline';

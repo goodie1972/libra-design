@@ -1,0 +1,15 @@
+package components
+
+// Statistic 统计数值组件。
+// trend: "up" 涨红 / "down" 跌绿 / "" 默认
+templ Statistic(label string, value string, suffix string, trend string, attrs templ.Attributes) {
+	<div class={ "libra-statistic", templ.KV("libra-statistic--up", trend == "up"), templ.KV("libra-statistic--down", trend == "down") } { attrs... }>
+		<div class="libra-statistic__label">{ label }</div>
+		<div class="libra-statistic__value">
+			<span class="libra-statistic__number">{ value }</span>
+			if suffix != "" {
+				<span class="libra-statistic__suffix">{ suffix }</span>
+			}
+		</div>
+	</div>
+}

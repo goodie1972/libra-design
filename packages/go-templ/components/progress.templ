@@ -1,0 +1,31 @@
+package components
+
+import "fmt"
+
+// calcPct 计算百分比并限制在 0~100 之间。
+func calcPct(value, max float64) float64 {
+	if max <= 0 {
+		max = 100
+	}
+	pct := value / max * 100
+	if pct < 0 {
+		pct = 0
+	}
+	if pct > 100 {
+		pct = 100
+	}
+	return pct
+}
+
+// Progress 进度条。value 当前值, max 最大值, size: sm / default（默认 default）
+templ Progress(value float64, max float64, size string, attrs templ.Attributes) {
+	if size == "" {
+		size = "default"
+	}
+	<div class={ "libra-progress", "libra-progress--" + size } role="progressbar" aria-valuenow={ fmt.Sprintf("%.0f", value) } aria-valuemax={ fmt.Sprintf("%.0f", max) } { attrs... }>
+		<div class="libra-progress__track">
+			<div class="libra-progress__bar" style={ "width: " + fmt.Sprintf("%.0f", calcPct(value, max)) + "%" }></div>
+		</div>
+		<span class="libra-progress__label">{ fmt.Sprintf("%.0f", calcPct(value, max)) }%</span>
+	</div>
+}

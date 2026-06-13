@@ -1,0 +1,38 @@
+package components
+
+// TimelineItem 时间线项。
+type TimelineItem struct {
+	Title       string
+	Description string
+	Time        string
+	Color       string
+}
+
+// resolveDotColor 返回圆点颜色，空值时使用默认 --accent。
+func resolveDotColor(color string) string {
+	if color == "" {
+		return "var(--accent)"
+	}
+	return color
+}
+
+// Timeline 垂直时间线组件。
+templ Timeline(items []TimelineItem, attrs templ.Attributes) {
+	<div class="libra-timeline" { attrs... }>
+		for _, item := range items {
+			<div class="libra-timeline__item">
+				<div class="libra-timeline__dot" style={ "background-color: " + resolveDotColor(item.Color) }></div>
+				<div class="libra-timeline__line"></div>
+				<div class="libra-timeline__content">
+					<div class="libra-timeline__title">{ item.Title }</div>
+					if item.Description != "" {
+						<div class="libra-timeline__desc">{ item.Description }</div>
+					}
+					if item.Time != "" {
+						<div class="libra-timeline__time">{ item.Time }</div>
+					}
+				</div>
+			</div>
+		}
+	</div>
+}

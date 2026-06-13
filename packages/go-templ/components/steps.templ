@@ -1,0 +1,34 @@
+package components
+
+// Step 步骤项。
+type Step struct {
+	Title       string
+	Description string
+	Status      string // "completed" / "active" / ""
+}
+
+// StepItem 单个步骤。status: completed/active/（默认 waiting）。
+templ StepItem(number int, title string, description string, status string) {
+	<div class={ "libra-steps__item", templ.KV("libra-steps--completed", status == "completed"), templ.KV("libra-steps--active", status == "active") }>
+		<div class="libra-steps__number">
+			if status == "completed" {
+				<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7L6 10L11 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+			} else {
+				{ number }
+			}
+		</div>
+		<div class="libra-steps__content">
+			<div class="libra-steps__title">{ title }</div>
+			if description != "" {
+				<div class="libra-steps__desc">{ description }</div>
+			}
+		</div>
+	</div>
+}
+
+// Steps 步骤条容器。子元素应为 StepItem。
+templ Steps(attrs templ.Attributes) {
+	<div class="libra-steps" { attrs... }>
+		{ children... }
+	</div>
+}

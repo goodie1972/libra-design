@@ -1,0 +1,13 @@
+package components
+
+// Skeleton 骨架屏组件。variant: text/card/avatar/chart
+templ Skeleton(variant string, width string, height string, attrs templ.Attributes) {
+	if variant == "" {
+		variant = "text"
+	}
+	<div
+		class={ "libra-skeleton", "libra-skeleton--"+variant }
+		style={ templ.Attributes{"width": width, "height": height} }
+		{ attrs... }
+	></div>
+}

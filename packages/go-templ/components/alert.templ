@@ -1,0 +1,37 @@
+package components
+
+// Alert 提示横幅。variant: info / success / warning / error（默认 info）
+templ Alert(message string, variant string, attrs templ.Attributes) {
+	if variant == "" {
+		variant = "info"
+	}
+	<div class={ "libra-alert", "libra-alert--" + variant } role="alert" { attrs... }>
+		<span class="libra-alert__icon">
+			if variant == "success" {
+				<svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+					<circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+					<path d="M5 8L7 10L11 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+				</svg>
+			} else if variant == "warning" {
+				<svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+					<path d="M8 1L15 14H1L8 1Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+					<path d="M8 6V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+					<circle cx="8" cy="11.5" r="0.8" fill="currentColor"/>
+				</svg>
+			} else if variant == "error" {
+				<svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+					<circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+					<path d="M5.5 5.5L10.5 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+					<path d="M10.5 5.5L5.5 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+				</svg>
+			} else {
+				<svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+					<circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+					<path d="M8 5V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+					<circle cx="8" cy="11.5" r="0.8" fill="currentColor"/>
+				</svg>
+			}
+		</span>
+		<span class="libra-alert__message">{ message }</span>
+	</div>
+}

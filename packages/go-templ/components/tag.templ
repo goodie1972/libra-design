@@ -1,0 +1,17 @@
+package components
+
+// Tag 标签组件。variant: default/primary/success/warning/error
+templ Tag(label string, variant string, closable bool, attrs templ.Attributes) {
+	if variant == "" {
+		variant = "default"
+	}
+	<span
+		class={ "libra-tag", "libra-tag--"+variant, templ.KV("libra-tag--closable", closable) }
+		{ attrs... }
+	>
+		{ label }
+		if closable {
+			<span class="libra-tag__close">&times;</span>
+		}
+	</span>
+}

@@ -1,0 +1,20 @@
+package components
+
+// Pagination 分页容器。子元素应为 PaginationItem/PaginationEllipsis。
+templ Pagination(current int, total int, size int, attrs templ.Attributes) {
+	<div class="libra-pagination" { attrs... }>
+		<span class={ "libra-pagination__item", templ.KV("libra-pagination__item--disabled", current <= 1) }>‹</span>
+		{ children... }
+		<span class={ "libra-pagination__item", templ.KV("libra-pagination__item--disabled", current >= total) }>›</span>
+	</div>
+}
+
+// PaginationItem 页码按钮。active=true 高亮。
+templ PaginationItem(page int, active bool) {
+	<span class={ "libra-pagination__item", templ.KV("libra-pagination__item--active", active) }>{ page }</span>
+}
+
+// PaginationEllipsis 省略号。
+templ PaginationEllipsis() {
+	<span class="libra-pagination__ellipsis">…</span>
+}

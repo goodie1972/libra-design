@@ -1,0 +1,11 @@
+package components
+
+// Switch 开关组件。checked=true 为开启状态。
+templ Switch(name string, checked bool, disabled bool, attrs templ.Attributes) {
+	<label class={ "libra-switch", templ.KV("libra-switch--active", checked), templ.KV("libra-switch--disabled", disabled) }>
+		<input type="checkbox" name={ name } checked={ checked } disabled={ disabled } style="display:none;" { attrs... }/>
+		<span class="libra-switch__track">
+			<span class="libra-switch__thumb"></span>
+		</span>
+	</label>
+}

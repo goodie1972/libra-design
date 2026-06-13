@@ -1,0 +1,12 @@
+package components
+
+// Toast 弹出式提示。variant: info / success / error（默认 info）, 固定底部右侧
+templ Toast(message string, variant string, attrs templ.Attributes) {
+	if variant == "" {
+		variant = "info"
+	}
+	<div class={ "libra-toast", "libra-toast--" + variant } role="alert" { attrs... }>
+		<span class="libra-toast__bar"></span>
+		<span class="libra-toast__message">{ message }</span>
+	</div>
+}
