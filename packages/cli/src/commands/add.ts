@@ -5,18 +5,18 @@ import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 /**
- * 组件源文件目录（从 @libra/react 源码读取）
+ * 组件源文件目录（从 @libra-design/react 源码读取）
  * 开发环境：packages/react/src/components/
- * 生产环境：node_modules/@libra/react/src/components/
+ * 生产环境：node_modules/@libra-design/react/src/components/
  */
 function getSourceDir(): string {
   // 优先从 monorepo 读取（开发环境）
   const devPath = resolve(__dirname, '../../../react/src/components');
   if (existsSync(devPath)) return devPath;
 
-  // 生产环境：从 @libra/react 包读取
+  // 生产环境：从 @libra-design/react 包读取
   try {
-    const pkg = resolve(require.resolve('@libra/react/package.json'), '../src/components');
+    const pkg = resolve(require.resolve('@libra-design/react/package.json'), '../src/components');
     if (existsSync(pkg)) return pkg;
   } catch {
     // fallback
@@ -149,7 +149,7 @@ function findStockuiPath(cwd: string): string | null {
     const content = JSON.parse(readFileSync(pkgPath, 'utf-8'));
     const deps = { ...content.dependencies, ...content.devDependencies };
 
-    if (deps['@libra/tokens']) return '@libra/tokens';
+    if (deps['@libra-design/tokens']) return '@libra-design/tokens';
     if (deps['libra']) return 'libra/packages/tokens';
 
     return null;

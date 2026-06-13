@@ -1,0 +1,74 @@
+package components
+
+// Input 金融终端输入框组件。
+// 支持 label、placeholder、error 状态、disabled。
+templ Input(label, placeholder, errorMsg, inputType string, disabled bool, attrs templ.Attributes) {
+	if inputType == "" {
+		inputType = "text"
+	}
+	<style>
+		.libra-input-group {
+			display: flex;
+			flex-direction: column;
+			gap: var(--space-1);
+		}
+		.libra-input__label {
+			font-family: var(--font-body);
+			font-size: var(--text-sm);
+			font-weight: var(--weight-medium);
+			color: var(--text-secondary);
+		}
+		.libra-input__field {
+			width: 100%;
+			padding: var(--space-2) var(--space-3);
+			background-color: var(--bg-input);
+			border: 1px solid var(--border-input);
+			border-radius: var(--radius-md);
+			font-family: var(--font-body);
+			font-size: var(--text-base);
+			color: var(--text-primary);
+			outline: none;
+			transition: border-color 0.15s ease, box-shadow 0.15s ease;
+			box-sizing: border-box;
+		}
+		.libra-input__field::placeholder {
+			color: var(--text-tertiary);
+		}
+		.libra-input__field:focus {
+			border-color: var(--accent);
+			box-shadow: 0 0 0 2px rgba(74, 108, 247, 0.15);
+		}
+		.libra-input__field:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+		.libra-input__field--error {
+			border-color: var(--error);
+		}
+		.libra-input__field--error:focus {
+			box-shadow: 0 0 0 2px rgba(234, 67, 53, 0.15);
+		}
+		.libra-input__error {
+			font-family: var(--font-body);
+			font-size: var(--text-xs);
+			color: var(--error);
+		}
+	</style>
+	<div
+		class={ "libra-input-group", templ.KV("libra-input-group--error", errorMsg != "") }
+		{ attrs... }
+	>
+		if label != "" {
+			<label class="libra-input__label">{ label }</label>
+		}
+		<input
+			class={ "libra-input__field", templ.KV("libra-input__field--error", errorMsg != "") }
+			type={ inputType }
+			placeholder={ placeholder }
+			disabled={ disabled }
+		/>
+		if errorMsg != "" {
+			<span class="libra-input__error">{ errorMsg }</span>
+		}
+	</div>
+}

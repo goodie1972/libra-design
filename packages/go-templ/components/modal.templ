@@ -1,0 +1,108 @@
+package components
+
+templ Modal(open bool, attrs templ.Attributes) {
+	if !open {
+		return
+	}
+	<style>
+		.libra-modal-overlay {
+			position: fixed;
+			inset: 0;
+			z-index: 1000;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background-color: rgba(0, 0, 0, 0.55);
+		}
+		.libra-modal {
+			background-color: var(--bg-card);
+			border: var(--card-border);
+			border-radius: var(--card-radius);
+			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+			min-width: 360px;
+			max-width: 90vw;
+			max-height: 85vh;
+			display: flex;
+			flex-direction: column;
+			overflow: hidden;
+		}
+		.libra-modal__header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: var(--space-4);
+			border-bottom: 1px solid var(--border-sub);
+		}
+		.libra-modal__title {
+			margin: 0;
+			font-family: var(--font-display);
+			font-size: var(--text-lg);
+			font-weight: var(--weight-semibold);
+			color: var(--text-primary);
+		}
+		.libra-modal__close {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 28px;
+			height: 28px;
+			padding: 0;
+			background: none;
+			border: none;
+			border-radius: var(--radius-sm);
+			color: var(--text-tertiary);
+			cursor: pointer;
+			transition: background-color 0.15s ease, color 0.15s ease;
+		}
+		.libra-modal__close:hover {
+			background-color: var(--bg-card-hover);
+			color: var(--text-primary);
+		}
+		.libra-modal__body {
+			padding: var(--space-4);
+			overflow-y: auto;
+			font-family: var(--font-body);
+			font-size: var(--text-base);
+			color: var(--text-primary);
+			flex: 1;
+		}
+		.libra-modal__footer {
+			display: flex;
+			align-items: center;
+			justify-content: flex-end;
+			gap: var(--space-2);
+			padding: var(--space-4);
+			border-top: 1px solid var(--border-sub);
+		}
+	</style>
+	<div class="libra-modal-overlay" data-libra-modal-overlay="">
+		<div class="libra-modal" { attrs... }>
+			{ children... }
+		</div>
+	</div>
+}
+
+templ ModalHeader(title string, attrs templ.Attributes) {
+	<div class="libra-modal__header" { attrs... }>
+		if title != "" {
+			<h2 class="libra-modal__title">{ title }</h2>
+		}
+		<button class="libra-modal__close" type="button" aria-label="关闭" data-libra-modal-close="">
+			<svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+				<path d="M4 4L12 12M12 4L4 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+			</svg>
+		</button>
+	</div>
+}
+
+templ ModalBody(attrs templ.Attributes) {
+	<div class="libra-modal__body" { attrs... }>
+		{ children... }
+	</div>
+}
+
+templ ModalFooter(attrs templ.Attributes) {
+	<div class="libra-modal__footer" { attrs... }>
+		{ children... }
+	</div>
+}

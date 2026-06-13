@@ -6,8 +6,8 @@ import {
   Select, Tabs, Tag, Modal, Tooltip, Switch,
   Table, TableHeader, TableHead, TableRow, TableCell,
   MarketTable,
-} from '@libra/react';
-import type { Tab, MarketRow, MarketColumn } from '@libra/react';
+} from '@libra-design/react';
+import type { Tab, MarketRow, MarketColumn } from '@libra-design/react';
 
 // ============================================================
 // 示例数据
@@ -47,7 +47,7 @@ export function App() {
       <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 28px', background: 'rgba(12,12,14,0.85)', backdropFilter: 'blur(12px)', borderBottom: '1px solid var(--border-main)' }}>
         <div style={{ fontSize: 15, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)' }} />
-          @libra/react
+          @libra-design/react
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <span style={{ fontSize: 11, color: 'var(--text-tertiary)', letterSpacing: '0.02em', textTransform: 'uppercase' }}>Theme Mix</span>
@@ -61,7 +61,7 @@ export function App() {
       <div style={{ maxWidth: 1000, margin: '0 auto', padding: '80px 32px 40px' }}>
         {/* Header */}
         <h1 style={{ fontSize: 28, fontWeight: 600, letterSpacing: '-0.02em', marginBottom: 8 }}>
-          @libra/react
+          @libra-design/react
         </h1>
         <p style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 40, lineHeight: 1.7, fontWeight: 300 }}>
           Libra 设计系统 React 组件库 — 15 个组件，双主题兼容

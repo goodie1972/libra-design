@@ -1,0 +1,72 @@
+package components
+
+// Card 卡片容器组件。hover 时边框颜色变为 var(--accent)。
+templ Card(attrs templ.Attributes) {
+	<style>
+		.libra-card {
+			background-color: var(--bg-card);
+			border: var(--card-border);
+			border-radius: var(--card-radius);
+			box-shadow: var(--card-shadow);
+			overflow: hidden;
+			transition: border-color 0.2s ease;
+		}
+		.libra-card:hover {
+			border-color: var(--accent);
+		}
+		.libra-card__header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: var(--space-4);
+			border-bottom: 1px solid var(--border-sub);
+		}
+		.libra-card__title {
+			margin: 0;
+			font-family: var(--font-display);
+			font-size: var(--text-lg);
+			font-weight: var(--weight-semibold);
+			color: var(--text-primary);
+			line-height: var(--leading-tight);
+		}
+		.libra-card__content {
+			padding: var(--space-4);
+		}
+	</style>
+	<div
+		class={ "libra-card" }
+		{ attrs... }
+	>
+		{ children... }
+	</div>
+}
+
+// CardHeader 卡片头部。
+templ CardHeader(attrs templ.Attributes) {
+	<div
+		class={ "libra-card__header" }
+		{ attrs... }
+	>
+		{ children... }
+	</div>
+}
+
+// CardTitle 卡片标题。
+templ CardTitle(attrs templ.Attributes) {
+	<h3
+		class={ "libra-card__title" }
+		{ attrs... }
+	>
+		{ children... }
+	</h3>
+}
+
+// CardContent 卡片内容区域。
+templ CardContent(attrs templ.Attributes) {
+	<div
+		class={ "libra-card__content" }
+		{ attrs... }
+	>
+		{ children... }
+	</div>
+}

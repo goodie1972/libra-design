@@ -1,7 +1,7 @@
 {
-  "name": "@libra/cli",
+  "name": "@libra-design/cli",
   "version": "0.1.0",
-  "description": "libra 设计系统 CLI — init/add，类似 shadcn/ui",
+  "description": "Libra CLI — init/add 组件安装。Go 原生版单二进制零依赖（go-cli），npm 版也在本包。",
   "type": "module",
   "main": "./dist/index.js",
   "bin": {

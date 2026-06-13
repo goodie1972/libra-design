@@ -14,7 +14,7 @@ export function initCommand(opts: { yes?: boolean }): void {
   const tokensPath = resolve(stylesDir, 'tokens.css');
 
   console.log('');
-  console.log('  ⚡ 初始化 @libra/tokens 到项目...');
+  console.log('  ⚡ 初始化 @libra-design/tokens 到项目...');
   console.log('');
 
   if (existsSync(tokensPath) && !opts.yes) {
@@ -30,8 +30,8 @@ export function initCommand(opts: { yes?: boolean }): void {
 
   // 写入 tokens.css
   const tokensCss = `/* ============================================================
-   @libra/tokens — libra 设计系统 Token
-   由 @libra/cli init 生成
+   @libra-design/tokens — libra 设计系统 Token
+   由 @libra-design/cli init 生成
    ============================================================ */
 
 :root {
@@ -53,7 +53,7 @@ export function initCommand(opts: { yes?: boolean }): void {
   --warning:      #fbbc04;
   --error:        #ea4335;
 
-  /* === 暗色端点（会被 @libra/theme 动态改写）=== */
+  /* === 暗色端点（会被 @libra-design/theme 动态改写）=== */
   --bg-root:       #0d0e10;
   --bg-card:       #131416;
   --bg-card-hover: #16171b;
@@ -88,7 +88,7 @@ export function initCommand(opts: { yes?: boolean }): void {
   console.log('');
   console.log('  下一步:');
   console.log('    1. 在入口文件 import "./styles/tokens.css"');
-  console.log('    2. 若需主题引擎: npm install @libra/theme');
+  console.log('    2. 若需主题引擎: npm install @libra-design/theme');
   console.log('    3. 添加组件: npx libra add <组件名>');
   console.log('');
 }

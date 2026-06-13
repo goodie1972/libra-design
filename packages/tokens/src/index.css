@@ -1,7 +1,7 @@
 /* ============================================================
-   @libra/tokens — libra 设计系统 CSS Token 定义
+   @libra-design/tokens — libra 设计系统 CSS Token 定义
    版本: 0.1.0
-   双主题起始值（暗色端点），由 @libra/theme 的 applyMix() 动态改写
+   双主题起始值（暗色端点），由 @libra-design/theme 的 applyMix() 动态改写
    ============================================================ */
 
 :root {

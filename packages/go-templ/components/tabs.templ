@@ -1,0 +1,60 @@
+package components
+
+import "fmt"
+
+templ Tabs(attrs templ.Attributes) {
+	<style>
+		.libra-tabs {
+			display: flex;
+			align-items: stretch;
+			gap: 0;
+			border-bottom: 1px solid var(--border-sub);
+		}
+		.libra-tabs__tab {
+			position: relative;
+			padding: var(--space-2) var(--space-4);
+			background: none;
+			border: none;
+			font-family: var(--font-body);
+			font-size: var(--text-base);
+			font-weight: var(--weight-medium);
+			color: var(--text-secondary);
+			cursor: pointer;
+			outline: none;
+			white-space: nowrap;
+			user-select: none;
+			transition: color 0.15s ease;
+		}
+		.libra-tabs__tab:hover {
+			color: var(--text-primary);
+		}
+		.libra-tabs__tab--active {
+			color: var(--accent);
+			font-weight: var(--weight-semibold);
+		}
+		.libra-tabs__tab--active::after {
+			content: "";
+			position: absolute;
+			bottom: 0;
+			left: var(--space-2);
+			right: var(--space-2);
+			height: 2px;
+			background-color: var(--accent);
+			border-radius: 1px;
+		}
+	</style>
+	<div class="libra-tabs" role="tablist" { attrs... }>
+		{ children... }
+	</div>
+}
+
+templ Tab(label string, isActive bool, attrs templ.Attributes) {
+	<button
+		class={ "libra-tabs__tab", templ.KV("libra-tabs__tab--active", isActive) }
+		role="tab"
+		aria-selected={ fmt.Sprintf("%t", isActive) }
+		{ attrs... }
+	>
+		{ label }
+	</button>
+}

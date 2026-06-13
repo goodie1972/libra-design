@@ -1,5 +1,5 @@
 /**
- * @libra/tokens — TypeScript 类型定义
+ * @libra-design/tokens — TypeScript 类型定义
  *
  * 这些类型与 CSS Token 一一对应，供消费方 TypeScript 项目类型检查。
  */

@@ -1,5 +1,5 @@
-import { DARK_ENDPOINT, LIGHT_ENDPOINT } from '@libra/tokens';
-import type { ThemeMix, ThemePreset, ThemeVariable } from '@libra/tokens';
+import { DARK_ENDPOINT, LIGHT_ENDPOINT } from '@libra-design/tokens';
+import type { ThemeMix, ThemePreset, ThemeVariable } from '@libra-design/tokens';
 
 /**
  * libra 双主题混合引擎
@@ -9,7 +9,7 @@ import type { ThemeMix, ThemePreset, ThemeVariable } from '@libra/tokens';
  *
  * @example
  * ```ts
- * import { applyMix } from '@libra/theme';
+ * import { applyMix } from '@libra-design/theme';
  * applyMix(0.7); // 柔光模式
  * ```
  */
@@ -147,7 +147,7 @@ export function applyMix(t: ThemeMix, root: HTMLElement = document.documentEleme
  *
  * @example
  * ```ts
- * import { applyPreset } from '@libra/theme';
+ * import { applyPreset } from '@libra-design/theme';
  * applyPreset('dark');
  * ```
  */
@@ -160,7 +160,7 @@ export function applyPreset(preset: ThemePreset): void {
  *
  * @example
  * ```ts
- * import { getThemeColor } from '@libra/theme';
+ * import { getThemeColor } from '@libra-design/theme';
  * const upColor = getThemeColor('up');
  * ```
  */

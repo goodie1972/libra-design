@@ -1,7 +1,7 @@
 {
-  "name": "@libra/mcp-server",
+  "name": "@libra-design/mcp-server",
   "version": "0.1.0",
-  "description": "MCP Server for Libra Design System — exposes design tokens and component generation to AI agents",
+  "description": "Libra MCP Server — 向 AI Agent 暴露设计令牌和组件生成。Go 原生版单二进制 10ms 冷启动，npm 版在本包。",
   "type": "module",
   "main": "./dist/index.js",
   "bin": {
@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
-    "@libra/tokens": "^0.1.0"
+    "@libra-design/tokens": "^0.1.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

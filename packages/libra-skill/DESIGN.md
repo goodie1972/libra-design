@@ -39,7 +39,7 @@ Libra is an **extreme aesthetics** design language. Not a UI kit — an aestheti
 ### Theme engine
 
 ```typescript
-import { applyMix, applyPreset } from '@libra/theme';
+import { applyMix, applyPreset } from '@libra-design/theme';
 applyPreset('dark');   // t=0
 applyPreset('soft');   // t=0.7 (default)
 applyPreset('light');  // t=1

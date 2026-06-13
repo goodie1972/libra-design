@@ -11,8 +11,8 @@ export default defineConfig({
   base: '/libra/react-demo/',
   resolve: {
     alias: {
-      '@libra/react': resolve(__dirname, '../src'),
-      '@libra/tokens/css': resolve(__dirname, '../../tokens/src/index.css'),
+      '@libra-design/react': resolve(__dirname, '../src'),
+      '@libra-design/tokens/css': resolve(__dirname, '../../tokens/src/index.css'),
     },
   },
   build: {

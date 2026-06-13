@@ -1,0 +1,89 @@
+package components
+
+templ Table(attrs templ.Attributes) {
+	<style>
+		.libra-table-wrapper {
+			overflow-x: auto;
+			border: var(--card-border);
+			border-radius: var(--card-radius);
+			background-color: var(--bg-card);
+		}
+		.libra-table {
+			width: 100%;
+			border-collapse: separate;
+			border-spacing: 0;
+			font-family: var(--font-body);
+			font-size: var(--text-base);
+			color: var(--text-primary);
+		}
+		.libra-table__head th,
+		.libra-table__cell {
+			padding: var(--space-2) var(--space-3);
+			text-align: left;
+			white-space: nowrap;
+			border-bottom: 1px solid var(--border-sub);
+		}
+		.libra-table__head th {
+			position: sticky;
+			top: 0;
+			z-index: 1;
+			background-color: var(--bg-card);
+			font-weight: var(--weight-semibold);
+			font-size: var(--text-sm);
+			color: var(--text-secondary);
+			text-transform: uppercase;
+			letter-spacing: 0.3px;
+		}
+		.libra-table__row:nth-child(even) .libra-table__cell {
+			background-color: var(--bg-card-hover);
+		}
+		.libra-table__row:hover .libra-table__cell {
+			background-color: var(--bg-input);
+		}
+		.libra-table__cell--right {
+			text-align: right;
+		}
+		.libra-table__cell--center {
+			text-align: center;
+		}
+		.libra-table__cell--numeric {
+			font-family: var(--font-mono);
+			font-variant-numeric: tabular-nums;
+			text-align: right;
+		}
+		.libra-table__row:last-child .libra-table__cell {
+			border-bottom: none;
+		}
+	</style>
+	<div class="libra-table-wrapper">
+		<table class="libra-table" { attrs... }>
+			{ children... }
+		</table>
+	</div>
+}
+
+templ TableHead(attrs templ.Attributes) {
+	<thead class="libra-table__head" { attrs... }>
+		{ children... }
+	</thead>
+}
+
+templ TableRow(attrs templ.Attributes) {
+	<tr class="libra-table__row" { attrs... }>
+		{ children... }
+	</tr>
+}
+
+templ TableCell(align string, numeric bool, attrs templ.Attributes) {
+	<td
+		class={
+			"libra-table__cell",
+			templ.KV("libra-table__cell--right", align == "right"),
+			templ.KV("libra-table__cell--center", align == "center"),
+			templ.KV("libra-table__cell--numeric", numeric),
+		}
+		{ attrs... }
+	>
+		{ children... }
+	</td>
+}

@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 /**
- * @libra/cli — libra 设计系统 CLI
+ * @libra-design/cli — libra 设计系统 CLI
  *
  * 类似 shadcn/ui 的体验：
- *   npx @libra/cli init        → 初始化 tokens.css 到项目
- *   npx @libra/cli add button  → 复制组件源码到项目
+ *   npx @libra-design/cli init        → 初始化 tokens.css 到项目
+ *   npx @libra-design/cli add button  → 复制组件源码到项目
  *
  * 项目信息页: https://github.com/ccwu/libra
  */

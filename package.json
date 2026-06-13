@@ -2,7 +2,7 @@
   "name": "libra",
   "version": "0.1.0",
   "private": true,
-  "description": "libra 设计系统 — 自研 Token + 双主题引擎 + 金融组件库",
+  "description": "Libra Design System — Go/Rust 原生 + React 多语言金融设计系统。一份设计令牌，全语言消费。JS 设计系统是红海，Go/Rust 是蓝海。",
   "workspaces": [
     "packages/*"
   ],

@@ -1,4 +1,4 @@
-# @libra/mcp-server
+# @libra-design/mcp-server
 
 MCP Server for Libra Design System — exposes design tokens and component generation to AI agents (Claude Code, Cursor, etc.).
 
@@ -13,7 +13,7 @@ Add to `~/.claude/settings.json`:
   "mcpServers": {
     "libra": {
       "command": "npx",
-      "args": ["@libra/mcp-server"]
+      "args": ["@libra-design/mcp-server"]
     }
   }
 }

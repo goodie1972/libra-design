@@ -1,7 +1,7 @@
 {
-  "name": "@libra/tokens",
+  "name": "@libra-design/tokens",
   "version": "0.1.0",
-  "description": "libra 设计 Token — CSS 自定义属性 + TypeScript 类型定义",
+  "description": "Libra 设计令牌 — 语言无关的金融色值体系。一份 JSON，Go/Rust/TS 三语言消费。CSS 变量 + TypeScript 类型。",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -27,7 +27,11 @@
     "design-tokens",
     "css-variables",
     "financial",
-    "dark-theme"
+    "dark-theme",
+    "go",
+    "rust",
+    "multi-language",
+    "language-agnostic"
   ],
   "license": "MIT",
   "devDependencies": {

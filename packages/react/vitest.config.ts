@@ -11,7 +11,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@libra/react': resolve(__dirname, 'src'),
+      '@libra-design/react': resolve(__dirname, 'src'),
     },
   },
 });

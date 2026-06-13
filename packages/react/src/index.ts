@@ -124,3 +124,16 @@ export type { OrderBookProps, OrderLevel } from './components/order-book';
 
 export { Heatmap } from './components/heatmap';
 export type { HeatmapProps, HeatmapCell } from './components/heatmap';
+
+// Phase 3 — Financial Depth Components
+export { OrderForm } from './components/order-form';
+export type { OrderFormProps, OrderData } from './components/order-form';
+
+export { PositionCard } from './components/position-card';
+export type { PositionCardProps } from './components/position-card';
+
+export { LiveTicker } from './components/live-ticker';
+export type { LiveTickerProps, TickerItem } from './components/live-ticker';
+
+export { HeatmapSector } from './components/heatmap-sector';
+export type { HeatmapSectorProps, SectorData } from './components/heatmap-sector';

@@ -8,8 +8,8 @@ import {
   Alert, Modal, Tooltip, Progress, Skeleton, SkeletonCard,
   Divider, Space, Flex, Table, TableHeader, TableHead, TableRow, TableCell,
   Avatar, Empty, Tag, MarketTable,
-} from '@libra/react';
-import type { MarketRow, MarketColumn, Tab } from '@libra/react';
+} from '@libra-design/react';
+import type { MarketRow, MarketColumn, Tab } from '@libra-design/react';
 
 // ============================================================
 // P0-Basic

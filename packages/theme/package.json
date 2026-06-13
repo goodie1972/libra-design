@@ -1,7 +1,7 @@
 {
-  "name": "@libra/theme",
+  "name": "@libra-design/theme",
   "version": "0.1.0",
-  "description": "libra 双主题混合引擎 — 暗色 ↔ 亮色无缝过渡，gamma-aware 插值",
+  "description": "Libra 双主题混合引擎 — 暗色↔亮色无缝过渡，gamma-aware 插值。Go/Rust 原生版无需浏览器，服务端直接渲染主题。",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -31,7 +31,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@libra/tokens": "^0.1.0"
+    "@libra-design/tokens": "^0.1.0"
   },
   "devDependencies": {
     "vite": "^5.4.0"

@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import '@libra/tokens/css';
+import '@libra-design/tokens/css';
 import { ThemeProvider } from './theme-provider';
 import { App } from './app';
 

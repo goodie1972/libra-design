@@ -1,0 +1,61 @@
+package components
+
+templ Badge(variant, size string, attrs templ.Attributes) {
+	if variant == "" {
+		variant = "flat"
+	}
+	if size == "" {
+		size = "default"
+	}
+	<style>
+		.libra-badge {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			font-family: var(--font-body);
+			font-weight: var(--weight-medium);
+			line-height: 1;
+			white-space: nowrap;
+			user-select: none;
+			border-radius: var(--radius-sm);
+			padding: 2px var(--space-2);
+			font-size: var(--text-base);
+			height: 22px;
+		}
+		.libra-badge--sm {
+			font-size: var(--text-xs);
+			padding: 1px var(--space-1);
+			height: 18px;
+		}
+		.libra-badge--up {
+			background-color: rgba(239, 83, 80, 0.12);
+			color: var(--up);
+		}
+		.libra-badge--down {
+			background-color: rgba(38, 166, 154, 0.12);
+			color: var(--down);
+		}
+		.libra-badge--flat {
+			background-color: var(--bg-input);
+			color: var(--text-secondary);
+		}
+		.libra-badge--success {
+			background-color: rgba(52, 168, 83, 0.12);
+			color: var(--success);
+		}
+		.libra-badge--warning {
+			background-color: rgba(251, 188, 4, 0.12);
+			color: var(--warning);
+		}
+		.libra-badge--error {
+			background-color: rgba(234, 67, 53, 0.12);
+			color: var(--error);
+		}
+	</style>
+	<span
+		class={ "libra-badge", "libra-badge--"+variant, "libra-badge--"+size }
+		{ attrs... }
+	>
+		{ children... }
+	</span>
+}

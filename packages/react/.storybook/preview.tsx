@@ -1,5 +1,5 @@
 import type { Preview } from '@storybook/react-vite';
-import '@libra/tokens/css';
+import '@libra-design/tokens/css';
 import { withTheme } from './theme-decorator';
 
 const preview: Preview = {

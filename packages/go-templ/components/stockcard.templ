@@ -1,0 +1,112 @@
+package components
+
+import "strconv"
+
+templ StockCard(code, name string, price, changePercent float64, volume int64, attrs templ.Attributes) {
+	<style>
+		.libra-stock-card {
+			background-color: var(--bg-card);
+			border: var(--card-border);
+			border-radius: var(--card-radius);
+			padding: var(--space-4);
+			display: flex;
+			flex-direction: column;
+			gap: var(--space-3);
+			cursor: pointer;
+			transition: border-color 0.2s ease, background-color 0.2s ease;
+		}
+		.libra-stock-card:hover {
+			border-color: var(--accent);
+			background-color: var(--bg-card-hover);
+		}
+		.libra-stock-card__header {
+			display: flex;
+			align-items: center;
+			gap: var(--space-2);
+		}
+		.libra-stock-card__code {
+			font-family: var(--font-mono);
+			font-size: var(--text-base);
+			font-weight: var(--weight-semibold);
+			color: var(--text-primary);
+		}
+		.libra-stock-card__name {
+			font-family: var(--font-body);
+			font-size: var(--text-sm);
+			color: var(--text-secondary);
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+		.libra-stock-card__body {
+			display: flex;
+			align-items: baseline;
+			gap: var(--space-2);
+		}
+		.libra-stock-card__price {
+			font-family: var(--font-mono);
+			font-size: var(--text-2xl);
+			font-weight: var(--weight-bold);
+			font-variant-numeric: tabular-nums;
+			line-height: var(--leading-tight);
+		}
+		.libra-stock-card__change {
+			font-family: var(--font-mono);
+			font-size: var(--text-md);
+			font-weight: var(--weight-semibold);
+			font-variant-numeric: tabular-nums;
+		}
+		.libra-stock-card__price.libra-price--up,
+		.libra-stock-card__change.libra-price--up {
+			color: var(--up);
+		}
+		.libra-stock-card__price.libra-price--down,
+		.libra-stock-card__change.libra-price--down {
+			color: var(--down);
+		}
+		.libra-stock-card__price.libra-price--flat,
+		.libra-stock-card__change.libra-price--flat {
+			color: var(--text-primary);
+		}
+		.libra-stock-card__change.libra-price--flat {
+			color: var(--text-tertiary);
+		}
+		.libra-stock-card__footer {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+		.libra-stock-card__volume-label {
+			font-family: var(--font-body);
+			font-size: var(--text-xs);
+			color: var(--text-tertiary);
+		}
+		.libra-stock-card__volume {
+			font-family: var(--font-mono);
+			font-size: var(--text-sm);
+			font-variant-numeric: tabular-nums;
+			color: var(--text-secondary);
+		}
+	</style>
+	<div class={ "libra-stock-card" } { attrs... }>
+		<div class="libra-stock-card__header">
+			<span class="libra-stock-card__code">{ code }</span>
+			<span class="libra-stock-card__name">{ name }</span>
+		</div>
+		<div class="libra-stock-card__body">
+			<span class={ "libra-stock-card__price", ChangeClass(changePercent) }>
+				{ strconv.FormatFloat(price, 'f', 2, 64) }
+			</span>
+			<span class={ "libra-stock-card__change", ChangeClass(changePercent) }>
+				if changePercent > 0 {
+					+
+				}
+				{ FormatChange(changePercent) }%
+			</span>
+		</div>
+		<div class="libra-stock-card__footer">
+			<span class="libra-stock-card__volume-label">成交量</span>
+			<span class="libra-stock-card__volume">{ FormatVolume(volume) }</span>
+		</div>
+	</div>
+}

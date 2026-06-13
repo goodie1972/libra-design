@@ -51,7 +51,7 @@ description: 生成符合 Libra 设计系统的 UI 代码时使用此 Skill。Us
 ### Theme engine
 
 ```typescript
-import { applyMix, applyPreset } from '@libra/theme';
+import { applyMix, applyPreset } from '@libra-design/theme';
 applyPreset('dark');   // t=0 — pure dark
 applyPreset('soft');   // t=0.7 — default, comfortable day/night
 applyPreset('light');  // t=1 — pure light
@@ -97,20 +97,20 @@ Only these 8 values. Nothing in between.
 
 ```bash
 # Install
-npm install @libra/tokens @libra/react
+npm install @libra-design/tokens @libra-design/react
 
 # Import tokens at entry point
-import '@libra/tokens/css';
+import '@libra-design/tokens/css';
 
 # Use components
-import { Button, Card, PriceDisplay } from '@libra/react';
+import { Button, Card, PriceDisplay } from '@libra-design/react';
 ```
 
 ### CLI (shadcn-style)
 
 ```bash
-npx @libra/cli init          # copy tokens.css to project
-npx @libra/cli add button    # copy component source
+npx @libra-design/cli init          # copy tokens.css to project
+npx @libra-design/cli add button    # copy component source
 ```
 
 ### MCP Server (AI integration)
@@ -119,7 +119,7 @@ Add to `~/.claude/settings.json`:
 ```json
 {
   "mcpServers": {
-    "libra": { "command": "npx", "args": ["@libra/mcp-server"] }
+    "libra": { "command": "npx", "args": ["@libra-design/mcp-server"] }
   }
 }
 ```

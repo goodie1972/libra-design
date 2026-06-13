@@ -1,0 +1,99 @@
+package components
+
+import "strconv"
+
+func MarketChangeClass(changePercent float64) string {
+	if changePercent > 0 {
+		return "libra-market--up"
+	} else if changePercent < 0 {
+		return "libra-market--down"
+	}
+	return "libra-market--flat"
+}
+
+templ MarketBoard(name string, points float64, change float64, changePercent float64, attrs templ.Attributes) {
+	<style>
+		.libra-market-board {
+			display: flex;
+			flex-direction: column;
+			gap: var(--space-2);
+			padding: var(--space-4);
+			background-color: var(--bg-card);
+			border: var(--card-border);
+			border-radius: var(--card-radius);
+			min-width: 180px;
+		}
+		.libra-market-board__header {
+			display: flex;
+			align-items: center;
+			gap: var(--space-2);
+		}
+		.libra-market-board__name {
+			font-family: var(--font-body);
+			font-size: var(--text-md);
+			font-weight: var(--weight-medium);
+			color: var(--text-secondary);
+		}
+		.libra-market-board__indicator {
+			font-size: var(--text-sm);
+		}
+		.libra-market-board__points {
+			font-family: var(--font-mono);
+			font-size: var(--text-xl);
+			font-weight: var(--weight-bold);
+			font-variant-numeric: tabular-nums;
+			line-height: var(--leading-tight);
+		}
+		.libra-market-board__change {
+			display: flex;
+			align-items: center;
+			gap: var(--space-3);
+		}
+		.libra-market-board__change-value,
+		.libra-market-board__change-pct {
+			font-family: var(--font-mono);
+			font-size: var(--text-base);
+			font-variant-numeric: tabular-nums;
+		}
+		.libra-market--up {
+			color: var(--up);
+		}
+		.libra-market--down {
+			color: var(--down);
+		}
+		.libra-market--flat {
+			color: var(--text-tertiary);
+		}
+	</style>
+	<div class={ "libra-market-board" } { attrs... }>
+		<div class="libra-market-board__header">
+			<span class="libra-market-board__name">{ name }</span>
+			<span class={ "libra-market-board__indicator", MarketChangeClass(changePercent) }>
+				if changePercent > 0 {
+					{ "\u25B2" }
+				} else if changePercent < 0 {
+					{ "\u25BC" }
+				} else {
+					{ "\u2500" }
+				}
+			</span>
+		</div>
+		<span class={ "libra-market-board__points", MarketChangeClass(changePercent) }>
+			{ strconv.FormatFloat(points, 'f', 2, 64) }
+		</span>
+		<div class="libra-market-board__change">
+			<span class={ "libra-market-board__change-value", MarketChangeClass(changePercent) }>
+				if change > 0 {
+					+
+				}
+				{ strconv.FormatFloat(change, 'f', 2, 64) }
+			</span>
+			<span class={ "libra-market-board__change-pct", MarketChangeClass(changePercent) }>
+				if changePercent > 0 {
+					+
+				}
+				{ FormatChange(changePercent) }%
+			</span>
+		</div>
+	</div>
+}

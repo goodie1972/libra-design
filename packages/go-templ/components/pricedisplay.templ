@@ -1,0 +1,80 @@
+package components
+
+import "strconv"
+
+func ChangeClass(changePercent float64) string {
+	if changePercent > 0 {
+		return "libra-price--up"
+	} else if changePercent < 0 {
+		return "libra-price--down"
+	}
+	return "libra-price--flat"
+}
+
+func FormatChange(changePercent float64) string {
+	return strconv.FormatFloat(changePercent, 'f', 2, 64)
+}
+
+func FormatVolume(v int64) string {
+	if v >= 100000000 {
+		return strconv.FormatFloat(float64(v)/100000000, 'f', 2, 64) + "亿"
+	}
+	if v >= 10000 {
+		return strconv.FormatFloat(float64(v)/10000, 'f', 2, 64) + "万"
+	}
+	return strconv.FormatInt(v, 10)
+}
+
+templ PriceDisplay(price float64, changePercent float64, currency string, attrs templ.Attributes) {
+	if currency == "" {
+		currency = "\u00A5"
+	}
+	<style>
+		.libra-price {
+			display: inline-flex;
+			flex-direction: column;
+			gap: var(--space-1);
+		}
+		.libra-price__value {
+			font-family: var(--font-mono);
+			font-size: var(--text-2xl);
+			font-weight: var(--weight-bold);
+			font-variant-numeric: tabular-nums;
+			line-height: var(--leading-tight);
+			color: var(--text-primary);
+		}
+		.libra-price__currency {
+			font-size: var(--text-lg);
+			font-weight: var(--weight-medium);
+			margin-right: 2px;
+		}
+		.libra-price__change {
+			font-family: var(--font-mono);
+			font-size: var(--text-md);
+			font-weight: var(--weight-semibold);
+			font-variant-numeric: tabular-nums;
+			line-height: var(--leading-tight);
+		}
+		.libra-price--up .libra-price__change {
+			color: var(--up);
+		}
+		.libra-price--down .libra-price__change {
+			color: var(--down);
+		}
+		.libra-price--flat .libra-price__change {
+			color: var(--text-tertiary);
+		}
+	</style>
+	<div class={ "libra-price", ChangeClass(changePercent) } { attrs... }>
+		<span class="libra-price__value">
+			<span class="libra-price__currency">{ currency }</span>
+			{ strconv.FormatFloat(price, 'f', 2, 64) }
+		</span>
+		<span class="libra-price__change">
+			if changePercent > 0 {
+				+
+			}
+			{ FormatChange(changePercent) }%
+		</span>
+	</div>
+}

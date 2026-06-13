@@ -1,0 +1,100 @@
+package components
+
+templ Button(variant, size string, disabled bool, attrs templ.Attributes) {
+	if variant == "" {
+		variant = "default"
+	}
+	if size == "" {
+		size = "default"
+	}
+	<style>
+		.libra-btn {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: var(--space-2);
+			border: 1px solid var(--border-input);
+			border-radius: var(--btn-radius);
+			font-family: var(--font-body);
+			font-weight: var(--weight-medium);
+			font-size: var(--text-base);
+			line-height: 1;
+			cursor: pointer;
+			transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+			outline: none;
+			text-decoration: none;
+			white-space: nowrap;
+			user-select: none;
+			padding: var(--space-2) var(--space-4);
+		}
+		.libra-btn--default {
+			background-color: var(--accent);
+			border-color: var(--accent);
+			color: #ffffff;
+		}
+		.libra-btn--default:hover:not(:disabled) {
+			background-color: var(--accent-hover);
+			border-color: var(--accent-hover);
+		}
+		.libra-btn--default:active:not(:disabled) {
+			background-color: var(--accent);
+		}
+		.libra-btn--secondary {
+			background-color: transparent;
+			border-color: var(--border-main);
+			color: var(--text-primary);
+		}
+		.libra-btn--secondary:hover:not(:disabled) {
+			background-color: var(--bg-card-hover);
+			border-color: var(--accent);
+			color: var(--accent);
+		}
+		.libra-btn--ghost {
+			background-color: transparent;
+			border-color: transparent;
+			color: var(--text-secondary);
+			padding: var(--space-2) var(--space-3);
+		}
+		.libra-btn--ghost:hover:not(:disabled) {
+			background-color: var(--bg-card-hover);
+			color: var(--text-primary);
+		}
+		.libra-btn--danger {
+			background-color: var(--error);
+			border-color: var(--error);
+			color: #ffffff;
+		}
+		.libra-btn--danger:hover:not(:disabled) {
+			filter: brightness(0.9);
+		}
+		.libra-btn--sm {
+			font-size: var(--text-sm);
+			padding: var(--space-1) var(--space-3);
+			height: 28px;
+		}
+		.libra-btn--lg {
+			font-size: var(--text-lg);
+			padding: var(--space-3) var(--space-5);
+			height: 44px;
+		}
+		.libra-btn--icon {
+			width: 32px;
+			height: 32px;
+			padding: 0;
+			border-radius: var(--radius-md);
+		}
+		.libra-btn--disabled,
+		.libra-btn:disabled {
+			opacity: 0.45;
+			cursor: not-allowed;
+			pointer-events: none;
+		}
+	</style>
+	<button
+		class={ "libra-btn", "libra-btn--"+variant, "libra-btn--"+size, templ.KV("libra-btn--disabled", disabled) }
+		disabled={ disabled }
+		{ attrs... }
+	>
+		{ children... }
+	</button>
+}
