@@ -1,0 +1,32 @@
+package components
+
+// RadioOption 单选选项。
+type RadioOption struct {
+	Value, Label string
+}
+
+// RadioGroup 单选按钮组。自定义圆形选中指示。
+templ RadioGroup(name string, options []RadioOption, value string, disabled bool, attrs templ.Attributes) {
+	<div class="libra-radio-group" { attrs... }>
+		for _, opt := range options {
+			<label
+				class={ "libra-radio", templ.KV("libra-radio--selected", opt.Value == value), templ.KV("libra-radio--disabled", disabled) }
+			>
+				<input
+					type="radio"
+					name={ name }
+					value={ opt.Value }
+					checked={ opt.Value == value }
+					disabled={ disabled }
+					class="libra-radio__input"
+				/>
+				<span class="libra-radio__indicator">
+					if opt.Value == value {
+						<span class="libra-radio__dot"></span>
+					}
+				</span>
+				<span class="libra-radio__label">{ opt.Label }</span>
+			</label>
+		}
+	</div>
+}

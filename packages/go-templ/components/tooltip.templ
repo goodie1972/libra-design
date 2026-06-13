@@ -1,0 +1,13 @@
+package components
+
+// Tooltip 文字提示。hover 时显示提示内容，CSS 过渡动画。
+// position: top / bottom / left / right（默认 top）。
+templ Tooltip(text string, position string, attrs templ.Attributes) {
+	if position == "" {
+		position = "top"
+	}
+	<span class={ "libra-tooltip", "libra-tooltip--" + position } { attrs... }>
+		{ children... }
+		<span class="libra-tooltip__content">{ text }</span>
+	</span>
+}

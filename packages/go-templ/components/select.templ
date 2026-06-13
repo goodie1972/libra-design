@@ -1,0 +1,27 @@
+package components
+
+// SelectOption 下拉选项。
+type SelectOption struct {
+	Value, Label string
+}
+
+// Select 下拉选择框。视觉风格与 Input 一致。
+templ Select(name string, options []SelectOption, placeholder string, errMsg string, disabled bool, attrs templ.Attributes) {
+	<div class="libra-select-group" { attrs... }>
+		<select
+			class={ "libra-select", templ.KV("libra-select--error", errMsg != "") }
+			name={ name }
+			disabled={ disabled }
+		>
+			if placeholder != "" {
+				<option value="" selected disabled>{ placeholder }</option>
+			}
+			for _, opt := range options {
+				<option value={ opt.Value }>{ opt.Label }</option>
+			}
+		</select>
+		if errMsg != "" {
+			<span class="libra-select__error">{ errMsg }</span>
+		}
+	</div>
+}

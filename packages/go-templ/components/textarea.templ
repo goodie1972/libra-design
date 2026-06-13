@@ -1,0 +1,20 @@
+package components
+
+// Textarea 多行文本输入。与 Input 同风格，可指定行数（默认 3 行）。
+templ Textarea(name string, placeholder string, rows int, errMsg string, disabled bool, attrs templ.Attributes) {
+	if rows <= 0 {
+		rows = 3
+	}
+	<div class="libra-textarea-group" { attrs... }>
+		<textarea
+			class={ "libra-textarea", templ.KV("libra-textarea--error", errMsg != "") }
+			name={ name }
+			placeholder={ placeholder }
+			rows={ rows }
+			disabled={ disabled }
+		></textarea>
+		if errMsg != "" {
+			<span class="libra-textarea__error">{ errMsg }</span>
+		}
+	</div>
+}

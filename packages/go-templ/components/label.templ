@@ -1,0 +1,11 @@
+package components
+
+// Label 表单标签组件。required=true 时在文本后显示红色 * 号。
+templ Label(text string, required bool, attrs templ.Attributes) {
+	<label class="libra-label" { attrs... }>
+		{ text }
+		if required {
+			<span class="libra-label__required">*</span>
+		}
+	</label>
+}

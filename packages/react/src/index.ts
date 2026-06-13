@@ -137,3 +137,16 @@ export type { LiveTickerProps, TickerItem } from './components/live-ticker';
 
 export { HeatmapSector } from './components/heatmap-sector';
 export type { HeatmapSectorProps, SectorData } from './components/heatmap-sector';
+
+// Phase 5 — Form & Layout
+export { Label } from './components/label';
+export type { LabelProps } from './components/label';
+
+export { Form } from './components/form';
+export type { FormProps } from './components/form';
+
+export { Layout, LayoutHeader, LayoutSider, LayoutContent, LayoutFooter } from './components/layout';
+export type { LayoutProps, LayoutHeaderProps, LayoutSiderProps, LayoutContentProps, LayoutFooterProps } from './components/layout';
+
+export { Watermark } from './components/watermark';
+export type { WatermarkProps } from './components/watermark';

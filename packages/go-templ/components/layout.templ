@@ -1,0 +1,36 @@
+package components
+
+// Layout 页面布局容器。类似 Ant Design 的 Layout 组件，flex 布局。
+templ Layout(attrs templ.Attributes) {
+	<div class="libra-layout" { attrs... }>
+		{ children... }
+	</div>
+}
+
+// LayoutHeader 顶部导航栏。
+templ LayoutHeader(attrs templ.Attributes) {
+	<header class="libra-layout__header" { attrs... }>
+		{ children... }
+	</header>
+}
+
+// LayoutSider 左侧侧边栏。
+templ LayoutSider(attrs templ.Attributes) {
+	<aside class="libra-layout__sider" { attrs... }>
+		{ children... }
+	</aside>
+}
+
+// LayoutContent 主内容区域。
+templ LayoutContent(attrs templ.Attributes) {
+	<main class="libra-layout__content" { attrs... }>
+		{ children... }
+	</main>
+}
+
+// LayoutFooter 底部栏。
+templ LayoutFooter(attrs templ.Attributes) {
+	<footer class="libra-layout__footer" { attrs... }>
+		{ children... }
+	</footer>
+}

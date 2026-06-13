@@ -1,0 +1,22 @@
+package components
+
+// DropdownItem 下拉菜单项。
+type DropdownItem struct {
+	Label, Href string
+	Danger      bool
+}
+
+// DropdownMenu 下拉菜单。hover 时弹出菜单，纯 CSS，无需 JS。
+templ DropdownMenu(trigger string, items []DropdownItem, attrs templ.Attributes) {
+	<div class="libra-dropdown" { attrs... }>
+		<button class="libra-dropdown__trigger" type="button">{ trigger }</button>
+		<div class="libra-dropdown__menu">
+			for _, item := range items {
+				<a
+					class={ "libra-dropdown__item", templ.KV("libra-dropdown__item--danger", item.Danger) }
+					href={ item.Href }
+				>{ item.Label }</a>
+			}
+		</div>
+	</div>
+}

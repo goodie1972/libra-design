@@ -1,0 +1,11 @@
+package components
+
+// Form 表单容器。包裹表单内容，提供统一间距布局。
+templ Form(action string, method string, attrs templ.Attributes) {
+	if method == "" {
+		method = "POST"
+	}
+	<form class="libra-form" action={ action } method={ method } { attrs... }>
+		{ children... }
+	</form>
+}

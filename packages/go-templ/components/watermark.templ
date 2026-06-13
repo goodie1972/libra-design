@@ -1,0 +1,24 @@
+package components
+
+import "fmt"
+
+// Watermark 全屏水印组件。
+// 默认显示"数据仅供参考，投资有风险"，半透明，旋转 -30deg。
+templ Watermark(text string, color string, opacity float64, attrs templ.Attributes) {
+	if text == "" {
+		text = "数据仅供参考，投资有风险"
+	}
+	if color == "" {
+		color = "var(--text-tertiary)"
+	}
+	if opacity == 0 {
+		opacity = 0.08
+	}
+	<div
+		class="libra-watermark"
+		style={ "color:" + color + ";opacity:" + fmt.Sprintf("%.2f", opacity) }
+		{ attrs... }
+	>
+		{ children... }
+	</div>
+}

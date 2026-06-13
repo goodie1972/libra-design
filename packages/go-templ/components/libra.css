@@ -1,0 +1,531 @@
+/* ============================================================
+   Libra Design System — CSS Custom Properties
+   Use via var(--xxx) in all components. NO hardcoded hex colors.
+   ============================================================ */
+:root {
+  /* Backgrounds — 4-layer surface stacking for dark mode */
+  --bg-root: #0b0e14;
+  --bg-card: #131820;
+  --bg-card-hover: #1c2330;
+  --bg-input: #0d1119;
+  --bg-sub-panel: #1a212e;
+  --bg-chart: #0f141e;
+
+  /* Text */
+  --text-primary: #e4e7ed;
+  --text-secondary: #8b95a6;
+  --text-tertiary: #5a6477;
+
+  /* Borders */
+  --border-main: #2a3345;
+  --border-sub: #1f2838;
+  --border-input: #2a3345;
+
+  /* Accent / Interaction */
+  --accent: #4a6cf7;
+  --accent-hover: #5b7cf8;
+  --error: #ea4335;
+
+  /* Border-radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 12px;
+  --radius-full: 9999px;
+  --btn-radius: 8px;
+  --card-radius: 10px;
+
+  /* Font-size */
+  --text-xs: 10px;
+  --text-sm: 12px;
+  --text-base: 13px;
+  --text-md: 14px;
+  --text-lg: 16px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+
+  /* Spacing — 4px base unit */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 64px;
+
+  /* Font-weight */
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Font-family */
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", Menlo, Courier, monospace;
+  --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* Up / Down colors */
+  --up: #ef5350;
+  --down: #26a69a;
+  --flat: #8b95a6;
+
+  /* Card */
+  --card-border: 1px solid var(--border-main);
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+
+  /* Leading */
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+}
+
+/* ============================================================
+   Phase 5 — Form + Layout Components
+   ============================================================ */
+
+/* ---------- 1. Label ---------- */
+.libra-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--text-secondary);
+  line-height: var(--leading-normal);
+}
+.libra-label__required {
+  color: var(--error);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-sm);
+  line-height: 1;
+}
+
+/* ---------- 2. Select ---------- */
+.libra-select-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.libra-select {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 5L6 8L9 5' stroke='%238b95a6' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-3) center;
+  padding-right: var(--space-6);
+}
+.libra-select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(74, 108, 247, 0.15);
+}
+.libra-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.libra-select--error {
+  border-color: var(--error);
+}
+.libra-select--error:focus {
+  box-shadow: 0 0 0 2px rgba(234, 67, 53, 0.15);
+}
+.libra-select__error {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--error);
+}
+
+/* ---------- 3. Textarea ---------- */
+.libra-textarea-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.libra-textarea {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  outline: none;
+  resize: vertical;
+  min-height: 60px;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.libra-textarea::placeholder {
+  color: var(--text-tertiary);
+}
+.libra-textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(74, 108, 247, 0.15);
+}
+.libra-textarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.libra-textarea--error {
+  border-color: var(--error);
+}
+.libra-textarea--error:focus {
+  box-shadow: 0 0 0 2px rgba(234, 67, 53, 0.15);
+}
+.libra-textarea__error {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--error);
+}
+
+/* ---------- 4. Checkbox ---------- */
+.libra-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  user-select: none;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  line-height: var(--leading-normal);
+}
+.libra-checkbox__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.libra-checkbox__indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-sm);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.libra-checkbox:hover .libra-checkbox__indicator {
+  border-color: var(--accent);
+}
+.libra-checkbox--checked .libra-checkbox__indicator {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+.libra-checkbox--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.libra-checkbox__label {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--text-primary);
+}
+
+/* ---------- 5. Radio Group ---------- */
+.libra-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.libra-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  user-select: none;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  line-height: var(--leading-normal);
+}
+.libra-radio__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.libra-radio__indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-full);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.libra-radio:hover .libra-radio__indicator {
+  border-color: var(--accent);
+}
+.libra-radio--selected .libra-radio__indicator {
+  border-color: var(--accent);
+}
+.libra-radio__dot {
+  display: block;
+  width: 8px;
+  height: 8px;
+  background-color: var(--accent);
+  border-radius: var(--radius-full);
+}
+.libra-radio--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.libra-radio__label {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--text-primary);
+}
+
+/* ---------- 6. Dropdown Menu ---------- */
+.libra-dropdown {
+  position: relative;
+  display: inline-block;
+}
+.libra-dropdown__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-main);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  user-select: none;
+  white-space: nowrap;
+}
+.libra-dropdown__trigger::after {
+  content: "";
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid var(--text-tertiary);
+  margin-left: var(--space-1);
+  transition: transform 0.15s ease;
+}
+.libra-dropdown:hover .libra-dropdown__trigger {
+  background-color: var(--bg-card-hover);
+  border-color: var(--accent);
+}
+.libra-dropdown:hover .libra-dropdown__trigger::after {
+  transform: rotate(180deg);
+}
+.libra-dropdown__menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 100;
+  min-width: 160px;
+  margin-top: var(--space-1);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-main);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px);
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s ease;
+}
+.libra-dropdown:hover .libra-dropdown__menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.libra-dropdown__item {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.1s ease;
+}
+.libra-dropdown__item:first-child {
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+.libra-dropdown__item:last-child {
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+.libra-dropdown__item:hover {
+  background-color: var(--bg-card-hover);
+}
+.libra-dropdown__item--danger {
+  color: var(--error);
+}
+
+/* ---------- 7. Form ---------- */
+.libra-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  width: 100%;
+}
+
+/* ---------- 8. Layout ---------- */
+.libra-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+}
+.libra-layout__header {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  padding: 0 var(--space-4);
+  background-color: var(--bg-card);
+  border-bottom: 1px solid var(--border-sub);
+  flex-shrink: 0;
+}
+.libra-layout__sider {
+  width: 240px;
+  background-color: var(--bg-card);
+  border-right: 1px solid var(--border-sub);
+  flex-shrink: 0;
+  overflow-y: auto;
+}
+.libra-layout--has-sider {
+  flex-direction: row;
+  flex: 1;
+}
+.libra-layout__content {
+  flex: 1;
+  padding: var(--space-4);
+  background-color: var(--bg-root);
+  overflow-y: auto;
+}
+.libra-layout__footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background-color: var(--bg-card);
+  border-top: 1px solid var(--border-sub);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+/* ---------- 9. Watermark ---------- */
+.libra-watermark {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+.libra-watermark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    -30deg,
+    transparent 0px,
+    transparent 100px,
+    currentColor 100px,
+    currentColor 101px
+  );
+  background-size: 200px 200px;
+  background-repeat: repeat;
+  opacity: inherit;
+  color: inherit;
+}
+.libra-watermark > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- 10. Tooltip ---------- */
+.libra-tooltip {
+  position: relative;
+  display: inline-flex;
+  cursor: pointer;
+}
+.libra-tooltip__content {
+  position: absolute;
+  z-index: 1000;
+  padding: var(--space-1) var(--space-2);
+  background-color: var(--bg-sub-panel);
+  border: 1px solid var(--border-main);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--text-primary);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease, visibility 0.15s ease, transform 0.15s ease;
+  transform: translateY(0);
+}
+.libra-tooltip:hover .libra-tooltip__content {
+  opacity: 1;
+  visibility: visible;
+}
+.libra-tooltip--top .libra-tooltip__content {
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  margin-bottom: var(--space-1);
+}
+.libra-tooltip--top:hover .libra-tooltip__content {
+  transform: translateX(-50%) translateY(0);
+}
+.libra-tooltip--bottom .libra-tooltip__content {
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+  margin-top: var(--space-1);
+}
+.libra-tooltip--bottom:hover .libra-tooltip__content {
+  transform: translateX(-50%) translateY(0);
+}
+.libra-tooltip--left .libra-tooltip__content {
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%) translateX(4px);
+  margin-right: var(--space-1);
+}
+.libra-tooltip--left:hover .libra-tooltip__content {
+  transform: translateY(-50%) translateX(0);
+}
+.libra-tooltip--right .libra-tooltip__content {
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%) translateX(-4px);
+  margin-left: var(--space-1);
+}
+.libra-tooltip--right:hover .libra-tooltip__content {
+  transform: translateY(-50%) translateX(0);
+}

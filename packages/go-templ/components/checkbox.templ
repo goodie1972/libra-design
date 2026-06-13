@@ -1,0 +1,27 @@
+package components
+
+// Checkbox 复选框。自定义勾选样式，隐藏原生 checkbox 用 div 模拟。
+templ Checkbox(name string, checked bool, label string, disabled bool, attrs templ.Attributes) {
+	<label
+		class={ "libra-checkbox", templ.KV("libra-checkbox--checked", checked), templ.KV("libra-checkbox--disabled", disabled) }
+		{ attrs... }
+	>
+		<input
+			type="checkbox"
+			name={ name }
+			checked={ checked }
+			disabled={ disabled }
+			class="libra-checkbox__input"
+		/>
+		<span class="libra-checkbox__indicator">
+			if checked {
+				<svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+					<path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+				</svg>
+			}
+		</span>
+		if label != "" {
+			<span class="libra-checkbox__label">{ label }</span>
+		}
+	</label>
+}
