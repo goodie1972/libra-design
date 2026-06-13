@@ -1,7 +1,7 @@
 {
   "name": "@libra-design/tokens",
-  "version": "0.1.0",
-  "description": "Libra 设计令牌 — 语言无关的金融色值体系。一份 JSON，Go/Rust/TS 三语言消费。CSS 变量 + TypeScript 类型。",
+  "version": "0.1.1",
+  "description": "Libra 极致审美的设计语言，专为Go/Rust量身定制。设计令牌 — CSS 变量 + TypeScript 类型定义。",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",

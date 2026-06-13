@@ -1,7 +1,7 @@
 {
   "name": "@libra-design/react",
-  "version": "0.1.0",
-  "description": "Libra React 金融组件库 — 40+ 组件（K 线/深度图/订单簿/热力图）。Go/Rust 同款设计令牌驱动，跨语言一致。",
+  "version": "0.1.1",
+  "description": "Libra 极致审美的设计语言，专为Go/Rust量身定制。React 金融组件库 — 40+ 组件。",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",

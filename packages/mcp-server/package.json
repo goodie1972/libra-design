@@ -1,7 +1,7 @@
 {
   "name": "@libra-design/mcp-server",
-  "version": "0.1.0",
-  "description": "Libra MCP Server — 向 AI Agent 暴露设计令牌和组件生成。Go 原生版单二进制 10ms 冷启动，npm 版在本包。",
+  "version": "0.1.1",
+  "description": "Libra 极致审美的设计语言，专为Go/Rust量身定制。MCP Server — AI Agent 设计令牌消费。",
   "type": "module",
   "main": "./dist/index.js",
   "bin": {

@@ -2,7 +2,7 @@
   "name": "libra",
   "version": "0.1.0",
   "private": true,
-  "description": "Libra Design System — Go/Rust 原生 + React 多语言金融设计系统。一份设计令牌，全语言消费。JS 设计系统是红海，Go/Rust 是蓝海。",
+  "description": "Libra 极致审美的设计语言，专为Go/Rust量身定制。多语言金融设计系统。",
   "workspaces": [
     "packages/*"
   ],
