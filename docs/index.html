@@ -153,11 +153,11 @@ h3 { font-size: 13px; font-weight: 500; color: var(--text-secondary); margin-bot
 
 /* THEME GRID */
 .theme-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
-.theme-card { padding: 16px; border-radius: 8px; border: 1px solid var(--border-sub); background: var(--bg-input); cursor: pointer; transition: all 0.2s; }
+.theme-card { display: flex; flex-direction: column; padding: 16px; border-radius: 8px; border: 1px solid var(--border-sub); background: var(--bg-input); cursor: pointer; transition: all 0.2s; }
 .theme-card:hover { border-color: var(--accent); background: var(--bg-card); }
 .theme-card .tc-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
-.theme-card .tc-desc { font-size: 11px; color: var(--text-tertiary); line-height: 1.5; }
-.theme-card .tc-bar { display: flex; gap: 2px; margin-top: 10px; height: 6px; border-radius: 3px; overflow: hidden; }
+.theme-card .tc-desc { font-size: 11px; color: var(--text-tertiary); line-height: 1.5; flex: 1; }
+.theme-card .tc-bar { display: flex; gap: 2px; margin-top: auto; height: 6px; border-radius: 3px; overflow: hidden; }
 .theme-card .tc-bar span { flex: 1; }
 
 /* PHILOSOPHY */
@@ -524,17 +524,17 @@ footer a:hover { opacity: 0.8; }
 // ============================================================
 // ALL THEME DEFINITIONS (10 named themes)
 // ============================================================
-var THEMES = [
-  {id:"terminal",name:"Terminal",desc:"Bloomberg Terminal 风格。黑底琥珀字",dark:{bg:"#0c0c0e",c:"#151518",h:"#1c1c20",b:"#252528",t:"#e8e8ed",a:"#f59e0b"},light:{bg:"#faf8f5",c:"#ffffff",h:"#f5f0e8",b:"#d4c8b0",t:"#1a1814",a:"#d97706"}},
-  {id:"ticker",name:"Ticker",desc:"交易所大屏。深蓝底亮白字",dark:{bg:"#0a1628",c:"#0f1f3d",h:"#142850",b:"#1a3560",t:"#e8f0fe",a:"#3b82f6"},light:{bg:"#f0f4fa",c:"#ffffff",h:"#e8edf5",b:"#c0cce0",t:"#0f1a30",a:"#2563eb"}},
-  {id:"vault",name:"Vault",desc:"私人银行金库。暖暗金棕",dark:{bg:"#161412",c:"#1c1a16",h:"#242118",b:"#2c2820",t:"#e8e0d0",a:"#c9a84c"},light:{bg:"#f8f6f2",c:"#ffffff",h:"#f0ece4",b:"#d0c8b8",t:"#1a1612",a:"#a08030"}},
-  {id:"margin",name:"Margin",desc:"保证金交易。极致暗红",dark:{bg:"#08080a",c:"#0e0e12",h:"#141418",b:"#1a1a20",t:"#f0f0f4",a:"#ef4444"},light:{bg:"#fafafa",c:"#ffffff",h:"#f4f4f4",b:"#d0d0d0",t:"#0a0a0c",a:"#dc2626"}},
-  {id:"ledger",name:"Ledger",desc:"账簿票据。暖纸白会计蓝",dark:{bg:"#1a1814",c:"#201e18",h:"#28261e",b:"#302e24",t:"#e8e4d8",a:"#1e3a8a"},light:{bg:"#faf8f3",c:"#ffffff",h:"#f4f0e8",b:"#d4cec0",t:"#1a1612",a:"#1e40af"}},
-  {id:"prospectus",name:"Prospectus",desc:"招股书。纯白深蓝黑",dark:{bg:"#0f1117",c:"#161820",h:"#1c1e28",b:"#242630",t:"#e4e6ec",a:"#1a1a2e"},light:{bg:"#ffffff",c:"#ffffff",h:"#f4f5f8",b:"#d0d2d8",t:"#0f1117",a:"#e63946"}},
-  {id:"arbitrage",name:"Arbitrage",desc:"量化套利。高对比赛紫",dark:{bg:"#050508",c:"#0a0a10",h:"#101018",b:"#1a1a28",t:"#f0f0f8",a:"#7c3aed"},light:{bg:"#f8f8fc",c:"#ffffff",h:"#f0f0f8",b:"#c8c8d8",t:"#08080c",a:"#6d28d9"}},
-  {id:"circuit",name:"Circuit",desc:"80年代CRT。绿字黑底",dark:{bg:"#0a0a0a",c:"#0e0e0e",h:"#141414",b:"#1a3a1a",t:"#22c55e",a:"#22c55e"},light:{bg:"#f0faf0",c:"#ffffff",h:"#e8f5e8",b:"#b0d0b0",t:"#0a1a0a",a:"#15803d"}},
-  {id:"candlestick",name:"Candlestick",desc:"K线图表。深灰金黄",dark:{bg:"#0d0e10",c:"#131416",h:"#191a1c",b:"#1e1e22",t:"#e4e4e8",a:"#f8b500"},light:{bg:"#f5f5f7",c:"#ffffff",h:"#f0f0f2",b:"#d0d0d4",t:"#0d0e10",a:"#d4a000"}},
-  {id:"clearing",name:"Clearing",desc:"清算所B2B。灰白克制",dark:{bg:"#18181b",c:"#1e1e22",h:"#242428",b:"#2a2a30",t:"#e4e4e8",a:"#52525b"},light:{bg:"#f5f5f5",c:"#ffffff",h:"#f0f0f0",b:"#c8c8cc",t:"#18181b",a:"#52525b"}}
+var ALL_THEMES = [
+  {id:"terminal",name:"Terminal",desc:"Bloomberg Terminal 黑底琥珀字",dark:{"bg-root":"#0c0c0e","bg-main":"#0c0c0e","bg-sidebar":"#0c0c0e","bg-card":"#151518","bg-card-hover":"#1c1c20","bg-input":"#1c1c20","bg-chart":"#0c0c0e","bg-sub-panel":"#151518","border-main":"#252528","border-sub":"#1c1c20","border-input":"#252528","text-primary":"#e8e8ed","text-secondary":"#a1a1a8","text-tertiary":"#6b6b72","accent":"#f59e0b","accent-hover":"#fbbf24","grid-line":"#1a1a1e"},light:{"bg-root":"#faf8f5","bg-main":"#faf8f5","bg-sidebar":"#faf8f5","bg-card":"#ffffff","bg-card-hover":"#f5f0e8","bg-input":"#f0ebe0","bg-chart":"#faf8f5","bg-sub-panel":"#ffffff","border-main":"#d4c8b0","border-sub":"#e8dcc8","border-input":"#d4c8b0","text-primary":"#1a1814","text-secondary":"#5c5548","text-tertiary":"#8c8470","accent":"#d97706","accent-hover":"#b45309","grid-line":"#f0ebe0"}},
+  {id:"ticker",name:"Ticker",desc:"交易所大屏 深蓝亮白",dark:{"bg-root":"#0a1628","bg-main":"#0a1628","bg-sidebar":"#0a1628","bg-card":"#0f1f3d","bg-card-hover":"#142850","bg-input":"#142850","bg-chart":"#0a1628","bg-sub-panel":"#0f1f3d","border-main":"#1a3560","border-sub":"#142850","border-input":"#1a3560","text-primary":"#e8f0fe","text-secondary":"#90a4cc","text-tertiary":"#5a7099","accent":"#3b82f6","accent-hover":"#60a5fa","grid-line":"#0f1f3d"},light:{"bg-root":"#f0f4fa","bg-main":"#f0f4fa","bg-sidebar":"#f0f4fa","bg-card":"#ffffff","bg-card-hover":"#e8edf5","bg-input":"#e0e7f2","bg-chart":"#f0f4fa","bg-sub-panel":"#ffffff","border-main":"#c0cce0","border-sub":"#d8e0ee","border-input":"#c0cce0","text-primary":"#0f1a30","text-secondary":"#4a5a78","text-tertiary":"#7888a0","accent":"#2563eb","accent-hover":"#1d4ed8","grid-line":"#e0e7f2"}},
+  {id:"vault",name:"Vault",desc:"私人银行 暖暗金棕",dark:{"bg-root":"#161412","bg-main":"#161412","bg-sidebar":"#161412","bg-card":"#1c1a16","bg-card-hover":"#242118","bg-input":"#242118","bg-chart":"#161412","bg-sub-panel":"#1c1a16","border-main":"#2c2820","border-sub":"#242118","border-input":"#2c2820","text-primary":"#e8e0d0","text-secondary":"#a09888","text-tertiary":"#706858","accent":"#c9a84c","accent-hover":"#d4b868","grid-line":"#1c1a16"},light:{"bg-root":"#f8f6f2","bg-main":"#f8f6f2","bg-sidebar":"#f8f6f2","bg-card":"#ffffff","bg-card-hover":"#f0ece4","bg-input":"#e8e4d8","bg-chart":"#f8f6f2","bg-sub-panel":"#ffffff","border-main":"#d0c8b8","border-sub":"#e0d8cc","border-input":"#d0c8b8","text-primary":"#1a1612","text-secondary":"#5c5040","text-tertiary":"#8c7c68","accent":"#a08030","accent-hover":"#8c6c28","grid-line":"#e8e4d8"}},
+  {id:"margin",name:"Margin",desc:"保证金交易 极致暗红",dark:{"bg-root":"#08080a","bg-main":"#08080a","bg-sidebar":"#08080a","bg-card":"#0e0e12","bg-card-hover":"#141418","bg-input":"#141418","bg-chart":"#08080a","bg-sub-panel":"#0e0e12","border-main":"#1a1a20","border-sub":"#141418","border-input":"#1a1a20","text-primary":"#f0f0f4","text-secondary":"#8c8c94","text-tertiary":"#5c5c64","accent":"#ef4444","accent-hover":"#f87171","grid-line":"#0e0e12"},light:{"bg-root":"#fafafa","bg-main":"#fafafa","bg-sidebar":"#fafafa","bg-card":"#ffffff","bg-card-hover":"#f4f4f4","bg-input":"#ececec","bg-chart":"#fafafa","bg-sub-panel":"#ffffff","border-main":"#d0d0d0","border-sub":"#e4e4e4","border-input":"#d0d0d0","text-primary":"#0a0a0c","text-secondary":"#4a4a50","text-tertiary":"#787880","accent":"#dc2626","accent-hover":"#b91c1c","grid-line":"#ececec"}},
+  {id:"ledger",name:"Ledger",desc:"账簿报表 暖纸白会计蓝",dark:{"bg-root":"#1a1814","bg-main":"#1a1814","bg-sidebar":"#1a1814","bg-card":"#201e18","bg-card-hover":"#28261e","bg-input":"#28261e","bg-chart":"#1a1814","bg-sub-panel":"#201e18","border-main":"#302e24","border-sub":"#28261e","border-input":"#302e24","text-primary":"#e8e4d8","text-secondary":"#a09888","text-tertiary":"#706858","accent":"#1e3a8a","accent-hover":"#2563eb","grid-line":"#201e18"},light:{"bg-root":"#faf8f3","bg-main":"#faf8f3","bg-sidebar":"#faf8f3","bg-card":"#ffffff","bg-card-hover":"#f4f0e8","bg-input":"#ece8dc","bg-chart":"#faf8f3","bg-sub-panel":"#ffffff","border-main":"#d4cec0","border-sub":"#e4ded4","border-input":"#d4cec0","text-primary":"#1a1612","text-secondary":"#504838","text-tertiary":"#807860","accent":"#1e40af","accent-hover":"#1e3a8a","grid-line":"#ece8dc"}},
+  {id:"prospectus",name:"Prospectus",desc:"招股书 纯白深蓝黑",dark:{"bg-root":"#0f1117","bg-main":"#0f1117","bg-sidebar":"#0f1117","bg-card":"#161820","bg-card-hover":"#1c1e28","bg-input":"#1c1e28","bg-chart":"#0f1117","bg-sub-panel":"#161820","border-main":"#242630","border-sub":"#1c1e28","border-input":"#242630","text-primary":"#e4e6ec","text-secondary":"#989aa8","text-tertiary":"#686a78","accent":"#1a1a2e","accent-hover":"#2a2a4e","grid-line":"#161820"},light:{"bg-root":"#ffffff","bg-main":"#ffffff","bg-sidebar":"#f8f9fa","bg-card":"#ffffff","bg-card-hover":"#f4f5f8","bg-input":"#ecedf0","bg-chart":"#ffffff","bg-sub-panel":"#fafafa","border-main":"#d0d2d8","border-sub":"#e0e2e8","border-input":"#d0d2d8","text-primary":"#0f1117","text-secondary":"#484a58","text-tertiary":"#787a88","accent":"#e63946","accent-hover":"#c1121f","grid-line":"#ecedf0"}},
+  {id:"arbitrage",name:"Arbitrage",desc:"量化套利 高对比赛紫",dark:{"bg-root":"#050508","bg-main":"#050508","bg-sidebar":"#050508","bg-card":"#0a0a10","bg-card-hover":"#101018","bg-input":"#101018","bg-chart":"#050508","bg-sub-panel":"#0a0a10","border-main":"#1a1a28","border-sub":"#101018","border-input":"#1a1a28","text-primary":"#f0f0f8","text-secondary":"#8888a0","text-tertiary":"#585870","accent":"#7c3aed","accent-hover":"#8b5cf6","grid-line":"#0a0a10"},light:{"bg-root":"#f8f8fc","bg-main":"#f8f8fc","bg-sidebar":"#f8f8fc","bg-card":"#ffffff","bg-card-hover":"#f0f0f8","bg-input":"#e8e8f4","bg-chart":"#f8f8fc","bg-sub-panel":"#ffffff","border-main":"#c8c8d8","border-sub":"#dcdce8","border-input":"#c8c8d8","text-primary":"#08080c","text-secondary":"#484860","text-tertiary":"#787890","accent":"#6d28d9","accent-hover":"#5b21b6","grid-line":"#e8e8f4"}},
+  {id:"circuit",name:"Circuit",desc:"80年代CRT 绿字黑底",dark:{"bg-root":"#0a0a0a","bg-main":"#0a0a0a","bg-sidebar":"#0a0a0a","bg-card":"#0e0e0e","bg-card-hover":"#141414","bg-input":"#141414","bg-chart":"#0a0a0a","bg-sub-panel":"#0e0e0e","border-main":"#1a3a1a","border-sub":"#0e1e0e","border-input":"#1a3a1a","text-primary":"#22c55e","text-secondary":"#16a34a","text-tertiary":"#15803d","accent":"#22c55e","accent-hover":"#4ade80","grid-line":"#0e1e0e"},light:{"bg-root":"#f0faf0","bg-main":"#f0faf0","bg-sidebar":"#f0faf0","bg-card":"#ffffff","bg-card-hover":"#e8f5e8","bg-input":"#dcefdc","bg-chart":"#f0faf0","bg-sub-panel":"#ffffff","border-main":"#b0d0b0","border-sub":"#c8e0c8","border-input":"#b0d0b0","text-primary":"#0a1a0a","text-secondary":"#2a5a2a","text-tertiary":"#4a7a4a","accent":"#15803d","accent-hover":"#166534","grid-line":"#dcefdc"}},
+  {id:"candlestick",name:"Candlestick",desc:"K线图表 深灰金黄",dark:{"bg-root":"#0d0e10","bg-main":"#0d0e10","bg-sidebar":"#0d0e10","bg-card":"#131416","bg-card-hover":"#191a1c","bg-input":"#191a1c","bg-chart":"#0d0e10","bg-sub-panel":"#131416","border-main":"#1e1e22","border-sub":"#16181a","border-input":"#1e1e22","text-primary":"#e4e4e8","text-secondary":"#94949c","text-tertiary":"#606068","accent":"#f8b500","accent-hover":"#fcd34d","grid-line":"#13161a"},light:{"bg-root":"#f5f5f7","bg-main":"#f5f5f7","bg-sidebar":"#f5f5f7","bg-card":"#ffffff","bg-card-hover":"#f0f0f2","bg-input":"#eaeaee","bg-chart":"#f5f5f7","bg-sub-panel":"#ffffff","border-main":"#d0d0d4","border-sub":"#e0e0e4","border-input":"#d0d0d4","text-primary":"#0d0e10","text-secondary":"#505058","text-tertiary":"#808088","accent":"#d4a000","accent-hover":"#b88600","grid-line":"#eaeaee"}},
+  {id:"clearing",name:"Clearing",desc:"清算所B2B 灰白克制",dark:{"bg-root":"#18181b","bg-main":"#18181b","bg-sidebar":"#18181b","bg-card":"#1e1e22","bg-card-hover":"#242428","bg-input":"#242428","bg-chart":"#18181b","bg-sub-panel":"#1e1e22","border-main":"#2a2a30","border-sub":"#242428","border-input":"#2a2a30","text-primary":"#e4e4e8","text-secondary":"#9898a0","text-tertiary":"#686870","accent":"#52525b","accent-hover":"#71717a","grid-line":"#1e1e22"},light:{"bg-root":"#f5f5f5","bg-main":"#f5f5f5","bg-sidebar":"#f5f5f5","bg-card":"#ffffff","bg-card-hover":"#f0f0f0","bg-input":"#e8e8e8","bg-chart":"#f5f5f5","bg-sub-panel":"#ffffff","border-main":"#c8c8cc","border-sub":"#dcdce0","border-input":"#c8c8cc","text-primary":"#18181b","text-secondary":"#48484c","text-tertiary":"#78787c","accent":"#52525b","accent-hover":"#3f3f46","grid-line":"#e8e8e8"}}
 ];
 
 // ============================================================
@@ -617,52 +617,21 @@ function applyMix(t) {
 }
 
 // ============================================================
-// LOAD FULL THEME FROM JSON
+// LOAD THEME (embedded data, works offline)
 // ============================================================
 function loadTheme(themeId) {
-  var url = '../tokens/themes/' + themeId + '.json';
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', url, true);
-  xhr.onload = function() {
-    if (xhr.status === 200) {
-      var t = JSON.parse(xhr.responseText);
-      applyFullTheme(t);
-    } else {
-      // fallback: use local DARK/LIGHT
-      var t = THEMES.find(function(th){return th.id===themeId;});
-      if (t) {
-        DARK['bg-root']=t.dark.bg;DARK['bg-main']=t.dark.bg;DARK['bg-sidebar']=t.dark.bg;
-        DARK['bg-card']=t.dark.c;DARK['bg-card-hover']=t.dark.h;DARK['bg-input']=t.dark.h;
-        DARK['bg-chart']=t.dark.bg;DARK['bg-sub-panel']=t.dark.c;
-        DARK['border-main']=t.dark.b;DARK['border-sub']=t.dark.h;DARK['border-input']=t.dark.b;
-        DARK['text-primary']=t.dark.t;DARK['text-secondary']='#a1a1a8';DARK['text-tertiary']='#6b6b72';
-        DARK['accent']=t.dark.a;DARK['accent-hover']='#fbbf24';DARK['grid-line']=t.dark.h;
-        LIGHT['bg-root']=t.light.bg;LIGHT['bg-main']=t.light.bg;LIGHT['bg-sidebar']=t.light.bg;
-        LIGHT['bg-card']=t.light.c;LIGHT['bg-card-hover']=t.light.h;LIGHT['bg-input']=t.light.h;
-        LIGHT['bg-chart']=t.light.bg;LIGHT['bg-sub-panel']=t.light.c;
-        LIGHT['border-main']=t.light.b;LIGHT['border-sub']=t.light.h;LIGHT['border-input']=t.light.b;
-        LIGHT['text-primary']=t.light.t;LIGHT['text-secondary']='#555566';LIGHT['text-tertiary']='#8e8e98';
-        LIGHT['accent']=t.light.a;LIGHT['accent-hover']='#4527e0';LIGHT['grid-line']=t.light.h;
-        CURRENT_THEME = t;
-        applyMix(parseFloat(document.getElementById('mixSlider').value));
-      }
-    }
-  };
-  xhr.send();
-}
-
-function applyFullTheme(t) {
+  var t = ALL_THEMES.find(function(th){return th.id===themeId;});
+  if (!t) return;
   var d = t.dark, l = t.light;
-  // Copy all 17 dark + 17 light values
   var keys = ['bg-root','bg-main','bg-sidebar','bg-card','bg-card-hover','bg-input','bg-chart','bg-sub-panel','border-main','border-sub','border-input','text-primary','text-secondary','text-tertiary','accent','accent-hover','grid-line'];
   keys.forEach(function(k) { DARK[k] = d[k]; LIGHT[k] = l[k]; });
   DARK['code-bg'] = '#08080a'; LIGHT['code-bg'] = '#1a1a1e';
-  CURRENT_THEME = t;
+  CURRENT_THEME = t.id;
   applyMix(parseFloat(document.getElementById('mixSlider').value));
 }
 
 function setTheme(themeId) {
-  var t = THEMES.find(function(th){return th.id===themeId;});
+  var t = ALL_THEMES.find(function(th){return th.id===themeId;});
   if (!t) return;
   document.getElementById('currentThemeLabel').textContent = t.name;
   document.getElementById('themeSelector').removeAttribute('open');
@@ -683,14 +652,14 @@ function setTheme(themeId) {
 function renderThemes() {
   var menu = document.getElementById('themeMenu');
   var grid = document.getElementById('themeGrid');
-  THEMES.forEach(function(t) {
+  ALL_THEMES.forEach(function(t) {
     // Dropdown menu item
     var btn = document.createElement('button');
     btn.dataset.theme = t.id;
     btn.onclick = function(){setTheme(t.id);};
     var swatch = document.createElement('span');
     swatch.className = 'theme-swatch';
-    swatch.style.background = t.dark.a;
+    swatch.style.background = t.dark.accent;
     btn.appendChild(swatch);
     var nameSpan = document.createElement('span');
     nameSpan.className = 'theme-name';
@@ -711,11 +680,11 @@ function renderThemes() {
     cDesc.className = 'tc-desc';
     cDesc.textContent = t.desc;
     card.appendChild(cDesc);
-    // Color bar
+    // Color bar (bottom aligned via flex)
     var bar = document.createElement('div');
     bar.className = 'tc-bar';
-    var colors = [t.dark.bg,t.dark.c,t.dark.h,t.dark.b,t.dark.a,t.dark.t,t.light.bg,t.light.c,t.light.h,t.light.b,t.light.a,t.light.t];
-    colors.forEach(function(c) {
+    var cols = [t.dark['bg-root'],t.dark['bg-card'],t.dark['bg-input'],t.dark['border-main'],t.light['bg-root'],t.light['bg-card'],t.light['bg-input'],t.light['border-main'],t.dark.accent,t.light.accent,t.dark['text-primary'],t.light['text-primary']];
+    cols.forEach(function(c) {
       var s = document.createElement('span');
       s.style.background = c;
       bar.appendChild(s);
