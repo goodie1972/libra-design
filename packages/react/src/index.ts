@@ -69,3 +69,36 @@ export type { ProgressProps } from './components/progress';
 
 export { Skeleton, SkeletonCard } from './components/skeleton';
 export type { SkeletonProps, SkeletonCardProps } from './components/skeleton';
+
+// P1 — Navigation
+export { Breadcrumb } from './components/breadcrumb';
+export type { BreadcrumbProps, BreadcrumbItem } from './components/breadcrumb';
+
+export { Pagination } from './components/pagination';
+export type { PaginationProps } from './components/pagination';
+
+export { DropdownMenu } from './components/dropdown-menu';
+export type { DropdownMenuProps, DropdownItem } from './components/dropdown-menu';
+
+export { Accordion } from './components/accordion';
+export type { AccordionProps, AccordionItem } from './components/accordion';
+
+// P1 — Layout
+export { Divider } from './components/divider';
+export type { DividerProps } from './components/divider';
+
+export { Space } from './components/space';
+export type { SpaceProps } from './components/space';
+
+export { Flex } from './components/flex';
+export type { FlexProps } from './components/flex';
+
+// P2 — Data Display
+export { Avatar } from './components/avatar';
+export type { AvatarProps } from './components/avatar';
+
+export { Empty } from './components/empty';
+export type { EmptyProps } from './components/empty';
+
+export { Statistic } from './components/statistic';
+export type { StatisticProps } from './components/statistic';

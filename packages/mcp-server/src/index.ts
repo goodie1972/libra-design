@@ -112,6 +112,9 @@ const AVAILABLE_COMPONENTS = [
   'select', 'tabs', 'tag', 'modal', 'tooltip', 'switch', 'market-table',
   'textarea', 'checkbox', 'radio', 'slider',
   'alert', 'toast', 'progress', 'skeleton',
+  'breadcrumb', 'pagination', 'dropdown-menu', 'accordion',
+  'divider', 'space', 'flex',
+  'avatar', 'empty', 'statistic',
 ];
 
 function generateComponent(name: string): string {

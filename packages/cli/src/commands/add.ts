@@ -50,6 +50,16 @@ const COMPONENTS: Record<string, string> = {
   toast: 'toast.tsx',
   progress: 'progress.tsx',
   skeleton: 'skeleton.tsx',
+  breadcrumb: 'breadcrumb.tsx',
+  pagination: 'pagination.tsx',
+  'dropdown-menu': 'dropdown-menu.tsx',
+  accordion: 'accordion.tsx',
+  divider: 'divider.tsx',
+  space: 'space.tsx',
+  flex: 'flex.tsx',
+  avatar: 'avatar.tsx',
+  empty: 'empty.tsx',
+  statistic: 'statistic.tsx',
 };
 
 /**

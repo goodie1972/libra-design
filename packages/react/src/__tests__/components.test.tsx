@@ -24,6 +24,16 @@ import { Alert } from '../components/alert';
 import { toastSuccess, toastError, toastLoading, dismiss, Toaster } from '../components/toast';
 import { Progress } from '../components/progress';
 import { Skeleton, SkeletonCard } from '../components/skeleton';
+import { Breadcrumb } from '../components/breadcrumb';
+import { Pagination } from '../components/pagination';
+import { DropdownMenu } from '../components/dropdown-menu';
+import { Accordion } from '../components/accordion';
+import { Divider } from '../components/divider';
+import { Space } from '../components/space';
+import { Flex } from '../components/flex';
+import { Avatar } from '../components/avatar';
+import { Empty } from '../components/empty';
+import { Statistic } from '../components/statistic';
 
 // ============================================================
 // cn utility
@@ -504,5 +514,190 @@ describe('Skeleton', () => {
   it('renders SkeletonCard', () => {
     const { container } = render(<SkeletonCard lines={2} />);
     expect(container.firstChild).toHaveClass('rounded-[var(--card-radius)]');
+  });
+});
+
+// ============================================================
+// Breadcrumb
+// ============================================================
+describe('Breadcrumb', () => {
+  it('renders items', () => {
+    render(<Breadcrumb items={[{ label: 'Home' }, { label: 'Stocks' }, { label: 'AAPL' }]} />);
+    expect(screen.getByText('Home')).toBeInTheDocument();
+    expect(screen.getByText('Stocks')).toBeInTheDocument();
+    expect(screen.getByText('AAPL')).toBeInTheDocument();
+  });
+  it('last item is primary color', () => {
+    render(<Breadcrumb items={[{ label: 'A' }, { label: 'B' }]} />);
+    expect(screen.getByText('B')).toHaveClass('text-[var(--text-primary)]');
+  });
+  it('renders links', () => {
+    render(<Breadcrumb items={[{ label: 'Home', href: '/' }]} />);
+    expect(screen.getByText('Home')).toHaveAttribute('href', '/');
+  });
+});
+
+// ============================================================
+// Pagination
+// ============================================================
+describe('Pagination', () => {
+  it('renders page buttons', () => {
+    render(<Pagination current={1} total={100} onChange={() => {}} />);
+    expect(screen.getByText('1')).toBeInTheDocument();
+    expect(screen.getByText('5')).toBeInTheDocument();
+  });
+  it('calls onChange on click', () => {
+    const fn = vi.fn();
+    render(<Pagination current={1} total={100} onChange={fn} />);
+    fireEvent.click(screen.getByText('2'));
+    expect(fn).toHaveBeenCalledWith(2);
+  });
+  it('disables prev on first page', () => {
+    render(<Pagination current={1} total={100} onChange={() => {}} />);
+    expect(screen.getByLabelText('Previous')).toBeDisabled();
+  });
+  it('returns null for single page', () => {
+    const { container } = render(<Pagination current={1} total={5} onChange={() => {}} />);
+    expect(container.firstChild).toBeNull();
+  });
+});
+
+// ============================================================
+// DropdownMenu
+// ============================================================
+describe('DropdownMenu', () => {
+  it('shows items on trigger click', () => {
+    render(<DropdownMenu trigger={<button>Menu</button>} items={[{ label: 'Item A' }, { label: 'Item B' }]} />);
+    fireEvent.click(screen.getByText('Menu'));
+    expect(screen.getByText('Item A')).toBeInTheDocument();
+    expect(screen.getByText('Item B')).toBeInTheDocument();
+  });
+  it('calls onClick and closes', () => {
+    const fn = vi.fn();
+    render(<DropdownMenu trigger={<button>Menu</button>} items={[{ label: 'Select', onClick: fn }]} />);
+    fireEvent.click(screen.getByText('Menu'));
+    fireEvent.click(screen.getByText('Select'));
+    expect(fn).toHaveBeenCalledOnce();
+  });
+});
+
+// ============================================================
+// Accordion
+// ============================================================
+describe('Accordion', () => {
+  const items = [
+    { value: '1', title: 'Section 1', content: 'Content 1' },
+    { value: '2', title: 'Section 2', content: 'Content 2' },
+  ];
+  it('renders titles', () => {
+    render(<Accordion items={items} />);
+    expect(screen.getByText('Section 1')).toBeInTheDocument();
+    expect(screen.getByText('Section 2')).toBeInTheDocument();
+  });
+  it('toggles content on click', () => {
+    render(<Accordion items={items} />);
+    const content = screen.getByText('Content 1').parentElement!;
+    expect(content.className).toContain('max-h-0');
+    fireEvent.click(screen.getByText('Section 1'));
+    expect(content.className).toContain('max-h-[500px]');
+  });
+});
+
+// ============================================================
+// Divider
+// ============================================================
+describe('Divider', () => {
+  it('renders horizontal', () => {
+    const { container } = render(<Divider />);
+    expect(container.firstChild).toHaveClass('h-px');
+  });
+  it('renders vertical', () => {
+    const { container } = render(<Divider orientation="vertical" />);
+    expect(container.firstChild).toHaveClass('w-px');
+  });
+  it('renders with label', () => {
+    render(<Divider label="OR" />);
+    expect(screen.getByText('OR')).toBeInTheDocument();
+  });
+});
+
+// ============================================================
+// Space
+// ============================================================
+describe('Space', () => {
+  it('renders children', () => {
+    render(<Space><button>A</button><button>B</button></Space>);
+    expect(screen.getByText('A')).toBeInTheDocument();
+    expect(screen.getByText('B')).toBeInTheDocument();
+  });
+  it('applies vertical direction', () => {
+    const { container } = render(<Space direction="vertical"><div /><div /></Space>);
+    expect(container.firstChild).toHaveClass('flex-col');
+  });
+});
+
+// ============================================================
+// Flex
+// ============================================================
+describe('Flex', () => {
+  it('renders with justify between', () => {
+    const { container } = render(<Flex justify="between"><div /><div /></Flex>);
+    expect(container.firstChild).toHaveClass('justify-between');
+  });
+  it('renders with align center', () => {
+    const { container } = render(<Flex align="center"><div /><div /></Flex>);
+    expect(container.firstChild).toHaveClass('items-center');
+  });
+});
+
+// ============================================================
+// Avatar
+// ============================================================
+describe('Avatar', () => {
+  it('renders fallback', () => {
+    render(<Avatar fallback="U" />);
+    expect(screen.getByText('U')).toBeInTheDocument();
+  });
+  it('renders image', () => {
+    render(<Avatar src="test.jpg" alt="User" />);
+    expect(screen.getByAltText('User')).toBeInTheDocument();
+  });
+});
+
+// ============================================================
+// Empty
+// ============================================================
+describe('Empty', () => {
+  it('renders title and description', () => {
+    render(<Empty title="No Data" description="No records found" />);
+    expect(screen.getByText('No Data')).toBeInTheDocument();
+    expect(screen.getByText('No records found')).toBeInTheDocument();
+  });
+  it('renders action', () => {
+    render(<Empty action={<button>Refresh</button>} />);
+    expect(screen.getByText('Refresh')).toBeInTheDocument();
+  });
+});
+
+// ============================================================
+// Statistic
+// ============================================================
+describe('Statistic', () => {
+  it('renders value', () => {
+    render(<Statistic value={3382.45} precision={2} />);
+    expect(screen.getByText('3382.45')).toBeInTheDocument();
+  });
+  it('renders with prefix/suffix', () => {
+    render(<Statistic value={2.13} precision={2} prefix="$" suffix="%" />);
+    expect(screen.getByText('$')).toBeInTheDocument();
+    expect(screen.getByText('%')).toBeInTheDocument();
+  });
+  it('applies up trend color', () => {
+    const { container } = render(<Statistic value={100} trend="up" />);
+    expect(container.firstChild!.lastChild).toHaveClass('text-[var(--up)]');
+  });
+  it('renders string value', () => {
+    render(<Statistic value="3,382.45" />);
+    expect(screen.getByText('3,382.45')).toBeInTheDocument();
   });
 });
