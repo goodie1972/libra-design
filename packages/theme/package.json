@@ -1,6 +1,6 @@
 {
   "name": "@libra-design/theme",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Libra 极致审美的设计语言，专为Go/Rust量身定制。双主题混合引擎 — gamma-aware 暗色↔亮色无缝过渡。",
   "type": "module",
   "main": "./dist/index.js",

@@ -1,0 +1,13 @@
+[package]
+name = "libra-tokens"
+version = "0.1.0"
+edition = "2021"
+description = "Libra 设计系统令牌 — Rust 绑定，对标 go-tokens"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[build-dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

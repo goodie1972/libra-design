@@ -1,0 +1,9 @@
+D:\bobo\python\libra\packages\rust-leptos\target\debug\deps\leptos_hot_reload-f1900c1bd463c3fd.d: C:\Users\Bobo\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\leptos_hot_reload-0.7.8\src\lib.rs C:\Users\Bobo\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\leptos_hot_reload-0.7.8\src\diff.rs C:\Users\Bobo\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\leptos_hot_reload-0.7.8\src\node.rs C:\Users\Bobo\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\leptos_hot_reload-0.7.8\src\parsing.rs C:\Users\Bobo\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\leptos_hot_reload-0.7.8\src\patch.js
+
+D:\bobo\python\libra\packages\rust-leptos\target\debug\deps\libleptos_hot_reload-f1900c1bd463c3fd.rmeta: C:\Users\Bobo\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\leptos_hot_reload-0.7.8\src\lib.rs C:\Users\Bobo\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\leptos_hot_reload-0.7.8\src\diff.rs C:\Users\Bobo\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\leptos_hot_reload-0.7.8\src\node.rs C:\Users\Bobo\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\leptos_hot_reload-0.7.8\src\parsing.rs C:\Users\Bobo\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\leptos_hot_reload-0.7.8\src\patch.js
+
+C:\Users\Bobo\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\leptos_hot_reload-0.7.8\src\lib.rs:
+C:\Users\Bobo\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\leptos_hot_reload-0.7.8\src\diff.rs:
+C:\Users\Bobo\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\leptos_hot_reload-0.7.8\src\node.rs:
+C:\Users\Bobo\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\leptos_hot_reload-0.7.8\src\parsing.rs:
+C:\Users\Bobo\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\leptos_hot_reload-0.7.8\src\patch.js:
