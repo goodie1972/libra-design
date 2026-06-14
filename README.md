@@ -9,7 +9,7 @@
 ```
 设计令牌 JSON（语言无关）
     ├── Go  track  → go-tokens / go-templ / go-cli / go-mcp
-    ├── Rust track → rust-tokens / rust-leptos（Phase C）
+    ├── Rust track → libra-tokens / libra-leptos（crates.io）
     └── TS  track  → @libra-design/tokens / theme / react / cli
 ```
 
@@ -19,7 +19,7 @@
 |------|----------|---------------|
 | **语言绑定** | 仅 JS/TS | Go · Rust · TS 三语言 |
 | **安装方式** | `npm install`（200MB node_modules） | `go get` 零依赖 / `cargo add` |
-| **CLI 体积** | Node 运行时 + node_modules | 单二进制 ~8MB，无外部依赖 |
+| **CLI 体积** | Node 运行时 + node_modules | 单二进制 3MB（go-cli）或 6.5MB（go-server），无外部依赖 |
 | **颜色计算** | JS 单线程 | Go/Rust 原生性能，批量插值零开销 |
 | **MCP Server** | npm 包 + npx 启动 | Go 单二进制，10ms 冷启动 |
 | **后端集成** | 需要 Node 桥接 | Go 服务直接 import，同进程零开销 |
@@ -35,13 +35,14 @@
 |---|------|------|------|
 | `@libra-design/tokens` | TS | CSS 变量 + 类型定义 | `npm i @libra-design/tokens` |
 | `@libra-design/theme` | TS | 双主题混合引擎 | `npm i @libra-design/theme` |
-| `@libra-design/react` | TS | 40+ React 金融组件 | `npm i @libra-design/react` |
+| `@libra-design/react` | TS | 64 个 React 金融组件（含 K 线/深度图/订单簿） | `npm i @libra-design/react` |
 | `@libra-design/cli` | TS | `libra init/add` 命令 | `npx @libra-design/cli init` |
 | `@libra-design/mcp-server` | TS | MCP Server for AI | `npx @libra-design/mcp-server` |
 | `go-tokens` | **Go** | 色值常量 + LerpColor + CSS 生成 | `go get github.com/goodie1972/go-tokens` |
 | `go-templ` | **Go** | 40 个金融 templ 组件 | `go get github.com/goodie1972/go-templ` |
 | `go-cli` | **Go** | 单二进制 `libra init` CLI | `go install github.com/goodie1972/go-cli/cmd/libra@latest` |
 | `go-mcp` | **Go** | MCP Server 单二进制 | `go install github.com/goodie1972/go-mcp@latest` |
+| `go-server` | **Go** | 单二进制金融仪表盘（6.5MB，含 40 组件） | `git clone → go build` |
 | `libra-tokens` | **Rust** | crate 色值+主题+CSS | `cargo add libra-tokens` ✅ crates.io |
 | `libra-leptos` | **Rust** | 20 个 Leptos 组件 | `cargo add libra-leptos` ✅ crates.io |
 
@@ -140,13 +141,16 @@ libra/
 ├── packages/
 │   ├── tokens/              # @libra-design/tokens — CSS 变量 + TS 类型
 │   ├── theme/               # @libra-design/theme — 双主题混合引擎
-│   ├── react/               # @libra-design/react — 40+ React 金融组件
+│   ├── react/               # @libra-design/react — 64 个 React 金融组件
 │   ├── cli/                 # @libra-design/cli — TS CLI
 │   ├── mcp-server/          # @libra-design/mcp-server — TS MCP Server
 │   ├── go-tokens/           # Go 原生色值引擎（零 npm 依赖）
 │   ├── go-templ/            # Go templ 金融组件（服务器端渲染）
 │   ├── go-cli/              # Go 单二进制 CLI（libra init）
-│   └── go-mcp/              # Go 单二进制 MCP Server
+│   ├── go-mcp/              # Go 单二进制 MCP Server
+│   ├── go-server/           # Go 单二进制金融仪表盘
+│   ├── rust-tokens/         # libra-tokens crate（crates.io）
+│   └── rust-leptos/         # libra-leptos crate（crates.io）
 └── docs/                    # 设计文档
 ```
 
