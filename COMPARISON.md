@@ -34,7 +34,7 @@
 | templUI (axzilla/templui) | ~8 MB | 1 | 零依赖 |
 | GoShip.it (haatos/goshipit) | ~7 MB | 1 | 零依赖 |
 | wailsjs 应用 | 50-100 MB | ~1000+ | 嵌入 Chromium |
-| npx @libra/cli | ~200 MB | 708+ | Node + npm |
+| npx @libra-design/cli | ~200 MB | 708+ | Node + npm |
 
 ### 2.2 冷启动时间
 
@@ -44,7 +44,7 @@
 | **`libra-mcp`** | **13 ms** | **14 ms** | 实测 5 次 |
 | templUI CLI | ~10 ms | ~15 ms | (参考 Go 二进制) |
 | wailsjs 应用 | ~2 s | ~3 s | (参考 Chromium 启动) |
-| npx @libra/cli init | ~2 s | ~3 s | (参考 npm 启动) |
+| npx @libra-design/cli init | ~2 s | ~3 s | (参考 npm 启动) |
 
 ### 2.3 构建时间
 
@@ -83,7 +83,7 @@ Final    ████████████████████  40
 | **go-cli** | **1** | **~1** | **0** | ✅ |
 | **go-templ** | **1** | **~5** | **0** | ✅ |
 | **go-mcp** | **1** | **~1** | **0** | ✅ |
-| **@libra/react** (npm) | 41 | 708 | **5** (含1 critical) | ❌ |
+| **@libra-design/react** (npm) | 41 | 708 | **5** (含1 critical) | ❌ |
 | wailsjs | ~20 | ~200+ | — | ⚠️ |
 
 **npm audit 结果**: 5 vulnerabilities (3 moderate, 1 high, 1 critical)
@@ -131,7 +131,7 @@ Final    ████████████████████  40
 ## 四、npm 依赖安全审计
 
 ```
-实测: npm install @libra/react + 工作区依赖
+实测: npm install @libra-design/react + 工作区依赖
 ────────────────────────────────────────────
 scanned:     445 packages
 vulnerable:  5
