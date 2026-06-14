@@ -2,7 +2,11 @@
 name = "libra-leptos"
 version = "0.1.0"
 edition = "2021"
+description = "Libra Design System — Leptos (Rust) financial components. 20 components ported from go-templ."
+license = "MIT"
+repository = "https://github.com/goodie1972/libra-design"
+homepage = "https://github.com/goodie1972/libra-design"
 
 [dependencies]
 leptos = "0.7"
-libra-tokens = { path = "../rust-tokens" }
+libra-tokens = "0.1"

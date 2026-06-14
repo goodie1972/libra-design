@@ -2,7 +2,10 @@
 name = "libra-tokens"
 version = "0.1.0"
 edition = "2021"
-description = "Libra 设计系统令牌 — Rust 绑定，对标 go-tokens"
+description = "Libra Design System — Rust design tokens: color constants, lerp, CSS generation, theme loading. The Rust-native counterpart of go-tokens."
+license = "MIT"
+repository = "https://github.com/goodie1972/libra-design"
+homepage = "https://github.com/goodie1972/libra-design"
 
 [dependencies]
 serde = { version = "1", features = ["derive"] }

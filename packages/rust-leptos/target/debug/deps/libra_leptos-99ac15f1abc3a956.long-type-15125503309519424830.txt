@@ -1,1 +1,0 @@
-leptos::html::HtmlElement<Input, (Class<std::string::String>, Attr<Placeholder, std::string::String>, Attr<leptos::attr::Disabled, bool>, Attr<Value, std::string::String>), ()>

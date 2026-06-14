@@ -11,7 +11,7 @@
 //  5. 暗色模式不靠 box-shadow，靠四层表面堆叠区分层级
 
 // build.rs 生成的原始 JSON 字符串 (RAW_TOKENS_JSON)
-include!("generated.rs");
+include!(concat!(env!("OUT_DIR"), "/generated.rs"));
 
 pub mod colors;
 pub mod lerp;
