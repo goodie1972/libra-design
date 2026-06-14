@@ -580,7 +580,7 @@ function loadTheme(id){
   ['bg-root','bg-main','bg-sidebar','bg-card','bg-card-hover','bg-input','bg-chart','bg-sub-panel','border-main','border-sub','border-input','text-primary','text-secondary','text-tertiary','accent','accent-hover','grid-line'].forEach(function(k){DARK[k]=d[k];LIGHT[k]=l[k]});
   DARK['code-bg']='#08080a';LIGHT['code-bg']='#1a1a1e';
   CURRENT_THEME=id;
-  applyMix(parseFloat('0.7'));
+  applyMix(0);
 }
 
 function setTheme(id){
