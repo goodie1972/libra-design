@@ -6,281 +6,208 @@
 <title>Libra Design — 极致审美的设计语言，专为 Go/Rust 量身定制</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --up: #ef5350; --down: #26a69a; --flat: #9e9e9e;
-  --up-bg: rgba(239,83,80,0.08); --down-bg: rgba(38,166,154,0.08);
-  --ma5: #f8b500; --ma10: #4a6cf7; --ma20: #9c27b0;
-  --success: #34a853; --warning: #fbbc04; --error: #ea4335;
-  --bg-root: #0c0c0e; --bg-main: #0c0c0e; --bg-sidebar: #0c0c0e;
-  --bg-card: #151518; --bg-card-hover: #1c1c20; --bg-input: #1c1c20;
-  --bg-chart: #0c0c0e; --bg-sub-panel: #151518;
-  --border-main: #252528; --border-sub: #1c1c20; --border-input: #252528;
-  --text-primary: #e8e8ed; --text-secondary: #c8c8d0; --text-tertiary: #a0a0a8;
-  --accent: #f59e0b; --accent-hover: #fbbf24;
-  --grid-line: #1a1a1e; --code-bg: #08080a;
-  --btn-radius: 8px; --card-radius: 10px;
-  --card-shadow: none; --card-border: 1px solid var(--border-main);
-  --font-body: 'Inter', -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  --font-mono: 'JetBrains Mono', 'SF Mono', 'Cascadia Code', monospace;
-  --font-display: 'Inter Display', -apple-system, 'PingFang SC', sans-serif;
-}
+:root{--up:#ef5350;--down:#26a69a;--flat:#9e9e9e;--up-bg:rgba(239,83,80,.08);--down-bg:rgba(38,166,154,.08);--ma5:#f8b500;--ma10:#4a6cf7;--ma20:#9c27b0;--success:#34a853;--warning:#fbbc04;--error:#ea4335;--bg-root:#0c0c0e;--bg-main:#0c0c0e;--bg-sidebar:#0c0c0e;--bg-card:#151518;--bg-card-hover:#1c1c20;--bg-input:#1c1c20;--bg-chart:#0c0c0e;--bg-sub-panel:#151518;--border-main:#252528;--border-sub:#1c1c20;--border-input:#252528;--text-primary:#e8e8ed;--text-secondary:#c8c8d0;--text-tertiary:#a0a0a8;--accent:#f59e0b;--accent-hover:#fbbf24;--grid-line:#1a1a1e;--code-bg:#08080a;--btn-radius:8px;--card-radius:10px;--card-shadow:none;--card-border:1px solid var(--border-main);--font-body:'Inter',-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;--font-mono:'JetBrains Mono','SF Mono','Cascadia Code',monospace;--font-display:'DM Sans','Inter',sans-serif}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{
-  font-family:var(--font-body);background:var(--bg-root);color:var(--text-primary);
-  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
-  transition:background .6s,color .6s;line-height:1.6;overflow-x:hidden
-}
+body{font-family:var(--font-body);background:var(--bg-root);color:var(--text-primary);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;transition:background .6s,color .6s;line-height:1.6;overflow-x:hidden}
 ::selection{background:var(--accent);color:#fff}
 .wrap{max-width:1060px;margin:0 auto;padding:0 28px}
 a{color:var(--accent);text-decoration:none;transition:opacity .2s}
-a:hover{opacity:.8}
 
-/* NAV */
-.nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 28px;height:52px;gap:10px;
-  background:rgba(12,12,14,.88);backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--border-main);
-  transition:background .6s,border-color .4s;
-}
+/* Animation */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.fade-up{opacity:0;animation:fadeUp .7s cubic-bezier(.16,1,.3,1)forwards}
+.fade-in{opacity:0;animation:fadeIn .5s ease forwards}
+.delay-1{animation-delay:.12s}.delay-2{animation-delay:.24s}.delay-3{animation-delay:.36s}.delay-4{animation-delay:.48s}
+
+/* Nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:52px;gap:10px;background:rgba(12,12,14,.88);backdrop-filter:blur(20px)saturate(1.5);border-bottom:1px solid var(--border-main);transition:background .6s,border-color .4s}
 .nav-l{display:flex;align-items:center;gap:12px}
-.nav-logo{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px;letter-spacing:-.02em}
+.nav-logo{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px;letter-spacing:-.02em;font-family:var(--font-display)}
 .nav-logo .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);transition:background .3s}
-.nav-ver{font-size:10px;color:var(--text-tertiary);background:var(--bg-input);padding:1px 7px;border-radius:4px;border:1px solid var(--border-sub);font-weight:500}
+.nav-ver{font-size:10px;color:var(--text-tertiary);background:var(--bg-input);padding:1px 7px;border-radius:4px;border:1px solid var(--border-sub);font-weight:500;font-family:var(--font-mono)}
 .nav-r{display:flex;align-items:center;gap:6px}
-.nav-btn{
-  display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:6px;
-  border:1px solid var(--border-main);background:transparent;
-  color:var(--text-secondary);cursor:pointer;font-size:12px;font-family:var(--font-body);
-  transition:all .2s;white-space:nowrap
-}
-.nav-btn:hover{background:var(--bg-card);color:var(--text-primary);border-color:var(--accent)}
+.nav-btn{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:6px;border:1px solid var(--border-main);background:transparent;color:var(--text-secondary);cursor:pointer;font-size:12px;font-family:var(--font-body);transition:all .2s;white-space:nowrap}
+.nav-btn:hover{background:var(--bg-card);color:var(--text-primary);border-color:var(--accent);transform:translateY(-1px)}
 
-/* THEME DROPDOWN */
+/* Theme dropdown */
 .theme-dd{position:relative;display:inline-block}
-.theme-dd-btn{
-  display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:6px;
-  border:1px solid var(--border-main);background:transparent;
-  color:var(--text-secondary);cursor:pointer;font-size:12px;font-family:var(--font-body);
-  transition:all .2s
-}
+.theme-dd-btn{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:6px;border:1px solid var(--border-main);background:transparent;color:var(--text-secondary);cursor:pointer;font-size:12px;font-family:var(--font-body);transition:all .2s}
 .theme-dd-btn:hover{background:var(--bg-card);color:var(--text-primary);border-color:var(--accent)}
-.theme-dd-btn::after{content:'';margin-left:2px;border-left:3px solid transparent;border-right:3px solid transparent;border-top:4px solid var(--text-tertiary)}
+.theme-dd-btn::after{content:'';margin-left:2px;border-left:3px solid transparent;border-right:3px solid transparent;border-top:4px solid var(--text-tertiary);transition:transform .2s}
 .theme-dd:hover .theme-dd-btn{border-color:var(--accent);background:var(--bg-card)}
+.theme-dd:hover .theme-dd-btn::after{transform:rotate(180deg)}
 .theme-dd:hover .theme-dd-menu{opacity:1;visibility:visible;transform:translateY(0)}
-.theme-dd-menu{
-  position:absolute;top:100%;right:0;margin-top:6px;width:210px;
-  background:var(--bg-card);border:1px solid var(--border-main);border-radius:8px;
-  padding:4px;z-index:200;box-shadow:0 8px 24px rgba(0,0,0,.4);
-  opacity:0;visibility:hidden;transform:translateY(-4px);transition:all .15s
-}
-.theme-dd-item{
-  display:flex;align-items:center;gap:8px;width:100%;padding:6px 9px;
-  border:none;border-radius:5px;background:transparent;color:var(--text-primary);
-  cursor:pointer;font-size:12px;font-family:var(--font-body);text-align:left;transition:background .1s
-}
-.theme-dd-item:hover{background:var(--bg-card-hover)}
-.theme-dd-item.active{background:var(--up-bg)}
+.theme-dd-menu{position:absolute;top:100%;right:0;margin-top:6px;width:210px;background:var(--bg-card);border:1px solid var(--border-main);border-radius:10px;padding:5px;z-index:200;box-shadow:0 12px 40px rgba(0,0,0,.5);opacity:0;visibility:hidden;transform:translateY(-6px);transition:all .2s cubic-bezier(.16,1,.3,1)}
+.theme-dd-item{display:flex;align-items:center;gap:8px;width:100%;padding:7px 10px;border:none;border-radius:6px;background:transparent;color:var(--text-primary);cursor:pointer;font-size:12px;font-family:var(--font-body);text-align:left;transition:all .12s}
+.theme-dd-item:hover{background:var(--bg-card-hover);transform:translateX(2px)}
+.theme-dd-item.active{background:var(--up-bg);font-weight:600}
 .theme-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 
-/* MIX GROUP */
-.mix-g{display:flex;gap:2px;padding:2px;border-radius:6px;background:var(--bg-input)}
-.mix-g button{
-  padding:4px 10px;border-radius:4px;border:none;
-  background:transparent;color:var(--text-tertiary);
-  cursor:pointer;font-size:13px;transition:all .2s;font-family:var(--font-body);line-height:1
-}
-.mix-g button:hover{color:var(--text-secondary)}
-.mix-g button.active{background:var(--bg-card);color:var(--text-primary)}
+/* Mix */
+.mix-g{display:flex;gap:2px;padding:2px;border-radius:7px;background:var(--bg-input)}
+.mix-g button{padding:4px 10px;border-radius:5px;border:none;background:transparent;color:var(--text-tertiary);cursor:pointer;font-size:14px;transition:all .2s;font-family:var(--font-body);line-height:1}
+.mix-g button:hover{color:var(--text-secondary);transform:scale(1.1)}
+.mix-g button.active{background:var(--bg-card);color:var(--text-primary);transform:scale(1)}
 
-/* HERO */
-.hero{padding:100px 0 48px;text-align:center;position:relative;overflow:hidden}
-.hero::before{
-  content:'';position:absolute;top:-240px;left:50%;transform:translateX(-50%);
-  width:800px;height:800px;
-  background:radial-gradient(ellipse,rgba(245,158,11,.04) 0%,transparent 70%);
-  pointer-events:none
-}
-.hero h1{
-  font-size:48px;font-weight:800;letter-spacing:-.04em;margin-bottom:10px;
-  font-family:var(--font-display);line-height:1.15
-}
-.hero h1 .hl{background:linear-gradient(135deg,var(--accent),#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero .sub{font-size:16px;color:var(--text-secondary);max-width:560px;margin:0 auto 24px;line-height:1.8;font-weight:300}
+/* Hero */
+.hero{padding:120px 0 56px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-300px;left:50%;transform:translateX(-50%);width:900px;height:900px;background:radial-gradient(ellipse,rgba(245,158,11,.05)0%,rgba(192,38,211,.02)40%,transparent 70%);pointer-events:none}
+.hero h1{font-size:52px;font-weight:800;letter-spacing:-.04em;margin-bottom:12px;font-family:var(--font-display);line-height:1.12}
+.hero h1 .hl{background:linear-gradient(135deg,var(--accent),#f97316,#d946ef);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero .sub{font-size:17px;color:var(--text-secondary);max-width:540px;margin:0 auto 28px;line-height:1.8;font-weight:300}
 .hero-tags{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-
-.tag{display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:4px;font-size:11px;font-weight:600;background:var(--up-bg);color:var(--accent)}
+.tag{display:inline-flex;align-items:center;gap:4px;padding:3px 12px;border-radius:5px;font-size:11px;font-weight:600;background:var(--up-bg);color:var(--accent)}
 .tag.go{background:rgba(0,173,216,.1);color:#00add8}
 .tag.rs{background:rgba(239,84,50,.1);color:#ef5432}
 .tag.ts{background:rgba(49,120,198,.1);color:#3178c6}
 
-/* METRICS */
-.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border-sub);border:1px solid var(--border-sub);border-radius:10px;overflow:hidden;margin-bottom:32px}
-.metric{background:var(--bg-card);padding:20px;text-align:center;transition:background .2s}
-.metric:hover{background:var(--bg-card-hover)}
-.metric .num{font-family:var(--font-mono);font-size:28px;font-weight:700;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
-.metric .lb{font-size:11px;color:var(--text-tertiary);margin-top:2px;font-weight:500}
-.metric .note{font-size:10px;color:var(--text-secondary);margin-top:1px;font-weight:400;opacity:.6}
+/* Metrics */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border-sub);border:1px solid var(--border-sub);border-radius:12px;overflow:hidden;margin-top:32px}
+.metric{background:var(--bg-card);padding:22px 16px;text-align:center;transition:all .3s cubic-bezier(.16,1,.3,1)}
+.metric:hover{background:var(--bg-card-hover);transform:translateY(-2px)}
+.metric .num{font-family:var(--font-mono);font-size:30px;font-weight:700;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.metric .lb{font-size:12px;color:var(--text-tertiary);margin-top:4px;font-weight:500;letter-spacing:.02em}
+.metric .note{font-size:10px;color:var(--text-secondary);margin-top:2px;opacity:.5}
 
-/* SHOWCASE */
-.sec{padding:40px 0;border-bottom:1px solid var(--border-sub)}
-.sec:last-of-type{border-bottom:none}
-.sl{font-size:11px;font-weight:600;color:var(--text-secondary);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
-h2{font-size:24px;font-weight:700;letter-spacing:-.02em;margin-bottom:16px;font-family:var(--font-display)}
-h3{font-size:13px;font-weight:500;color:var(--text-secondary);margin-bottom:12px}
-.desc{font-size:14px;color:var(--text-secondary);line-height:1.8;max-width:600px;margin-bottom:24px;font-weight:300}
+/* Section */
+.sec{padding:48px 0;position:relative}
+.sec:not(:last-child)::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:60%;height:1px;background:linear-gradient(90deg,transparent,var(--border-sub),transparent)}
+.sl{font-size:11px;font-weight:600;color:var(--text-secondary);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+h2{font-size:28px;font-weight:700;letter-spacing:-.03em;margin-bottom:12px;font-family:var(--font-display);line-height:1.2}
+h3{font-size:14px;font-weight:500;color:var(--text-secondary);margin-bottom:14px;letter-spacing:.02em}
+.desc{font-size:15px;color:var(--text-secondary);line-height:1.8;max-width:560px;margin-bottom:28px;font-weight:300}
 
-/* SPLIT LAYOUT: preview + code */
-.split{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border-sub);border:1px solid var(--border-sub);border-radius:10px;overflow:hidden;margin-bottom:20px}
-.split-preview{background:var(--bg-root);padding:24px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;min-height:100px}
-.split-code{background:var(--code-bg);padding:16px;overflow-x:auto;position:relative}
-.split-code pre{font-family:var(--font-mono);font-size:11px;line-height:1.8;color:#c4c4c8;margin:0}
-.split-code .cm{color:#6b6b72}
+/* Split demo */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border-sub);border:1px solid var(--border-sub);border-radius:12px;overflow:hidden;margin-bottom:20px;transition:border-color .3s}
+.split:hover{border-color:var(--accent)}
+.split-preview{background:var(--bg-root);padding:28px 24px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;min-height:110px}
+.split-code{background:var(--code-bg);padding:18px;overflow-x:auto;position:relative}
+.split-code pre{font-family:var(--font-mono);font-size:11px;line-height:1.9;color:#c4c4c8;margin:0}
+.split-code .cm{color:#6b6b72;user-select:none}
 .split-code .kw{color:#7b9cff}
 .split-code .str{color:#34a853}
 .split-code .num{color:#ffa726}
-
-/* COPY BUTTON */
-.copy-btn{
-  position:absolute;top:8px;right:8px;padding:3px 8px;border-radius:4px;
-  border:1px solid var(--border-sub);background:var(--bg-card);
-  color:var(--text-tertiary);cursor:pointer;font-size:10px;font-family:var(--font-body);
-  transition:all .15s;opacity:0
-}
-.split-code:hover .copy-btn{opacity:1}
+.copy-btn{position:absolute;top:8px;right:8px;padding:4px 10px;border-radius:5px;border:1px solid var(--border-sub);background:var(--bg-card);color:var(--text-tertiary);cursor:pointer;font-size:10px;font-family:var(--font-body);transition:all .2s;opacity:0;transform:translateY(-2px)}
+.split-code:hover .copy-btn{opacity:1;transform:translateY(0)}
 .copy-btn:hover{background:var(--bg-card-hover);color:var(--text-primary);border-color:var(--accent)}
 
-/* LANG TABS */
-.lang-tabs{display:flex;gap:0;border-bottom:1px solid var(--border-sub);margin-bottom:20px}
-.lang-tab{padding:8px 16px;font-size:12px;font-weight:500;background:none;border:none;color:var(--text-tertiary);cursor:pointer;transition:all .15s;font-family:var(--font-body);position:relative}
+/* Demo buttons */
+.demo-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 20px;border-radius:var(--btn-radius);font-size:13px;font-family:var(--font-body);font-weight:500;cursor:pointer;transition:all .2s cubic-bezier(.16,1,.3,1);border:none;text-decoration:none}
+.demo-btn[data-variant=default]{background:var(--accent);color:#fff}
+.demo-btn[data-variant=default]:hover{background:var(--accent-hover);transform:translateY(-2px);box-shadow:0 4px 16px rgba(245,158,11,.25)}
+.demo-btn[data-variant=secondary]{background:transparent;color:var(--text-primary);border:1px solid var(--border-main)}
+.demo-btn[data-variant=secondary]:hover{border-color:var(--accent);background:var(--bg-card-hover);transform:translateY(-2px)}
+.demo-btn[data-variant=ghost]{background:transparent;color:var(--text-secondary)}
+.demo-btn[data-variant=ghost]:hover{color:var(--text-primary);background:var(--bg-card-hover);transform:translateY(-1px)}
+.demo-btn[data-variant=danger]{background:var(--error);color:#fff}
+.demo-btn[data-variant=danger]:hover{filter:brightness(1.1);transform:translateY(-2px);box-shadow:0 4px 16px rgba(234,67,53,.25)}
+.demo-btn:active{transform:scale(.96)}
+
+/* Demo cards */
+.demo-card{background:var(--bg-card);border:var(--card-border);border-radius:var(--card-radius);padding:20px 24px;min-width:160px;flex:1;display:flex;flex-direction:column;gap:6px;transition:all .3s cubic-bezier(.16,1,.3,1)}
+.demo-card:hover{background:var(--bg-card-hover);border-color:var(--accent);transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.demo-card .cl{font-size:10px;color:var(--text-secondary);letter-spacing:.05em;text-transform:uppercase}
+.demo-card .cv{font-size:28px;font-weight:700;font-family:var(--font-mono);font-variant-numeric:tabular-nums;letter-spacing:-.04em}
+.demo-card .cd{font-size:14px;font-weight:500}
+.demo-card .cd.up{color:var(--up)}.demo-card .cd.dn{color:var(--down)}
+
+/* Table */
+.tw{background:var(--bg-card);border:1px solid var(--border-main);border-radius:var(--card-radius);overflow:hidden;transition:all .3s;width:100%}
+.tw:hover{border-color:var(--accent)}
+.tw table{width:100%;border-collapse:collapse}
+.tw th{padding:12px 18px;font-size:10px;font-weight:500;color:var(--text-secondary);text-align:left;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border-sub)}
+.tw th.r{text-align:right}
+.tw td{padding:12px 18px;font-size:13px;border-bottom:1px solid var(--border-sub)}
+.tw td.r{text-align:right;font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.tw tr:last-child td{border-bottom:none}
+.tw tbody tr{transition:background .1s}
+.tw tbody tr:hover td{background:var(--bg-card-hover)}
+
+/* Quickstart */
+.qs{background:var(--code-bg);border:1px solid var(--border-sub);border-radius:12px;padding:22px 26px;font-family:var(--font-mono);font-size:13px;line-height:2.1;overflow-x:auto;position:relative;color:#c4c4c8;margin-bottom:28px;transition:border-color .3s}
+.qs:hover{border-color:var(--accent)}
+.qs .prompt{color:var(--text-tertiary)}.qs .cmd{color:#34a853}.qs .out{color:#ffa726}.qs .comment{color:#6b6b72}
+.lang-tabs{display:flex;gap:0;border-bottom:1px solid var(--border-sub);margin-bottom:24px}
+.lang-tab{padding:10px 20px;font-size:13px;font-weight:500;background:none;border:none;color:var(--text-tertiary);cursor:pointer;transition:all .15s;font-family:var(--font-body);position:relative}
 .lang-tab:hover{color:var(--text-secondary)}
 .lang-tab.active{color:var(--accent)}
 .lang-tab.active::after{content:'';position:absolute;bottom:-1px;left:8px;right:8px;height:2px;background:var(--accent);border-radius:1px}
 
-/* COMPONENT DEMO STYLES */
-.demo-card{
-  background:var(--bg-card);border:var(--card-border);border-radius:var(--card-radius);
-  padding:18px 22px;min-width:160px;flex:1;display:flex;flex-direction:column;gap:6px;
-  transition:background .3s,border-color .3s
-}
-.demo-card:hover{background:var(--bg-card-hover);border-color:var(--accent)}
-.demo-card .cl{font-size:10px;color:var(--text-secondary);letter-spacing:.04em;text-transform:uppercase}
-.demo-card .cv{font-size:26px;font-weight:700;font-family:var(--font-mono);font-variant-numeric:tabular-nums;letter-spacing:-.03em}
-.demo-card .cd{font-size:13px;font-weight:500}
-.demo-card .cd.up{color:var(--up)}.demo-card .cd.dn{color:var(--down)}
-
-/* DEMO BUTTONS */
-.demo-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 18px;border-radius:var(--btn-radius);font-size:13px;font-family:var(--font-body);font-weight:500;cursor:pointer;transition:all .15s;border:none;text-decoration:none}
-.demo-btn[data-variant=default]{background:var(--accent);color:#fff}
-.demo-btn[data-variant=default]:hover{background:var(--accent-hover);transform:translateY(-1px)}
-.demo-btn[data-variant=secondary]{background:transparent;color:var(--text-primary);border:1px solid var(--border-main)}
-.demo-btn[data-variant=secondary]:hover{border-color:var(--accent);background:var(--bg-card-hover)}
-.demo-btn[data-variant=ghost]{background:transparent;color:var(--text-secondary)}
-.demo-btn[data-variant=ghost]:hover{color:var(--text-primary);background:var(--bg-card-hover)}
-.demo-btn[data-variant=danger]{background:var(--error);color:#fff}
-.demo-btn[data-variant=danger]:hover{opacity:.9;transform:translateY(-1px)}
-
-.demo-comp{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-
-/* TABLE DEMO */
-.tw{background:var(--bg-card);border:1px solid var(--border-main);border-radius:var(--card-radius);overflow:hidden;transition:background .3s;width:100%}
-.tw table{width:100%;border-collapse:collapse}
-.tw th{padding:10px 16px;font-size:10px;font-weight:500;color:var(--text-secondary);text-align:left;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border-sub)}
-.tw th.r{text-align:right}
-.tw td{padding:10px 16px;font-size:13px;border-bottom:1px solid var(--border-sub)}
-.tw td.r{text-align:right;font-family:var(--font-mono);font-variant-numeric:tabular-nums}
-.tw tr:last-child td{border-bottom:none}
-.tw tbody tr{transition:background .1s}
-.tw tbody tr:hover{background:var(--bg-card-hover)}
-
-/* QUICKSTART QUICKSTART */
-.qs{
-  background:var(--code-bg);border:1px solid var(--border-sub);border-radius:10px;
-  padding:20px 24px;font-family:var(--font-mono);font-size:13px;line-height:2;
-  overflow-x:auto;position:relative;color:#c4c4c8;margin-bottom:28px
-}
-.qs .prompt{color:var(--text-tertiary)}
-.qs .cmd{color:var(--str)}
-.qs .out{color:var(--num)}
-.qs .comment{color:#6b6b72}
-
-/* CARD GRID */
-.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:28px}
-.ci{padding:14px 16px;border-radius:8px;border:1px solid var(--border-sub);background:var(--bg-input);transition:all .2s}
-.ci:hover{border-color:var(--accent);background:var(--bg-card)}
-.ci .ci-n{font-size:13px;font-weight:600;color:var(--text-primary);font-family:var(--font-mono)}
-.ci .ci-d{font-size:11px;color:var(--text-tertiary);margin-top:2px;line-height:1.5}
-
-/* THEME GRID */
-.tg{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
-.tc{padding:14px;border-radius:8px;border:1px solid var(--border-sub);background:var(--bg-input);cursor:pointer;transition:all .2s}
-.tc:hover{border-color:var(--accent);background:var(--bg-card)}
-.tc .tn{font-size:12px;font-weight:600;margin-bottom:2px}
+/* Theme grid */
+.tg{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.tc{padding:16px;border-radius:10px;border:1px solid var(--border-sub);background:var(--bg-input);cursor:pointer;transition:all .25s cubic-bezier(.16,1,.3,1)}
+.tc:hover{border-color:var(--accent);background:var(--bg-card);transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.tc .tn{font-size:13px;font-weight:600;margin-bottom:3px}
 .tc .td{font-size:10px;color:var(--text-tertiary);line-height:1.5}
-.tc .tb{display:flex;gap:2px;margin-top:10px;height:5px;border-radius:3px;overflow:hidden}
-.tc .tb span{flex:1}
+.tc .tb{display:flex;gap:2px;margin-top:12px;height:6px;border-radius:3px;overflow:hidden}
+.tc .tb span{flex:1;transition:all .3s}
+.tc:hover .tb span{filter:brightness(1.2)}
 
-/* FOOTER */
-footer{padding:32px 0;text-align:center;font-size:12px;color:var(--text-tertiary)}
-footer a{color:var(--accent)}
+/* Card grid */
+.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.ci{padding:16px 18px;border-radius:10px;border:1px solid var(--border-sub);background:var(--bg-input);transition:all .25s cubic-bezier(.16,1,.3,1)}
+.ci:hover{border-color:var(--accent);background:var(--bg-card);transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.ci .ci-n{font-size:13px;font-weight:600;color:var(--text-primary);font-family:var(--font-mono)}
+.ci .ci-d{font-size:11px;color:var(--text-tertiary);margin-top:3px;line-height:1.5}
 
-/* RESPONSIVE */
+/* Footer */
+footer{padding:40px 0;text-align:center;font-size:12px;color:var(--text-tertiary);position:relative}
+footer::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:40%;height:1px;background:linear-gradient(90deg,transparent,var(--border-main),transparent)}
+
 @media(max-width:768px){
   .wrap{padding:0 16px}
   .hero h1{font-size:32px}
   .split{grid-template-columns:1fr}
   .metrics{grid-template-columns:repeat(2,1fr)}
-  .nav{padding:0 12px;flex-wrap:wrap;height:auto;padding:8px 12px;gap:6px}
+  .nav{padding:0 12px;height:auto;padding:8px 12px;gap:6px}
   .nav-r{flex-wrap:wrap}
+  h2{font-size:22px}
 }
 </style>
 </head>
 <body>
 
-<!-- ============ NAV ============ -->
-<nav class="nav">
+<!-- ============= NAV ============= -->
+<nav class="nav fade-in">
   <div class="nav-l">
     <div class="nav-logo"><span class="dot"></span> Libra</div>
-    <span class="nav-ver">v0.1.2</span>
+    <span class="nav-ver">v0.1.3</span>
   </div>
   <div class="nav-r">
-    <div class="theme-dd" id="themeDropdown">
+    <div class="theme-dd">
       <button class="theme-dd-btn" id="currentThemeBtn">Terminal</button>
       <div class="theme-dd-menu" id="themeMenu"></div>
     </div>
     <div class="mix-g" id="presetGroup">
       <button data-mix="0">🌙</button>
-      <button data-mix="0.7" class="active">🌤</button>
+      <button data-mix="0.7">🌤</button>
       <button data-mix="1">☀</button>
     </div>
     <button class="nav-btn" onclick="window.open('https://github.com/goodie1972/libra-design')">
       <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
       <span>Star</span>
     </button>
-    <button class="nav-btn" onclick="toggleLang()">
-      <span id="langIndicator">EN</span>
-    </button>
+    <button class="nav-btn" onclick="toggleLang()"><span id="langIndicator">EN</span></button>
   </div>
 </nav>
 
-<!-- ============ HERO ============ -->
-<!-- hidden slider for theme engine --><input type="range" id="mixSlider" min="0" max="1" step="0.01" value="0.7" style="display:none"><div class="hero">
+<!-- ============= HERO ============= -->
+<div class="hero">
   <div class="wrap">
-    <h1>极致审美的<span class="hl">设计语言</span><br>专为 Go/Rust 量身定制</h1>
-    <p class="sub">多语言金融设计系统 — 一份令牌，Go/Rust/TS 三语言消费。<br>不是又一个 React 组件库，是 Go/Rust 原生的设计系统。</p>
-    <div class="hero-tags">
+    <h1 class="fade-up delay-1">极致审美的<span class="hl">设计语言</span><br>专为 Go/Rust 量身定制</h1>
+    <p class="sub fade-up delay-2">多语言金融设计系统 — 一份令牌，Go/Rust/TS 三语言消费。<br>不是又一个 React 组件库，是 Go/Rust 原生的设计系统。</p>
+    <div class="hero-tags fade-up delay-3">
       <span class="tag go">🐹 Go Native</span>
       <span class="tag rs">🦀 Rust Native</span>
       <span class="tag ts">📘 TypeScript</span>
     </div>
 
-    <!-- METRICS -->
-    <div class="metrics" style="margin-top:28px">
-      <div class="metric"><div class="num" style="color:var(--accent)">6.5</div><div class="lb">单二进制</div><div class="note">MB · 无运行时</div></div>
+    <div class="metrics fade-up delay-3">
+      <div class="metric"><div class="num" style="color:var(--accent)">6.5</div><div class="lb">单二进制</div><div class="note">MB · 零运行时</div></div>
       <div class="metric"><div class="num" style="color:var(--up)">15</div><div class="lb">冷启动</div><div class="note">ms · 零预热</div></div>
       <div class="metric"><div class="num" style="color:var(--down)">124</div><div class="lb">组件总数</div><div class="note">React+Go+Rust</div></div>
       <div class="metric"><div class="num" style="color:var(--accent)">0</div><div class="lb">运行时依赖</div><div class="note">零 npm · 零 Chromium</div></div>
@@ -288,236 +215,155 @@ footer a{color:var(--accent)}
   </div>
 </div>
 
-<!-- ============ COMPONENT SHOWCASE ============ -->
+<!-- ============= COMPONENT SHOWCASE ============= -->
 <div class="sec">
   <div class="wrap">
-    <div class="sl">组件展示</div>
-    <h2>所见即所得 · 代码即预览</h2>
-    <p class="desc">每个组件都有实时预览和可复制代码。切换主题时所有组件同步变色。</p>
+    <div class="sl fade-up">组件展示</div>
+    <h2 class="fade-up delay-1">所见即所得 · 代码即预览</h2>
+    <p class="desc fade-up delay-2">每个组件都有实时预览和可复制代码。切换主题时所有组件同步变色。悬停代码块可复制。</p>
 
-    <!-- BUTTON -->
-    <h3>Button · 按钮</h3>
-    <div class="split">
+    <h3 class="fade-up">Button · 按钮</h3>
+    <div class="split fade-up">
       <div class="split-preview">
         <button class="demo-btn" data-variant="default">主要操作</button>
         <button class="demo-btn" data-variant="secondary">次要</button>
         <button class="demo-btn" data-variant="ghost">文字按钮</button>
         <button class="demo-btn" data-variant="danger">危险</button>
       </div>
-      <div class="split-code">
-        <button class="copy-btn" onclick="copyCode(this,'btn')">复制</button>
-        <pre id="btn-code"><span class="cm">// Go templ</span>
-templ Button(<span class="str">"default"</span>, <span class="str">"lg"</span>, false, nil) { 买入 }
+      <div class="split-code"><button class="copy-btn" onclick="copyCode(this,'btn')">复制</button>
+<pre id="btn-code"><span class="cm">// Go templ</span>
+components.Button(<span class="str">"default"</span>, <span class="str">"lg"</span>, false, nil)
 
 <span class="cm">// React</span>
-&lt;<span class="kw">Button</span> variant=<span class="str">"default"</span>&gt;主要操作&lt;/<span class="kw">Button</span>&gt;</pre>
-      </div>
+&lt;<span class="kw">Button</span> variant=<span class="str">"default"</span>&gt;主要操作&lt;/<span class="kw">Button</span>&gt;</pre></div>
     </div>
 
-    <!-- CARDS -->
-    <h3>PriceDisplay · 金融卡片</h3>
-    <div class="split">
-      <div class="split-preview" style="gap:12px">
+    <h3 class="fade-up">Card · 金融卡片</h3>
+    <div class="split fade-up">
+      <div class="split-preview" style="gap:14px">
         <div class="demo-card"><div class="cl">上证指数</div><div class="cv" style="color:var(--up)">3,382.45</div><div class="cd up">+1.23%</div></div>
         <div class="demo-card"><div class="cl">深证成指</div><div class="cv" style="color:var(--down)">10,876.32</div><div class="cd dn">-0.45%</div></div>
         <div class="demo-card"><div class="cl">创业板指</div><div class="cv" style="color:var(--up)">2,154.78</div><div class="cd up">+0.88%</div></div>
       </div>
-      <div class="split-code">
-        <button class="copy-btn" onclick="copyCode(this,'card')">复制</button>
-        <pre id="card-code"><span class="cm">// Go templ</span>
-components.<span class="kw">PriceDisplay</span>(<span class="num">1689.50</span>, <span class="num">2.15</span>, <span class="str">"up"</span>)
+      <div class="split-code"><button class="copy-btn" onclick="copyCode(this,'card')">复制</button>
+<pre id="card-code"><span class="cm">// Go templ</span>
+components.PriceDisplay(<span class="num">1689.50</span>, <span class="num">2.15</span>, <span class="str">"up"</span>)
 
 <span class="cm">// React</span>
-&lt;<span class="kw">PriceDisplay</span> value={<span class="num">1689.50</span>} change={<span class="num">2.15</span>} trend=<span class="str">"up"</span>/&gt;</pre>
-      </div>
+&lt;<span class="kw">PriceDisplay</span> value={<span class="num">1689.50</span>} change={<span class="num">2.15</span>}/&gt;</pre></div>
     </div>
 
-    <!-- BADGES + TAGS -->
-    <h3>Badge · Tag · 标签体系</h3>
-    <div class="split">
-      <div class="split-preview" style="gap:6px">
-        <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:4px;font-size:11px;font-weight:600;background:rgba(239,83,80,.12);color:var(--up)">涨</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:4px;font-size:11px;font-weight:600;background:rgba(38,166,154,.12);color:var(--down)">跌</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:4px;font-size:11px;font-weight:600;background:rgba(158,158,158,.12);color:var(--flat)">平</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500;background:rgba(52,168,83,.1);color:var(--success)">成功</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500;background:rgba(251,188,4,.1);color:var(--warning)">警告</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500;background:rgba(234,67,53,.1);color:var(--error)">错误</span>
+    <h3 class="fade-up">Badge · Tag</h3>
+    <div class="split fade-up">
+      <div class="split-preview" style="gap:7px">
+        <span style="display:inline-flex;align-items:center;gap:4px;padding:3px 11px;border-radius:5px;font-size:11px;font-weight:600;background:rgba(239,83,80,.12);color:var(--up)">涨</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;padding:3px 11px;border-radius:5px;font-size:11px;font-weight:600;background:rgba(38,166,154,.12);color:var(--down)">跌</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;padding:3px 11px;border-radius:5px;font-size:11px;font-weight:600;background:rgba(158,158,158,.12);color:var(--flat)">平</span>
       </div>
-      <div class="split-code">
-        <button class="copy-btn" onclick="copyCode(this,'tag')">复制</button>
-        <pre id="tag-code"><span class="cm">// Go templ</span>
-components.<span class="kw">Badge</span>(<span class="str">"涨"</span>, <span class="str">"up"</span>)
-components.<span class="kw">Tag</span>(<span class="str">"成功"</span>, <span class="str">"success"</span>)
+      <div class="split-code"><button class="copy-btn" onclick="copyCode(this,'badge')">复制</button>
+<pre id="badge-code"><span class="cm">// Go templ</span>
+components.Badge(<span class="str">"涨"</span>, <span class="str">"up"</span>)
+components.Tag(<span class="str">"成功"</span>, <span class="str">"success"</span>)
 
 <span class="cm">// React</span>
-&lt;<span class="kw">Badge</span> variant=<span class="str">"up"</span>&gt;涨&lt;/<span class="kw">Badge</span>&gt;
-&lt;<span class="kw">Tag</span> variant=<span class="str">"success"</span>&gt;成功&lt;/<span class="kw">Tag</span>&gt;</pre>
-      </div>
+&lt;<span class="kw">Badge</span> variant=<span class="str">"up"</span>&gt;涨&lt;/<span class="kw">Badge</span>&gt;</pre></div>
     </div>
 
-    <!-- TABLE -->
-    <h3>Table · 数据表格</h3>
-    <div class="split">
+    <h3 class="fade-up">Table · 表格</h3>
+    <div class="split fade-up">
       <div class="split-preview">
-        <div class="tw">
-          <table><thead><tr><th>代码</th><th>名称</th><th class="r">现价</th><th class="r">涨幅</th></tr></thead>
+        <div class="tw"><table><thead><tr><th>代码</th><th>名称</th><th class="r">现价</th><th class="r">涨幅</th></tr></thead>
           <tbody>
             <tr><td>sh600519</td><td>贵州茅台</td><td class="r">1,689.50</td><td class="r" style="color:var(--up)">+2.15%</td></tr>
             <tr><td>sz000858</td><td>五粮液</td><td class="r">142.80</td><td class="r" style="color:var(--down)">-1.34%</td></tr>
             <tr><td>sh601398</td><td>工商银行</td><td class="r">5.89</td><td class="r" style="color:var(--up)">+0.51%</td></tr>
-          </tbody></table>
-        </div>
+        </tbody></table></div>
       </div>
-      <div class="split-code">
-        <button class="copy-btn" onclick="copyCode(this,'table')">复制</button>
-        <pre id="table-code"><span class="cm">// Go templ (with HTMX auto-refresh)</span>
-components.<span class="kw">Table</span>(headers, rows, templ.Attributes{
-  <span class="str">"hx-get"</span>:    <span class="str">"/stocks"</span>,
-  <span class="str">"hx-trigger"</span>: <span class="str">"every 30s"</span>,
-})
+      <div class="split-code"><button class="copy-btn" onclick="copyCode(this,'tbl')">复制</button>
+<pre id="tbl-code"><span class="cm">// Go templ</span>
+components.Table(headers, rows, nil)
 
 <span class="cm">// React</span>
-&lt;<span class="kw">StockTable</span> data={stocks} /&gt;</pre>
-      </div>
+&lt;<span class="kw">StockTable</span> data={stocks}/&gt;</pre></div>
     </div>
 
-    <!-- ALERT + STATISTIC -->
-    <h3>Alert · Statistic · 反馈</h3>
-    <div class="split">
-      <div class="split-preview" style="flex-direction:column;gap:8px;align-items:stretch">
-        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;background:rgba(74,108,247,.08);border:1px solid rgba(74,108,247,.25);font-size:12px">
-          <span style="color:var(--accent);font-size:14px">ℹ</span>
-          <span>操作成功完成</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;background:rgba(234,67,53,.08);border:1px solid rgba(234,67,53,.25);font-size:12px">
-          <span style="color:var(--error);font-size:14px">✕</span>
-          <span>网络连接超时，请重试</span>
-        </div>
-      </div>
-      <div class="split-code">
-        <button class="copy-btn" onclick="copyCode(this,'alert')">复制</button>
-        <pre id="alert-code"><span class="cm">// Go templ</span>
-components.<span class="kw">Alert</span>(<span class="str">"操作成功完成"</span>, <span class="str">"success"</span>)
-components.<span class="kw">Alert</span>(<span class="str">"网络连接超时"</span>, <span class="str">"error"</span>)
-
-<span class="cm">// React</span>
-&lt;<span class="kw">Alert</span> type=<span class="str">"success"</span>&gt;操作成功完成&lt;/<span class="kw">Alert</span>&gt;</pre>
-      </div>
-    </div>
-
-    <!-- CALENDAR -->
-    <h3>Calendar · 金融日历</h3>
-    <div class="split">
+    <h3 class="fade-up">Calendar · 日历</h3>
+    <div class="split fade-up">
       <div class="split-preview" style="flex-direction:column;align-items:stretch">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;width:100%">
-          <span style="font-size:14px;font-weight:600">2026年6月</span>
+        <div style="display:flex;justify-content:space-between;margin-bottom:10px;width:100%">
+          <span style="font-size:15px;font-weight:600;font-family:var(--font-display)">2026年6月</span>
           <div style="display:flex;gap:6px">
-            <button style="width:26px;height:26px;border-radius:4px;border:1px solid var(--border-main);background:var(--bg-input);cursor:pointer;font-size:12px;color:var(--text-secondary)">‹</button>
-            <button style="width:26px;height:26px;border-radius:4px;border:1px solid var(--border-main);background:var(--bg-input);cursor:pointer;font-size:12px;color:var(--text-secondary)">›</button>
+            <button style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border-main);background:var(--bg-input);cursor:pointer;font-size:14px;color:var(--text-secondary)">‹</button>
+            <button style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border-main);background:var(--bg-input);cursor:pointer;font-size:14px;color:var(--text-secondary)">›</button>
           </div>
         </div>
-        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;width:100%">
-          <span style="font-size:10px;color:var(--text-tertiary);padding:4px 0">日</span>
-          <span style="font-size:10px;color:var(--text-tertiary);padding:4px 0">一</span>
-          <span style="font-size:10px;color:var(--text-tertiary);padding:4px 0">二</span>
-          <span style="font-size:10px;color:var(--text-tertiary);padding:4px 0">三</span>
-          <span style="font-size:10px;color:var(--text-tertiary);padding:4px 0">四</span>
-          <span style="font-size:10px;color:var(--text-tertiary);padding:4px 0">五</span>
-          <span style="font-size:10px;color:var(--text-tertiary);padding:4px 0">六</span>
-          <span style="font-size:12px;color:var(--text-tertiary);padding:6px 0">1</span><span style="font-size:12px;color:var(--text-tertiary);padding:6px 0">2</span>
-          <span style="font-size:12px;color:var(--text-tertiary);padding:6px 0">3</span><span style="font-size:12px;color:var(--text-tertiary);padding:6px 0">4</span>
-          <span style="font-size:12px;color:var(--text-tertiary);padding:6px 0">5</span><span style="font-size:12px;color:var(--text-tertiary);padding:6px 0">6</span>
-          <span style="font-size:12px;color:var(--text-tertiary);padding:6px 0">7</span>
-          <span style="font-size:12px;padding:6px 0">8</span><span style="font-size:12px;padding:6px 0">9</span>
-          <span style="font-size:12px;padding:6px 0">10</span><span style="font-size:12px;padding:6px 0">11</span>
-          <span style="font-size:12px;padding:6px 0">12</span><span style="font-size:12px;padding:6px 0">13</span>
-          <span style="font-size:12px;padding:6px 0">14</span>
-          <span style="font-size:12px;padding:6px 0;background:rgba(245,158,11,.1);color:var(--accent);font-weight:600;border-radius:4px">15 <div style="font-size:8px;margin-top:1px;color:var(--up)">●</div></span>
-          <span style="font-size:12px;padding:6px 0">16</span>
-          <span style="font-size:12px;padding:6px 0">17</span>
-          <span style="font-size:12px;padding:6px 0">18</span>
-          <span style="font-size:12px;padding:6px 0">19</span>
-          <span style="font-size:12px;padding:6px 0;background:rgba(38,166,154,.1);color:var(--down);font-weight:600;border-radius:4px">20 <div style="font-size:8px;margin-top:1px;color:var(--down)">●</div></span>
-          <span style="font-size:12px;padding:6px 0">21</span>
-          <span style="font-size:12px;padding:6px 0">22</span>
-          <span style="font-size:12px;padding:6px 0">23</span>
-          <span style="font-size:12px;padding:6px 0">24</span>
-          <span style="font-size:12px;padding:6px 0;background:rgba(99,99,106,.1);border-radius:4px">25 <div style="font-size:8px;color:var(--text-tertiary)">●</div></span>
-          <span style="font-size:12px;padding:6px 0">26</span>
-          <span style="font-size:12px;padding:6px 0">27</span>
-          <span style="font-size:12px;padding:6px 0">28</span>
-          <span style="font-size:12px;padding:6px 0">29</span>
-          <span style="font-size:12px;padding:6px 0">30</span>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center">
+          <span style="font-size:10px;color:var(--text-tertiary);padding:4px 0;font-weight:500">日</span><span style="font-size:10px;color:var(--text-tertiary);padding:4px 0;font-weight:500">一</span><span style="font-size:10px;color:var(--text-tertiary);padding:4px 0;font-weight:500">二</span><span style="font-size:10px;color:var(--text-tertiary);padding:4px 0;font-weight:500">三</span><span style="font-size:10px;color:var(--text-tertiary);padding:4px 0;font-weight:500">四</span><span style="font-size:10px;color:var(--text-tertiary);padding:4px 0;font-weight:500">五</span><span style="font-size:10px;color:var(--text-tertiary);padding:4px 0;font-weight:500">六</span>
+          <span style="font-size:12px;color:var(--text-tertiary);padding:6px 0">1</span><span style="font-size:12px;color:var(--text-tertiary);padding:6px 0">2</span><span style="font-size:12px;color:var(--text-tertiary);padding:6px 0">3</span><span style="font-size:12px;color:var(--text-tertiary);padding:6px 0">4</span><span style="font-size:12px;color:var(--text-tertiary);padding:6px 0">5</span><span style="font-size:12px;color:var(--text-tertiary);padding:6px 0">6</span><span style="font-size:12px;color:var(--text-tertiary);padding:6px 0">7</span>
+          <span style="font-size:12px;padding:6px 0">8</span><span style="font-size:12px;padding:6px 0">9</span><span style="font-size:12px;padding:6px 0">10</span><span style="font-size:12px;padding:6px 0">11</span><span style="font-size:12px;padding:6px 0">12</span><span style="font-size:12px;padding:6px 0">13</span><span style="font-size:12px;padding:6px 0">14</span>
+          <span style="font-size:12px;padding:6px 0;background:rgba(245,158,11,.12);color:var(--accent);font-weight:600;border-radius:5px">15<div style="font-size:8px;color:var(--accent)">●</div></span>
+          <span style="font-size:12px;padding:6px 0">16</span><span style="font-size:12px;padding:6px 0">17</span><span style="font-size:12px;padding:6px 0">18</span><span style="font-size:12px;padding:6px 0">19</span>
+          <span style="font-size:12px;padding:6px 0;background:rgba(38,166,154,.12);color:var(--down);font-weight:600;border-radius:5px">20<div style="font-size:8px;color:var(--down)">●</div></span>
+          <span style="font-size:12px;padding:6px 0">21</span><span style="font-size:12px;padding:6px 0">22</span><span style="font-size:12px;padding:6px 0">23</span><span style="font-size:12px;padding:6px 0">24</span>
+          <span style="font-size:12px;padding:6px 0;background:rgba(160,160,168,.12);border-radius:5px">25<div style="font-size:8px;color:var(--text-tertiary)">●</div></span>
+          <span style="font-size:12px;padding:6px 0">26</span><span style="font-size:12px;padding:6px 0">27</span><span style="font-size:12px;padding:6px 0">28</span><span style="font-size:12px;padding:6px 0">29</span><span style="font-size:12px;padding:6px 0">30</span>
         </div>
       </div>
-      <div class="split-code">
-        <button class="copy-btn" onclick="copyCode(this,'cal')">复制</button>
-        <pre id="cal-code"><span class="cm">// Go templ — 财报/除息日历</span>
-events := []<span class="kw">CalendarEvent</span>{
+      <div class="split-code"><button class="copy-btn" onclick="copyCode(this,'cal')">复制</button>
+<pre id="cal-code"><span class="cm">// Go templ — 财报日历</span>
+events := []CalendarEvent{
   {Day: <span class="num">15</span>, Type: <span class="str">"earnings"</span>},
-  {Day: <span class="num">20</span>, Type: <span class="str">"dividend"</span>},
 }
-components.<span class="kw">Calendar</span>(<span class="num">2026</span>, <span class="num">6</span>, events)
-
-<span class="cm">// React</span>
-&lt;<span class="kw">Calendar</span> year={<span class="num">2026</span>} month={<span class="num">6</span>} events={events} /&gt;</pre>
-      </div>
+components.Calendar(<span class="num">2026</span>, <span class="num">6</span>, events)</pre></div>
     </div>
   </div>
 </div>
 
-<!-- ============ QUICKSTART ============ -->
+<!-- ============= QUICKSTART ============= -->
 <div class="sec">
   <div class="wrap">
-    <div class="sl">30 秒上手</div>
-    <h2>选择你的语言</h2>
-
-    <div class="lang-tabs" id="langTabs">
+    <div class="sl fade-up">30 秒上手</div>
+    <h2 class="fade-up delay-1">选择你的语言</h2>
+    <div class="lang-tabs fade-up delay-2">
       <button class="lang-tab active" data-lang="go" onclick="switchLang('go')">🐹 Go</button>
       <button class="lang-tab" data-lang="rust" onclick="switchLang('rust')">🦀 Rust</button>
       <button class="lang-tab" data-lang="ts" onclick="switchLang('ts')">📘 TypeScript</button>
     </div>
-
-    <!-- GO -->
     <div class="lang-panel" id="lang-go">
-      <div class="qs"><span class="comment"># 安装 CLI（单二进制，3 MB）</span><br><span class="prompt">$ </span><span class="cmd">go install github.com/libra/go-cli/cmd/libra@latest</span><br><span class="prompt">$ </span><span class="cmd">libra init</span><br><span class="out">✓ 已生成 tokens.css (4289 字节)</span><br><br><span class="comment">// 在 Go 代码中直接使用色值</span><br><span class="prompt">$ </span><span class="cmd">go get github.com/libra/go-tokens</span><br><br><span class="kw">import</span> <span class="str">"github.com/libra/go-tokens"</span><br><br>upColor := tokens.<span class="kw">ColorUp</span>    <span class="comment">// "#ef5350"</span><br>mid := tokens.<span class="kw">LerpColor</span>(<span class="str">"#0c0c0e"</span>, <span class="str">"#ffffff"</span>, <span class="num">0.5</span>)<br>css := tokens.<span class="kw">GenerateCSS</span>()</div>
+      <div class="qs"><span class="comment"># Go 用户 5 秒上手</span><br><span class="prompt">$ </span><span class="cmd">go install github.com/libra/go-cli/cmd/libra@latest</span><br><span class="prompt">$ </span><span class="cmd">libra init</span><br><span class="out">✓ 已生成 tokens.css (4289 字节)</span><br><br><span class="comment">// 在代码中直接使用</span><br><span class="kw">import</span> <span class="str">"github.com/libra/go-tokens"</span><br>upColor := tokens.ColorUp  <span class="comment">// "#ef5350"</span><br>css := tokens.GenerateCSS()</div>
     </div>
-
-    <!-- RUST -->
     <div class="lang-panel" id="lang-rust" style="display:none">
-      <div class="qs"><span class="comment"># Cargo.toml</span><br><span class="kw">libra-tokens</span> = { path = <span class="str">"../rust-tokens"</span> }<br><br><span class="comment">// 在 Rust 中使用</span><br><span class="kw">use</span> libra_tokens::colors::{COLOR_UP, dark};<br><br><span class="kw">let</span> bg = dark::BG_ROOT;  <span class="comment">// "#0c0c0e"</span><br><span class="kw">let</span> mid = libra_tokens::lerp::<span class="kw">lerp_color</span>(<span class="str">"#0c0c0e"</span>, <span class="str">"#ffffff"</span>, <span class="num">0.5</span>);</div>
+      <div class="qs"><span class="comment">// Cargo.toml</span><br><span class="kw">libra-tokens</span> = { path = <span class="str">"../rust-tokens"</span> }<br><br><span class="kw">use</span> libra_tokens::colors::dark;<br><span class="kw">let</span> bg = dark::BG_ROOT;  <span class="comment">// "#0c0c0e"</span></div>
     </div>
-
-    <!-- TS -->
     <div class="lang-panel" id="lang-ts" style="display:none">
-      <div class="qs"><span class="comment"># 安装设计 Token</span><br><span class="prompt">$ </span><span class="cmd">npm install @libra-design/tokens</span><br><br><span class="comment">// 在入口文件引入</span><br><span class="kw">import</span> <span class="str">'@libra-design/tokens/css'</span><br><br><span class="comment">// React 组件</span><br><span class="kw">import</span> { Button, Card, StockTable } <span class="kw">from</span> <span class="str">'@libra-design/react'</span><br><br><span class="comment">// 主题引擎</span><br><span class="kw">import</span> { applyPreset } <span class="kw">from</span> <span class="str">'@libra-design/theme'</span><br>applyPreset(<span class="str">'terminal'</span>);  <span class="comment">// 📈 10 套命名主题</span></div>
+      <div class="qs"><span class="comment"># TS 用户</span><br><span class="prompt">$ </span><span class="cmd">npm install @libra-design/tokens @libra-design/react</span><br><br><span class="kw">import</span> <span class="str">'@libra-design/tokens/css'</span><br><span class="kw">import</span> { Button, StockTable } <span class="kw">from</span> <span class="str">'@libra-design/react'</span></div>
     </div>
   </div>
 </div>
 
-<!-- ============ THEMES ============ -->
+<!-- ============= THEMES ============= -->
 <div class="sec">
   <div class="wrap">
-    <div class="sl">主题预设</div>
-    <h2>10 套金融术语主题</h2>
-    <p class="desc">每套 = 17 暗色端点色 + 17 亮色端点色。点击即可切换到该主题。</p>
-    <div class="tg" id="themeGrid"></div>
+    <div class="sl fade-up">主题预设</div>
+    <h2 class="fade-up delay-1">10 套金融术语主题</h2>
+    <p class="desc fade-up delay-2">每套 = 17 暗色 + 17 亮色端点色。点击即可切换。</p>
+    <div class="tg fade-up delay-3" id="themeGrid"></div>
   </div>
 </div>
 
-<!-- ============ PACKAGE MATRIX ============ -->
+<!-- ============= PACKAGES ============= -->
 <div class="sec">
   <div class="wrap">
-    <div class="sl">包矩阵</div>
-    <h2>Go · Rust · TS 三语言覆盖</h2>
-    <div class="cg">
+    <div class="sl fade-up">包矩阵</div>
+    <h2 class="fade-up delay-1">Go · Rust · TS 三语言覆盖</h2>
+    <div class="cg fade-up delay-2" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px">
       <div class="ci"><div class="ci-n">go-tokens</div><div class="ci-d">🐹 色值常量 + LerpColor + CSS 生成</div></div>
       <div class="ci"><div class="ci-n">go-cli</div><div class="ci-d">🐹 单二进制 CLI · libra init</div></div>
       <div class="ci"><div class="ci-n">go-templ</div><div class="ci-d">🐹 40 个金融 templ 组件</div></div>
-      <div class="ci"><div class="ci-n">go-mcp</div><div class="ci-d">🐹 MCP Server · 13ms 冷启动</div></div>
-      <div class="ci"><div class="ci-n">go-server</div><div class="ci-d">🐹 单二进制仪表盘 · 6.5MB</div></div>
-      <div class="ci"><div class="ci-n">rust-tokens</div><div class="ci-d">🦀 crate · 色值+主题+CSS 生成</div></div>
-      <div class="ci"><div class="ci-n">rust-leptos</div><div class="ci-d">🦀 20 个 Leptos 组件</div></div>
+      <div class="ci"><div class="ci-n">go-mcp</div><div class="ci-d">🐹 AI Agent · MCP Server 13ms</div></div>
+      <div class="ci"><div class="ci-n">go-server</div><div class="ci-d">🐹 单二进制仪表盘 6.5MB</div></div>
+      <div class="ci"><div class="ci-n">rust-tokens</div><div class="ci-d">🦀 crate 色值+主题+CSS</div></div>
+      <div class="ci"><div class="ci-n">rust-leptos</div><div class="ci-d">🦀 20 个 Leptos 金融组件</div></div>
       <div class="ci"><div class="ci-n">@libra-design/tokens</div><div class="ci-d">📘 CSS 变量 + TS 类型</div></div>
       <div class="ci"><div class="ci-n">@libra-design/theme</div><div class="ci-d">📘 双主题混合引擎</div></div>
       <div class="ci"><div class="ci-n">@libra-design/react</div><div class="ci-d">📘 64 个 React 金融组件</div></div>
@@ -525,128 +371,82 @@ components.<span class="kw">Calendar</span>(<span class="num">2026</span>, <span
   </div>
 </div>
 
-<!-- ============ FOOTER ============ -->
+<!-- ============= FOOTER ============= -->
 <footer>
   <div class="wrap">
     <a href="https://github.com/goodie1972/libra-design">GitHub</a> · <a href="https://www.npmjs.com/org/libra-design">npm</a> · MIT<br>
-    <span style="font-size:11px;color:var(--text-tertiary)">极致审美的设计语言，专为 Go/Rust 量身定制</span>
+    <span style="font-size:11px;opacity:.5">极致审美的设计语言，专为 Go/Rust 量身定制</span>
   </div>
 </footer>
 
+<input type="range" id="mixSlider" min="0" max="1" step="0.01" value="0" style="display:none">
+
 <script>
-// ============================================================
-// ALL 10 THEMES (34 colors each)
-// ============================================================
-var ALL_THEMES = [
-  {id:"terminal",name:"Terminal",desc:"Bloomberg Terminal 黑底琥珀",dark:{"bg-root":"#0c0c0e","bg-main":"#0c0c0e","bg-sidebar":"#0c0c0e","bg-card":"#151518","bg-card-hover":"#1c1c20","bg-input":"#1c1c20","bg-chart":"#0c0c0e","bg-sub-panel":"#151518","border-main":"#252528","border-sub":"#1c1c20","border-input":"#252528","text-primary":"#e8e8ed","text-secondary":"#b8b8bf","text-tertiary":"#a0a0a8","accent":"#f59e0b","accent-hover":"#fbbf24","grid-line":"#1a1a1e"},light:{"bg-root":"#faf8f5","bg-main":"#faf8f5","bg-sidebar":"#faf8f5","bg-card":"#ffffff","bg-card-hover":"#f5f0e8","bg-input":"#f0ebe0","bg-chart":"#faf8f5","bg-sub-panel":"#ffffff","border-main":"#d4c8b0","border-sub":"#e8dcc8","border-input":"#d4c8b0","text-primary":"#1a1814","text-secondary":"#3a3428","text-tertiary":"#5c5440","accent":"#d97706","accent-hover":"#b45309","grid-line":"#f0ebe0"}},
-  {id:"ticker",name:"Ticker",desc:"交易所大屏 深蓝亮白",dark:{"bg-root":"#0a1628","bg-main":"#0a1628","bg-sidebar":"#0a1628","bg-card":"#0f1f3d","bg-card-hover":"#142850","bg-input":"#142850","bg-chart":"#0a1628","bg-sub-panel":"#0f1f3d","border-main":"#1a3560","border-sub":"#142850","border-input":"#1a3560","text-primary":"#e8f0fe","text-secondary":"#a8b8d8","text-tertiary":"#8ca0c4","accent":"#3b82f6","accent-hover":"#60a5fa","grid-line":"#0f1f3d"},light:{"bg-root":"#f0f4fa","bg-main":"#f0f4fa","bg-sidebar":"#f0f4fa","bg-card":"#ffffff","bg-card-hover":"#e8edf5","bg-input":"#e0e7f2","bg-chart":"#f0f4fa","bg-sub-panel":"#ffffff","border-main":"#c0cce0","border-sub":"#d8e0ee","border-input":"#c0cce0","text-primary":"#0f1a30","text-secondary":"#283850","text-tertiary":"#506078","accent":"#2563eb","accent-hover":"#1d4ed8","grid-line":"#e0e7f2"}},
-  {id:"vault",name:"Vault",desc:"私人银行 暖暗金棕",dark:{"bg-root":"#161412","bg-main":"#161412","bg-sidebar":"#161412","bg-card":"#1c1a16","bg-card-hover":"#242118","bg-input":"#242118","bg-chart":"#161412","bg-sub-panel":"#1c1a16","border-main":"#2c2820","border-sub":"#242118","border-input":"#2c2820","text-primary":"#e8e0d0","text-secondary":"#c0b8a8","text-tertiary":"#a0a0a8","accent":"#c9a84c","accent-hover":"#d4b868","grid-line":"#1c1a16"},light:{"bg-root":"#f8f6f2","bg-main":"#f8f6f2","bg-sidebar":"#f8f6f2","bg-card":"#ffffff","bg-card-hover":"#f0ece4","bg-input":"#e8e4d8","bg-chart":"#f8f6f2","bg-sub-panel":"#ffffff","border-main":"#d0c8b8","border-sub":"#e0d8cc","border-input":"#d0c8b8","text-primary":"#1a1612","text-secondary":"#3a3428","text-tertiary":"#5c5440","accent":"#a08030","accent-hover":"#8c6c28","grid-line":"#e8e4d8"}},
-  {id:"margin",name:"Margin",desc:"保证金交易 极致暗红",dark:{"bg-root":"#08080a","bg-main":"#08080a","bg-sidebar":"#08080a","bg-card":"#0e0e12","bg-card-hover":"#141418","bg-input":"#141418","bg-chart":"#08080a","bg-sub-panel":"#0e0e12","border-main":"#1a1a20","border-sub":"#141418","border-input":"#1a1a20","text-primary":"#f0f0f4","text-secondary":"#8c8c94","text-tertiary":"#a0a0a8","accent":"#ef4444","accent-hover":"#f87171","grid-line":"#0e0e12"},light:{"bg-root":"#fafafa","bg-main":"#fafafa","bg-sidebar":"#fafafa","bg-card":"#ffffff","bg-card-hover":"#f4f4f4","bg-input":"#ececec","bg-chart":"#fafafa","bg-sub-panel":"#ffffff","border-main":"#d0d0d0","border-sub":"#e4e4e4","border-input":"#d0d0d0","text-primary":"#0a0a0c","text-secondary":"#2a2a2e","text-tertiary":"#505054","accent":"#dc2626","accent-hover":"#b91c1c","grid-line":"#ececec"}},
-  {id:"ledger",name:"Ledger",desc:"账簿报表 暖纸白蓝",dark:{"bg-root":"#1a1814","bg-main":"#1a1814","bg-sidebar":"#1a1814","bg-card":"#201e18","bg-card-hover":"#28261e","bg-input":"#28261e","bg-chart":"#1a1814","bg-sub-panel":"#201e18","border-main":"#302e24","border-sub":"#28261e","border-input":"#302e24","text-primary":"#e8e4d8","text-secondary":"#c0b8a8","text-tertiary":"#a0a0a8","accent":"#1e3a8a","accent-hover":"#2563eb","grid-line":"#201e18"},light:{"bg-root":"#faf8f3","bg-main":"#faf8f3","bg-sidebar":"#faf8f3","bg-card":"#ffffff","bg-card-hover":"#f4f0e8","bg-input":"#ece8dc","bg-chart":"#faf8f3","bg-sub-panel":"#ffffff","border-main":"#d4cec0","border-sub":"#e4ded4","border-input":"#d4cec0","text-primary":"#1a1612","text-secondary":"#3a3428","text-tertiary":"#5c5440","accent":"#1e40af","accent-hover":"#1e3a8a","grid-line":"#ece8dc"}},
-  {id:"prospectus",name:"Prospectus",desc:"招股书 纯白深蓝",dark:{"bg-root":"#0f1117","bg-main":"#0f1117","bg-sidebar":"#0f1117","bg-card":"#161820","bg-card-hover":"#1c1e28","bg-input":"#1c1e28","bg-chart":"#0f1117","bg-sub-panel":"#161820","border-main":"#242630","border-sub":"#1c1e28","border-input":"#242630","text-primary":"#e4e6ec","text-secondary":"#c0c0c6","text-tertiary":"#a0a0a8","accent":"#1a1a2e","accent-hover":"#2a2a4e","grid-line":"#161820"},light:{"bg-root":"#ffffff","bg-main":"#ffffff","bg-sidebar":"#f8f9fa","bg-card":"#ffffff","bg-card-hover":"#f4f5f8","bg-input":"#ecedf0","bg-chart":"#ffffff","bg-sub-panel":"#fafafa","border-main":"#d0d2d8","border-sub":"#e0e2e8","border-input":"#d0d2d8","text-primary":"#0f1117","text-secondary":"#484a58","text-tertiary":"#505054","accent":"#e63946","accent-hover":"#c1121f","grid-line":"#ecedf0"}},
-  {id:"arbitrage",name:"Arbitrage",desc:"量化套利 高对比赛紫",dark:{"bg-root":"#050508","bg-main":"#050508","bg-sidebar":"#050508","bg-card":"#0a0a10","bg-card-hover":"#101018","bg-input":"#101018","bg-chart":"#050508","bg-sub-panel":"#0a0a10","border-main":"#1a1a28","border-sub":"#101018","border-input":"#1a1a28","text-primary":"#f0f0f8","text-secondary":"#b0b0c4","text-tertiary":"#a0a0a8","accent":"#7c3aed","accent-hover":"#8b5cf6","grid-line":"#0a0a10"},light:{"bg-root":"#f8f8fc","bg-main":"#f8f8fc","bg-sidebar":"#f8f8fc","bg-card":"#ffffff","bg-card-hover":"#f0f0f8","bg-input":"#e8e8f4","bg-chart":"#f8f8fc","bg-sub-panel":"#ffffff","border-main":"#c8c8d8","border-sub":"#dcdce8","border-input":"#c8c8d8","text-primary":"#08080c","text-secondary":"#2e2e40","text-tertiary":"#505060","accent":"#6d28d9","accent-hover":"#5b21b6","grid-line":"#e8e8f4"}},
-  {id:"circuit",name:"Circuit",desc:"80年代CRT 绿字黑底",dark:{"bg-root":"#0a0a0a","bg-main":"#0a0a0a","bg-sidebar":"#0a0a0a","bg-card":"#0e0e0e","bg-card-hover":"#141414","bg-input":"#141414","bg-chart":"#0a0a0a","bg-sub-panel":"#0e0e0e","border-main":"#1a3a1a","border-sub":"#0e1e0e","border-input":"#1a3a1a","text-primary":"#22c55e","text-secondary":"#16a34a","text-tertiary":"#6ee89a","accent":"#22c55e","accent-hover":"#6ee89a","grid-line":"#0e1e0e"},light:{"bg-root":"#f0faf0","bg-main":"#f0faf0","bg-sidebar":"#f0faf0","bg-card":"#ffffff","bg-card-hover":"#e8f5e8","bg-input":"#dcefdc","bg-chart":"#f0faf0","bg-sub-panel":"#ffffff","border-main":"#b0d0b0","border-sub":"#c8e0c8","border-input":"#b0d0b0","text-primary":"#0a1a0a","text-secondary":"#2a5a2a","text-tertiary":"#2a5a2a","accent":"#6ee89a","accent-hover":"#166534","grid-line":"#dcefdc"}},
-  {id:"candlestick",name:"Candlestick",desc:"K线图表 深灰金黄",dark:{"bg-root":"#0d0e10","bg-main":"#0d0e10","bg-sidebar":"#0d0e10","bg-card":"#131416","bg-card-hover":"#191a1c","bg-input":"#191a1c","bg-chart":"#0d0e10","bg-sub-panel":"#131416","border-main":"#1e1e22","border-sub":"#16181a","border-input":"#1e1e22","text-primary":"#e4e4e8","text-secondary":"#c0c0c6","text-tertiary":"#a0a0a8","accent":"#f8b500","accent-hover":"#fcd34d","grid-line":"#13161a"},light:{"bg-root":"#f5f5f7","bg-main":"#f5f5f7","bg-sidebar":"#f5f5f7","bg-card":"#ffffff","bg-card-hover":"#f0f0f2","bg-input":"#eaeaee","bg-chart":"#f5f5f7","bg-sub-panel":"#ffffff","border-main":"#d0d0d4","border-sub":"#e0e0e4","border-input":"#d0d0d4","text-primary":"#0d0e10","text-secondary":"#505058","text-tertiary":"#505054","accent":"#d4a000","accent-hover":"#b88600","grid-line":"#eaeaee"}},
-  {id:"clearing",name:"Clearing",desc:"清算所B2B 灰白专业",dark:{"bg-root":"#18181b","bg-main":"#18181b","bg-sidebar":"#18181b","bg-card":"#1e1e22","bg-card-hover":"#242428","bg-input":"#242428","bg-chart":"#18181b","bg-sub-panel":"#1e1e22","border-main":"#2a2a30","border-sub":"#242428","border-input":"#2a2a30","text-primary":"#e4e4e8","text-secondary":"#c0c0c6","text-tertiary":"#a0a0a8","accent":"#52525b","accent-hover":"#71717a","grid-line":"#1e1e22"},light:{"bg-root":"#f5f5f5","bg-main":"#f5f5f5","bg-sidebar":"#f5f5f5","bg-card":"#ffffff","bg-card-hover":"#f0f0f0","bg-input":"#e8e8e8","bg-chart":"#f5f5f5","bg-sub-panel":"#ffffff","border-main":"#c8c8cc","border-sub":"#dcdce0","border-input":"#c8c8cc","text-primary":"#18181b","text-secondary":"#2a2a2e","text-tertiary":"#505054","accent":"#52525b","accent-hover":"#3f3f46","grid-line":"#e8e8e8"}}
+var ALL_THEMES=[
+{id:"terminal",name:"Terminal",desc:"Bloomberg Terminal 黑底琥珀",dark:{"bg-root":"#0c0c0e","bg-main":"#0c0c0e","bg-sidebar":"#0c0c0e","bg-card":"#151518","bg-card-hover":"#1c1c20","bg-input":"#1c1c20","bg-chart":"#0c0c0e","bg-sub-panel":"#151518","border-main":"#252528","border-sub":"#1c1c20","border-input":"#252528","text-primary":"#e8e8ed","text-secondary":"#c8c8d0","text-tertiary":"#a0a0a8","accent":"#f59e0b","accent-hover":"#fbbf24","grid-line":"#1a1a1e"},light:{"bg-root":"#faf8f5","bg-main":"#faf8f5","bg-sidebar":"#faf8f5","bg-card":"#ffffff","bg-card-hover":"#f5f0e8","bg-input":"#f0ebe0","bg-chart":"#faf8f5","bg-sub-panel":"#ffffff","border-main":"#d4c8b0","border-sub":"#e8dcc8","border-input":"#d4c8b0","text-primary":"#1a1814","text-secondary":"#3a3428","text-tertiary":"#5c5440","accent":"#d97706","accent-hover":"#b45309","grid-line":"#f0ebe0"}},
+{id:"ticker",name:"Ticker",desc:"交易所大屏 深蓝亮白",dark:{"bg-root":"#0a1628","bg-main":"#0a1628","bg-sidebar":"#0a1628","bg-card":"#0f1f3d","bg-card-hover":"#142850","bg-input":"#142850","bg-chart":"#0a1628","bg-sub-panel":"#0f1f3d","border-main":"#1a3560","border-sub":"#142850","border-input":"#1a3560","text-primary":"#e8f0fe","text-secondary":"#a8b8d8","text-tertiary":"#8ca0c4","accent":"#3b82f6","accent-hover":"#60a5fa","grid-line":"#0f1f3d"},light:{"bg-root":"#f0f4fa","bg-main":"#f0f4fa","bg-sidebar":"#f0f4fa","bg-card":"#ffffff","bg-card-hover":"#e8edf5","bg-input":"#e0e7f2","bg-chart":"#f0f4fa","bg-sub-panel":"#ffffff","border-main":"#c0cce0","border-sub":"#d8e0ee","border-input":"#c0cce0","text-primary":"#0f1a30","text-secondary":"#283850","text-tertiary":"#506078","accent":"#2563eb","accent-hover":"#1d4ed8","grid-line":"#e0e7f2"}},
+{id:"vault",name:"Vault",desc:"私人银行 暖暗金棕",dark:{"bg-root":"#161412","bg-main":"#161412","bg-sidebar":"#161412","bg-card":"#1c1a16","bg-card-hover":"#242118","bg-input":"#242118","bg-chart":"#161412","bg-sub-panel":"#1c1a16","border-main":"#2c2820","border-sub":"#242118","border-input":"#2c2820","text-primary":"#e8e0d0","text-secondary":"#c0b8a8","text-tertiary":"#a0a0a8","accent":"#c9a84c","accent-hover":"#d4b868","grid-line":"#1c1a16"},light:{"bg-root":"#f8f6f2","bg-main":"#f8f6f2","bg-sidebar":"#f8f6f2","bg-card":"#ffffff","bg-card-hover":"#f0ece4","bg-input":"#e8e4d8","bg-chart":"#f8f6f2","bg-sub-panel":"#ffffff","border-main":"#d0c8b8","border-sub":"#e0d8cc","border-input":"#d0c8b8","text-primary":"#1a1612","text-secondary":"#3a3428","text-tertiary":"#5c5440","accent":"#a08030","accent-hover":"#8c6c28","grid-line":"#e8e4d8"}},
+{id:"margin",name:"Margin",desc:"保证金交易 极致暗红",dark:{"bg-root":"#08080a","bg-main":"#08080a","bg-sidebar":"#08080a","bg-card":"#0e0e12","bg-card-hover":"#141418","bg-input":"#141418","bg-chart":"#08080a","bg-sub-panel":"#0e0e12","border-main":"#1a1a20","border-sub":"#141418","border-input":"#1a1a20","text-primary":"#f0f0f4","text-secondary":"#8c8c94","text-tertiary":"#787880","accent":"#ef4444","accent-hover":"#f87171","grid-line":"#0e0e12"},light:{"bg-root":"#fafafa","bg-main":"#fafafa","bg-sidebar":"#fafafa","bg-card":"#ffffff","bg-card-hover":"#f4f4f4","bg-input":"#ececec","bg-chart":"#fafafa","bg-sub-panel":"#ffffff","border-main":"#d0d0d0","border-sub":"#e4e4e4","border-input":"#d0d0d0","text-primary":"#0a0a0c","text-secondary":"#2a2a2e","text-tertiary":"#505054","accent":"#dc2626","accent-hover":"#b91c1c","grid-line":"#ececec"}},
+{id:"ledger",name:"Ledger",desc:"账簿报表 暖纸白蓝",dark:{"bg-root":"#1a1814","bg-main":"#1a1814","bg-sidebar":"#1a1814","bg-card":"#201e18","bg-card-hover":"#28261e","bg-input":"#28261e","bg-chart":"#1a1814","bg-sub-panel":"#201e18","border-main":"#302e24","border-sub":"#28261e","border-input":"#302e24","text-primary":"#e8e4d8","text-secondary":"#c0b8a8","text-tertiary":"#a0a0a8","accent":"#1e3a8a","accent-hover":"#2563eb","grid-line":"#201e18"},light:{"bg-root":"#faf8f3","bg-main":"#faf8f3","bg-sidebar":"#faf8f3","bg-card":"#ffffff","bg-card-hover":"#f4f0e8","bg-input":"#ece8dc","bg-chart":"#faf8f3","bg-sub-panel":"#ffffff","border-main":"#d4cec0","border-sub":"#e4ded4","border-input":"#d4cec0","text-primary":"#1a1612","text-secondary":"#3a3428","text-tertiary":"#5c5440","accent":"#1e40af","accent-hover":"#1e3a8a","grid-line":"#ece8dc"}},
+{id:"prospectus",name:"Prospectus",desc:"招股书 纯白深蓝",dark:{"bg-root":"#0f1117","bg-main":"#0f1117","bg-sidebar":"#0f1117","bg-card":"#161820","bg-card-hover":"#1c1e28","bg-input":"#1c1e28","bg-chart":"#0f1117","bg-sub-panel":"#161820","border-main":"#242630","border-sub":"#1c1e28","border-input":"#242630","text-primary":"#e4e6ec","text-secondary":"#b0b0b6","text-tertiary":"#a0a0a8","accent":"#e63946","accent-hover":"#c1121f","grid-line":"#161820"},light:{"bg-root":"#ffffff","bg-main":"#ffffff","bg-sidebar":"#f8f9fa","bg-card":"#ffffff","bg-card-hover":"#f4f5f8","bg-input":"#ecedf0","bg-chart":"#ffffff","bg-sub-panel":"#fafafa","border-main":"#d0d2d8","border-sub":"#e0e2e8","border-input":"#d0d2d8","text-primary":"#0f1117","text-secondary":"#484a58","text-tertiary":"#505054","accent":"#e63946","accent-hover":"#c1121f","grid-line":"#ecedf0"}},
+{id:"arbitrage",name:"Arbitrage",desc:"量化套利 高对比赛紫",dark:{"bg-root":"#050508","bg-main":"#050508","bg-sidebar":"#050508","bg-card":"#0a0a10","bg-card-hover":"#101018","bg-input":"#101018","bg-chart":"#050508","bg-sub-panel":"#0a0a10","border-main":"#1a1a28","border-sub":"#101018","border-input":"#1a1a28","text-primary":"#f0f0f8","text-secondary":"#b0b0c4","text-tertiary":"#a0a0a8","accent":"#7c3aed","accent-hover":"#8b5cf6","grid-line":"#0a0a10"},light:{"bg-root":"#f8f8fc","bg-main":"#f8f8fc","bg-sidebar":"#f8f8fc","bg-card":"#ffffff","bg-card-hover":"#f0f0f8","bg-input":"#e8e8f4","bg-chart":"#f8f8fc","bg-sub-panel":"#ffffff","border-main":"#c8c8d8","border-sub":"#dcdce8","border-input":"#c8c8d8","text-primary":"#08080c","text-secondary":"#2e2e40","text-tertiary":"#505060","accent":"#6d28d9","accent-hover":"#5b21b6","grid-line":"#e8e8f4"}},
+{id:"circuit",name:"Circuit",desc:"80年代CRT 绿字黑底",dark:{"bg-root":"#0a0a0a","bg-main":"#0a0a0a","bg-sidebar":"#0a0a0a","bg-card":"#0e0e0e","bg-card-hover":"#141414","bg-input":"#141414","bg-chart":"#0a0a0a","bg-sub-panel":"#0e0e0e","border-main":"#1a3a1a","border-sub":"#0e1e0e","border-input":"#1a3a1a","text-primary":"#22c55e","text-secondary":"#16a34a","text-tertiary":"#6ee89a","accent":"#22c55e","accent-hover":"#4ade80","grid-line":"#0e1e0e"},light:{"bg-root":"#f0faf0","bg-main":"#f0faf0","bg-sidebar":"#f0faf0","bg-card":"#ffffff","bg-card-hover":"#e8f5e8","bg-input":"#dcefdc","bg-chart":"#f0faf0","bg-sub-panel":"#ffffff","border-main":"#b0d0b0","border-sub":"#c8e0c8","border-input":"#b0d0b0","text-primary":"#0a1a0a","text-secondary":"#2a5a2a","text-tertiary":"#2a5a2a","accent":"#4ade80","accent-hover":"#166534","grid-line":"#dcefdc"}},
+{id:"candlestick",name:"Candlestick",desc:"K线图表 深灰金黄",dark:{"bg-root":"#0d0e10","bg-main":"#0d0e10","bg-sidebar":"#0d0e10","bg-card":"#131416","bg-card-hover":"#191a1c","bg-input":"#191a1c","bg-chart":"#0d0e10","bg-sub-panel":"#131416","border-main":"#1e1e22","border-sub":"#16181a","border-input":"#1e1e22","text-primary":"#e4e4e8","text-secondary":"#b0b0b6","text-tertiary":"#a0a0a8","accent":"#f8b500","accent-hover":"#fcd34d","grid-line":"#13161a"},light:{"bg-root":"#f5f5f7","bg-main":"#f5f5f7","bg-sidebar":"#f5f5f7","bg-card":"#ffffff","bg-card-hover":"#f0f0f2","bg-input":"#eaeaee","bg-chart":"#f5f5f7","bg-sub-panel":"#ffffff","border-main":"#d0d0d4","border-sub":"#e0e0e4","border-input":"#d0d0d4","text-primary":"#0d0e10","text-secondary":"#505058","text-tertiary":"#505054","accent":"#d4a000","accent-hover":"#b88600","grid-line":"#eaeaee"}},
+{id:"clearing",name:"Clearing",desc:"清算所B2B 灰白专业",dark:{"bg-root":"#18181b","bg-main":"#18181b","bg-sidebar":"#18181b","bg-card":"#1e1e22","bg-card-hover":"#242428","bg-input":"#242428","bg-chart":"#18181b","bg-sub-panel":"#1e1e22","border-main":"#2a2a30","border-sub":"#242428","border-input":"#2a2a30","text-primary":"#e4e4e8","text-secondary":"#c0c0c6","text-tertiary":"#a0a0a8","accent":"#52525b","accent-hover":"#71717a","grid-line":"#1e1e22"},light:{"bg-root":"#f5f5f5","bg-main":"#f5f5f5","bg-sidebar":"#f5f5f5","bg-card":"#ffffff","bg-card-hover":"#f0f0f0","bg-input":"#e8e8e8","bg-chart":"#f5f5f5","bg-sub-panel":"#ffffff","border-main":"#c8c8cc","border-sub":"#dcdce0","border-input":"#c8c8cc","text-primary":"#18181b","text-secondary":"#2a2a2e","text-tertiary":"#505054","accent":"#52525b","accent-hover":"#3f3f46","grid-line":"#e8e8e8"}}
 ];
 
-// Default endpoints (Terminal theme) - updated for WCAG AA contrast
-var DARK={}, LIGHT={};
-
-// ============================================================
-// THEME ENGINE
-// ============================================================
-function lerpColor(h1,h2,t){var c1=parseInt(h1.slice(1),16),c2=parseInt(h2.slice(1),16);var r1=(c1>>16)&0xff,g1=(c1>>8)&0xff,b1=c1&0xff;var r2=(c2>>16)&0xff,g2=(c2>>8)&0xff,b2=c2&0xff;var r=Math.round(Math.sqrt((1-t)*r1*r1+t*r2*r2));var g=Math.round(Math.sqrt((1-t)*g1*g1+t*g2*g2));var b=Math.round(Math.sqrt((1-t)*b1*b1+t*b2*b2));return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1)}
-function lerpLinear(h1,h2,t){var c1=parseInt(h1.slice(1),16),c2=parseInt(h2.slice(1),16);var r1=(c1>>16)&0xff,g1=(c1>>8)&0xff,b1=c1&0xff;var r2=(c2>>16)&0xff,g2=(c2>>8)&0xff,b2=c2&0xff;return '#'+((1<<24)+(Math.round(r1+(r2-r1)*t)<<16)+(Math.round(g1+(g2-g1)*t)<<8)+Math.round(b1+(b2-b1)*t)).toString(16).slice(1)}
+function lerpColor(h1,h2,t){var c1=parseInt(h1.slice(1),16),c2=parseInt(h2.slice(1),16);var r1=(c1>>16)&0xff,g1=(c1>>8)&0xff,b1=c1&0xff;var r2=(c2>>16)&0xff,g2=(c2>>8)&0xff,b2=c2&0xff;return'#'+((1<<24)+(Math.round(Math.sqrt((1-t)*r1*r1+t*r2*r2))<<16)+(Math.round(Math.sqrt((1-t)*g1*g1+t*g2*g2))<<8)+Math.round(Math.sqrt((1-t)*b1*b1+t*b2*b2))).toString(16).slice(1)}
+function lerpLinear(h1,h2,t){var c1=parseInt(h1.slice(1),16),c2=parseInt(h2.slice(1),16);var r1=(c1>>16)&0xff,g1=(c1>>8)&0xff,b1=c1&0xff;var r2=(c2>>16)&0xff,g2=(c2>>8)&0xff,b2=c2&0xff;return'#'+((1<<24)+(Math.round(r1+(r2-r1)*t)<<16)+(Math.round(g1+(g2-g1)*t)<<8)+Math.round(b1+(b2-b1)*t)).toString(16).slice(1)}
 function textCurve(t){return 1-Math.pow(1-t,5)}
 function borderCurve(t){return 1-Math.pow(1-t,2)}
+var DARK={},LIGHT={},CUR=null;
 
 function applyMix(t){
-  var root=document.documentElement.style,tt=textCurve(t),bt=borderCurve(t);
-  ['bg-root','bg-main','bg-sidebar','bg-card','bg-card-hover','bg-input','bg-chart','bg-sub-panel'].forEach(function(k){root.setProperty('--'+k,lerpColor(DARK[k],LIGHT[k],t))});
-  ['border-main','border-sub','border-input'].forEach(function(k){root.setProperty('--'+k,lerpColor(DARK[k],LIGHT[k],bt))});
-  ['text-primary','text-secondary','text-tertiary','accent','accent-hover'].forEach(function(k){root.setProperty('--'+k,lerpLinear(DARK[k],LIGHT[k],tt))});
-  root.setProperty('--grid-line',lerpColor(DARK['grid-line'],LIGHT['grid-line'],bt));
-  root.setProperty('--code-bg',lerpColor(DARK['bg-root'],LIGHT['bg-root'],t));
-  root.setProperty('--btn-radius',Math.round(8+t*12)+'px');
-  root.setProperty('--card-radius',Math.round(10+t*2)+'px');
-  root.setProperty('--card-shadow',t<0.01?'none':'0 1px 3px rgba(0,0,0,'+(t*0.04).toFixed(2)+')');
-  root.setProperty('--card-border',t>0.5?'none':'1px solid var(--border-main)');
+  var r=document.documentElement.style,tt=textCurve(t),bt=borderCurve(t);
+  ['bg-root','bg-main','bg-sidebar','bg-card','bg-card-hover','bg-input','bg-chart','bg-sub-panel'].forEach(function(k){r.setProperty('--'+k,lerpColor(DARK[k],LIGHT[k],t))});
+  ['border-main','border-sub','border-input'].forEach(function(k){r.setProperty('--'+k,lerpColor(DARK[k],LIGHT[k],bt))});
+  ['text-primary','text-secondary','text-tertiary','accent','accent-hover'].forEach(function(k){r.setProperty('--'+k,lerpLinear(DARK[k],LIGHT[k],tt))});
+  r.setProperty('--grid-line',lerpColor(DARK['grid-line'],LIGHT['grid-line'],bt));
+  r.setProperty('--code-bg',lerpColor(DARK['bg-root'],LIGHT['bg-root'],t));
+  r.setProperty('--btn-radius',Math.round(8+t*12)+'px');r.setProperty('--card-radius',Math.round(10+t*2)+'px');
 }
 
 function loadTheme(id){
-  var t=ALL_THEMES.find(function(th){return th.id===id});if(!t)return;
+  var t=ALL_THEMES.find(function(h){return h.id===id});if(!t)return;
   var d=t.dark,l=t.light;
   ['bg-root','bg-main','bg-sidebar','bg-card','bg-card-hover','bg-input','bg-chart','bg-sub-panel','border-main','border-sub','border-input','text-primary','text-secondary','text-tertiary','accent','accent-hover','grid-line'].forEach(function(k){DARK[k]=d[k];LIGHT[k]=l[k]});
-  DARK['code-bg']='#08080a';LIGHT['code-bg']='#1a1a1e';
-  CURRENT_THEME=id;
-  applyMix(0);
+  DARK['code-bg']='#08080a';LIGHT['code-bg']='#1a1a1e';CUR=id;
+  var v=parseFloat(document.getElementById('mixSlider').value);applyMix(isNaN(v)?0:v);
 }
 
 function setTheme(id){
-  var t=ALL_THEMES.find(function(th){return th.id===id});if(!t)return;
-  document.getElementById('currentThemeBtn').textContent=t.name;
-  loadTheme(id);
+  var t=ALL_THEMES.find(function(h){return h.id===id});if(!t)return;
+  document.getElementById('currentThemeBtn').textContent=t.name;loadTheme(id);
   document.querySelectorAll('#themeMenu .theme-dd-item').forEach(function(b){b.classList.toggle('active',b.dataset.theme===id)});
   document.querySelectorAll('#themeGrid .tc').forEach(function(c){c.style.borderColor=c.dataset.theme===id?'var(--accent)':''});
 }
 
-// ============================================================
-// RENDER THEMES
-// ============================================================
 function renderThemes(){
-  var menu=document.getElementById('themeMenu');
-  var grid=document.getElementById('themeGrid');
+  var m=document.getElementById('themeMenu'),g=document.getElementById('themeGrid');
   ALL_THEMES.forEach(function(t){
-    var btn=document.createElement('button');btn.className='theme-dd-item';btn.dataset.theme=t.id;
-    btn.onclick=function(){setTheme(t.id)};
-    var dot=document.createElement('span');dot.className='theme-dot';dot.style.background=t.dark.accent;
-    btn.appendChild(dot);btn.appendChild(document.createTextNode(t.name));menu.appendChild(btn);
-
-    var card=document.createElement('div');card.className='tc';card.dataset.theme=t.id;card.onclick=function(){setTheme(t.id)};
-    var cn=document.createElement('div');cn.className='tn';cn.textContent=t.name;card.appendChild(cn);
-    var cd=document.createElement('div');cd.className='td';cd.textContent=t.desc;card.appendChild(cd);
-    var bar=document.createElement('div');bar.className='tb';
-    [t.dark['bg-root'],t.dark['bg-card'],t.dark['bg-input'],t.dark['border-main'],t.dark.accent,t.light['bg-root'],t.light['bg-card'],t.light['bg-input'],t.light['border-main'],t.light.accent].forEach(function(c){var s=document.createElement('span');s.style.background=c;bar.appendChild(s)});
-    card.appendChild(bar);grid.appendChild(card);
+    var b=document.createElement('button');b.className='theme-dd-item';b.dataset.theme=t.id;
+    b.onclick=function(){setTheme(t.id)};
+    var d=document.createElement('span');d.className='theme-dot';d.style.background=t.dark.accent;b.appendChild(d);b.appendChild(document.createTextNode(t.name));m.appendChild(b);
+    var c=document.createElement('div');c.className='tc';c.dataset.theme=t.id;c.onclick=function(){setTheme(t.id)};
+    var n=document.createElement('div');n.className='tn';n.textContent=t.name;c.appendChild(n);
+    var e=document.createElement('div');e.className='td';e.textContent=t.desc;c.appendChild(e);
+    var r=document.createElement('div');r.className='tb';
+    [t.dark['bg-root'],t.dark['bg-card'],t.dark['bg-input'],t.dark['border-main'],t.dark.accent,t.light['bg-root'],t.light['bg-card'],t.light['bg-input'],t.light['border-main'],t.light.accent].forEach(function(x){var s=document.createElement('span');s.style.background=x;r.appendChild(s)});
+    c.appendChild(r);g.appendChild(c);
   });
 }
 
-// ============================================================
-// COPY CODE
-// ============================================================
-function copyCode(btn,id){
-  var code=document.getElementById(id+'-code');
-  if(!code)return;
-  var text=code.textContent.replace(/\s+/g,' ').trim();
-  navigator.clipboard.writeText(text).then(function(){btn.textContent='✓ 已复制';setTimeout(function(){btn.textContent='复制'},1500)});
-}
-
-// ============================================================
-// LANGUAGE SWITCH
-// ============================================================
-function switchLang(lang){
-  document.querySelectorAll('#langTabs .lang-tab').forEach(function(t){t.classList.toggle('active',t.dataset.lang===lang)});
-  document.querySelectorAll('.lang-panel').forEach(function(p){p.style.display='none'});
-  var panel=document.getElementById('lang-'+lang);if(panel)panel.style.display='block';
-}
-
-// ============================================================
-// LANG TOGGLE
-// ============================================================
-function toggleLang(){
-  var html=document.documentElement;
-  var next=html.getAttribute('data-lang')==='zh'?'en':'zh';
-  html.setAttribute('data-lang',next);
-  document.getElementById('langIndicator').textContent=next==='zh'?'EN':'中';
-}
+function copyCode(b,id){var c=document.getElementById(id+'-code');if(!c)return;navigator.clipboard.writeText(c.textContent.trim()).then(function(){b.textContent='✓';setTimeout(function(){b.textContent='复制'},1200)})}
+function switchLang(l){document.querySelectorAll('.lang-tab').forEach(function(t){t.classList.toggle('active',t.dataset.lang===l)});document.querySelectorAll('.lang-panel').forEach(function(p){p.style.display='none'});var p=document.getElementById('lang-'+l);if(p)p.style.display='block'}
+function toggleLang(){var h=document.documentElement,n=h.getAttribute('data-lang')==='zh'?'en':'zh';h.setAttribute('data-lang',n);document.getElementById('langIndicator').textContent=n==='zh'?'EN':'中'}
 document.getElementById('langIndicator').textContent='EN';
-
-// ============================================================
-// INIT
-// ============================================================
-renderThemes();
-setTheme('terminal');
+document.querySelectorAll('.mix-g button').forEach(function(b){b.addEventListener('click',function(){document.getElementById('mixSlider').value=this.dataset.mix;loadTheme(CUR||'terminal')})});
+renderThemes();setTheme('terminal');
 </script>
 </body>
 </html>
