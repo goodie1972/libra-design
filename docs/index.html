@@ -1,738 +1,639 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-lang="zh">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⚖️ Libra Design — 极致审美的设计语言，专为Go/Rust量身定制</title>
+<title>Libra Design — 极致审美的设计语言，专为 Go/Rust 量身定制</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --up: #ef5350; --down: #26a69a; --flat: #9e9e9e;
   --up-bg: rgba(239,83,80,0.08); --down-bg: rgba(38,166,154,0.08);
-  --ma5: #f8b500; --ma10: #4a6cf7; --ma20: #9c27b0; --ma60: #009688;
+  --ma5: #f8b500; --ma10: #4a6cf7; --ma20: #9c27b0;
   --success: #34a853; --warning: #fbbc04; --error: #ea4335;
   --bg-root: #0c0c0e; --bg-main: #0c0c0e; --bg-sidebar: #0c0c0e;
-  --bg-card: #121214; --bg-card-hover: #18181b; --bg-input: #18181b;
-  --bg-chart: #0c0c0e; --bg-sub-panel: #121214;
-  --border-main: #1e1e22; --border-sub: #161618; --border-input: #1e1e22;
-  --text-primary: #e8e8ed; --text-secondary: #9a9aa0; --text-tertiary: #63636a;
-  --accent: #4a6cf7; --accent-hover: #5d7cf9;
-  --grid-line: #18191c;
-  --vol-up: rgba(239,83,80,0.55); --vol-down: rgba(38,166,154,0.55);
-  --font-body: 'Inter', -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  --font-mono: 'JetBrains Mono', 'SF Mono', 'Cascadia Code', monospace;
+  --bg-card: #151518; --bg-card-hover: #1c1c20; --bg-input: #1c1c20;
+  --bg-chart: #0c0c0e; --bg-sub-panel: #151518;
+  --border-main: #252528; --border-sub: #1c1c20; --border-input: #252528;
+  --text-primary: #e8e8ed; --text-secondary: #a1a1a8; --text-tertiary: #63636a;
+  --accent: #f59e0b; --accent-hover: #fbbf24;
+  --grid-line: #1a1a1e; --code-bg: #08080a;
   --btn-radius: 8px; --card-radius: 10px;
   --card-shadow: none; --card-border: 1px solid var(--border-main);
-  --code-bg: #08080a;
-  --tag-bg: rgba(74,108,247,0.12);
-  --lang-zh: block;
-  --lang-en: none;
+  --font-body: 'Inter', -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Cascadia Code', monospace;
+  --font-display: 'Inter Display', -apple-system, 'PingFang SC', sans-serif;
 }
-html[data-lang="en"] { --lang-zh: none; --lang-en: block; }
-.zh { display: var(--lang-zh); }
-.en { display: var(--lang-en); }
-*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: var(--font-body); background: var(--bg-root); color: var(--text-primary);
-  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-  transition: background 0.6s ease, color 0.6s ease;
-  line-height: 1.6; overflow-x: hidden;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-body);background:var(--bg-root);color:var(--text-primary);
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  transition:background .6s,color .6s;line-height:1.6;overflow-x:hidden
 }
-::selection { background: var(--accent); color: #fff; }
-.wrap { max-width: 1000px; margin: 0 auto; padding: 0 32px; }
+::selection{background:var(--accent);color:#fff}
+.wrap{max-width:1060px;margin:0 auto;padding:0 28px}
+a{color:var(--accent);text-decoration:none;transition:opacity .2s}
+a:hover{opacity:.8}
 
-/* TOP BAR */
-.top-bar {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 28px; gap: 6px;
-  background: rgba(12,12,14,0.85);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border-main);
-  transition: background 0.6s, border-color 0.4s;
+/* NAV */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;height:52px;gap:10px;
+  background:rgba(12,12,14,.88);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border-main);
+  transition:background .6s,border-color .4s;
 }
-.top-bar-left { display: flex; align-items: center; gap: 10px; }
-.top-bar-logo { font-size: 14px; font-weight: 700; letter-spacing: -0.02em; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
-.top-bar-logo .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); transition: background 0.3s; }
-.top-bar-right { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.nav-l{display:flex;align-items:center;gap:12px}
+.nav-logo{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px;letter-spacing:-.02em}
+.nav-logo .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);transition:background .3s}
+.nav-ver{font-size:10px;color:var(--text-tertiary);background:var(--bg-input);padding:1px 7px;border-radius:4px;border:1px solid var(--border-sub);font-weight:500}
+.nav-r{display:flex;align-items:center;gap:6px}
+.nav-btn{
+  display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:6px;
+  border:1px solid var(--border-main);background:transparent;
+  color:var(--text-secondary);cursor:pointer;font-size:12px;font-family:var(--font-body);
+  transition:all .2s;white-space:nowrap
+}
+.nav-btn:hover{background:var(--bg-card);color:var(--text-primary);border-color:var(--accent)}
 
-/* Theme Selector Dropdown */
-.theme-selector {
-  position: relative; display: inline-flex;
+/* THEME DROPDOWN */
+.theme-dd{position:relative;display:inline-block}
+.theme-dd-btn{
+  display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:6px;
+  border:1px solid var(--border-main);background:transparent;
+  color:var(--text-secondary);cursor:pointer;font-size:12px;font-family:var(--font-body);
+  transition:all .2s
 }
-.theme-selector summary {
-  display: flex; align-items: center; gap: 6px;
-  padding: 5px 12px; border-radius: 6px;
-  border: 1px solid var(--border-main);
-  background: transparent; color: var(--text-secondary);
-  cursor: pointer; font-size: 12px; font-family: var(--font-body);
-  transition: all 0.2s;
-  list-style: none;
+.theme-dd-btn:hover{background:var(--bg-card);color:var(--text-primary);border-color:var(--accent)}
+.theme-dd-btn::after{content:'';margin-left:2px;border-left:3px solid transparent;border-right:3px solid transparent;border-top:4px solid var(--text-tertiary)}
+.theme-dd:hover .theme-dd-btn{border-color:var(--accent);background:var(--bg-card)}
+.theme-dd:hover .theme-dd-menu{opacity:1;visibility:visible;transform:translateY(0)}
+.theme-dd-menu{
+  position:absolute;top:100%;right:0;margin-top:6px;width:210px;
+  background:var(--bg-card);border:1px solid var(--border-main);border-radius:8px;
+  padding:4px;z-index:200;box-shadow:0 8px 24px rgba(0,0,0,.4);
+  opacity:0;visibility:hidden;transform:translateY(-4px);transition:all .15s
 }
-.theme-selector summary:hover { background: var(--bg-card); color: var(--text-primary); border-color: var(--accent); }
-.theme-selector[open] summary { background: var(--bg-card); border-color: var(--accent); }
-.theme-selector .theme-menu {
-  position: absolute; top: 100%; right: 0; margin-top: 4px;
-  width: 240px; max-height: 360px; overflow-y: auto;
-  background: var(--bg-card); border: 1px solid var(--border-main);
-  border-radius: 8px; padding: 4px;
-  z-index: 200; box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+.theme-dd-item{
+  display:flex;align-items:center;gap:8px;width:100%;padding:6px 9px;
+  border:none;border-radius:5px;background:transparent;color:var(--text-primary);
+  cursor:pointer;font-size:12px;font-family:var(--font-body);text-align:left;transition:background .1s
 }
-.theme-menu button {
-  display: flex; align-items: center; gap: 8px;
-  width: 100%; padding: 7px 10px; border: none; border-radius: 5px;
-  background: transparent; color: var(--text-primary); cursor: pointer;
-  font-size: 12px; font-family: var(--font-body); text-align: left;
-  transition: background 0.15s;
-}
-.theme-menu button:hover { background: var(--bg-card-hover); }
-.theme-menu button.active { background: var(--tag-bg); }
-.theme-menu .theme-swatch {
-  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
-}
-.theme-menu .theme-name { font-weight: 500; }
-.theme-menu .theme-desc { font-size: 10px; color: var(--text-tertiary); }
+.theme-dd-item:hover{background:var(--bg-card-hover)}
+.theme-dd-item.active{background:var(--up-bg)}
+.theme-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 
-.mix-group { display: flex; gap: 2px; padding: 2px; border-radius: 6px; background: var(--bg-input); }
-.mix-group button {
-  padding: 4px 10px; border-radius: 4px; border: none;
-  background: transparent; color: var(--text-tertiary);
-  cursor: pointer; font-size: 13px; transition: all 0.2s;
-  font-family: var(--font-body); line-height: 1;
+/* MIX GROUP */
+.mix-g{display:flex;gap:2px;padding:2px;border-radius:6px;background:var(--bg-input)}
+.mix-g button{
+  padding:4px 10px;border-radius:4px;border:none;
+  background:transparent;color:var(--text-tertiary);
+  cursor:pointer;font-size:13px;transition:all .2s;font-family:var(--font-body);line-height:1
 }
-.mix-group button:hover { color: var(--text-secondary); }
-.mix-group button.active { background: var(--bg-card); color: var(--text-primary); }
-
-.lang-btn {
-  display: flex; align-items: center; gap: 6px;
-  padding: 5px 12px; border-radius: 6px;
-  border: 1px solid var(--border-main);
-  background: transparent; color: var(--text-secondary);
-  cursor: pointer; font-size: 12px; font-family: var(--font-body);
-  transition: all 0.2s;
-}
-.lang-btn:hover { background: var(--bg-card); color: var(--text-primary); border-color: var(--accent); }
+.mix-g button:hover{color:var(--text-secondary)}
+.mix-g button.active{background:var(--bg-card);color:var(--text-primary)}
 
 /* HERO */
-.hero { padding: 120px 0 50px; text-align: center; position: relative; overflow: hidden; }
-.hero::before {
-  content: ''; position: absolute; top: -200px; left: 50%; transform: translateX(-50%);
-  width: 800px; height: 800px;
-  background: radial-gradient(ellipse, rgba(74,108,247,0.04) 0%, transparent 70%);
-  pointer-events: none;
+.hero{padding:100px 0 48px;text-align:center;position:relative;overflow:hidden}
+.hero::before{
+  content:'';position:absolute;top:-240px;left:50%;transform:translateX(-50%);
+  width:800px;height:800px;
+  background:radial-gradient(ellipse,rgba(245,158,11,.04) 0%,transparent 70%);
+  pointer-events:none
 }
-.hero h1 { font-size: 46px; font-weight: 700; letter-spacing: -0.04em; margin-bottom: 12px; }
-.hero h1 .accent { color: var(--accent); }
-.hero .subtitle { font-size: 15px; color: var(--text-secondary); max-width: 560px; margin: 0 auto 20px; line-height: 1.8; font-weight: 300; }
-.hero .presets { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+.hero h1{
+  font-size:48px;font-weight:800;letter-spacing:-.04em;margin-bottom:10px;
+  font-family:var(--font-display);line-height:1.15
+}
+.hero h1 .hl{background:linear-gradient(135deg,var(--accent),#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero .sub{font-size:16px;color:var(--text-secondary);max-width:560px;margin:0 auto 24px;line-height:1.8;font-weight:300}
+.hero-tags{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 
-/* TAG */
-.tag { display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 4px; font-size: 11px; font-weight: 500; background: var(--tag-bg); color: var(--accent); }
-.tag.go { background: rgba(0,173,216,0.1); color: #00add8; }
-.tag.rust { background: rgba(239,84,50,0.1); color: #ef5432; }
-.tag.ts { background: rgba(49,120,198,0.1); color: #3178c6; }
+.tag{display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:4px;font-size:11px;font-weight:600;background:var(--up-bg);color:var(--accent)}
+.tag.go{background:rgba(0,173,216,.1);color:#00add8}
+.tag.rs{background:rgba(239,84,50,.1);color:#ef5432}
+.tag.ts{background:rgba(49,120,198,.1);color:#3178c6}
 
-/* SLIDER */
-.slider-section { padding: 22px 0; background: var(--bg-card); border-top: 1px solid var(--border-main); border-bottom: 1px solid var(--border-main); }
-.slider-wrap { display: flex; align-items: center; gap: 20px; }
-.slider-wrap label { font-size: 11px; color: var(--text-secondary); min-width: 56px; letter-spacing: 0.02em; text-transform: uppercase; white-space: nowrap; }
-.slider-wrap input[type=range] { flex: 1; height: 3px; border-radius: 2px; -webkit-appearance: none; appearance: none; background: linear-gradient(to right, #0c0c0e, #f5f5f7); outline: none; cursor: pointer; }
-.slider-wrap input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #fff; border: 2px solid var(--accent); cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.3); transition: transform 0.15s; }
-.slider-wrap .mix-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary); min-width: 40px; text-align: right; }
+/* METRICS */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border-sub);border:1px solid var(--border-sub);border-radius:10px;overflow:hidden;margin-bottom:32px}
+.metric{background:var(--bg-card);padding:20px;text-align:center;transition:background .2s}
+.metric:hover{background:var(--bg-card-hover)}
+.metric .num{font-family:var(--font-mono);font-size:28px;font-weight:700;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.metric .lb{font-size:11px;color:var(--text-tertiary);margin-top:2px;font-weight:500}
+.metric .note{font-size:10px;color:var(--text-secondary);margin-top:1px;font-weight:400;opacity:.6}
 
-/* SECTIONS */
-section { padding: 50px 0; border-bottom: 1px solid var(--border-sub); }
-section:last-of-type { border-bottom: none; }
-.section-label { font-size: 11px; font-weight: 500; color: var(--text-secondary); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
-h2 { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 24px; line-height: 1.3; }
-h3 { font-size: 13px; font-weight: 500; color: var(--text-secondary); margin-bottom: 14px; letter-spacing: 0.02em; }
-.desc { font-size: 14px; color: var(--text-secondary); line-height: 1.8; max-width: 600px; margin-bottom: 24px; font-weight: 300; }
+/* SHOWCASE */
+.sec{padding:40px 0;border-bottom:1px solid var(--border-sub)}
+.sec:last-of-type{border-bottom:none}
+.sl{font-size:11px;font-weight:600;color:var(--text-secondary);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+h2{font-size:24px;font-weight:700;letter-spacing:-.02em;margin-bottom:16px;font-family:var(--font-display)}
+h3{font-size:13px;font-weight:500;color:var(--text-secondary);margin-bottom:12px}
+.desc{font-size:14px;color:var(--text-secondary);line-height:1.8;max-width:600px;margin-bottom:24px;font-weight:300}
+
+/* SPLIT LAYOUT: preview + code */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border-sub);border:1px solid var(--border-sub);border-radius:10px;overflow:hidden;margin-bottom:20px}
+.split-preview{background:var(--bg-root);padding:24px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;min-height:100px}
+.split-code{background:var(--code-bg);padding:16px;overflow-x:auto;position:relative}
+.split-code pre{font-family:var(--font-mono);font-size:11px;line-height:1.8;color:#c4c4c8;margin:0}
+.split-code .cm{color:#6b6b72}
+.split-code .kw{color:#7b9cff}
+.split-code .str{color:#34a853}
+.split-code .num{color:#ffa726}
+
+/* COPY BUTTON */
+.copy-btn{
+  position:absolute;top:8px;right:8px;padding:3px 8px;border-radius:4px;
+  border:1px solid var(--border-sub);background:var(--bg-card);
+  color:var(--text-tertiary);cursor:pointer;font-size:10px;font-family:var(--font-body);
+  transition:all .15s;opacity:0
+}
+.split-code:hover .copy-btn{opacity:1}
+.copy-btn:hover{background:var(--bg-card-hover);color:var(--text-primary);border-color:var(--accent)}
+
+/* LANG TABS */
+.lang-tabs{display:flex;gap:0;border-bottom:1px solid var(--border-sub);margin-bottom:20px}
+.lang-tab{padding:8px 16px;font-size:12px;font-weight:500;background:none;border:none;color:var(--text-tertiary);cursor:pointer;transition:all .15s;font-family:var(--font-body);position:relative}
+.lang-tab:hover{color:var(--text-secondary)}
+.lang-tab.active{color:var(--accent)}
+.lang-tab.active::after{content:'';position:absolute;bottom:-1px;left:8px;right:8px;height:2px;background:var(--accent);border-radius:1px}
+
+/* COMPONENT DEMO STYLES */
+.demo-card{
+  background:var(--bg-card);border:var(--card-border);border-radius:var(--card-radius);
+  padding:18px 22px;min-width:160px;flex:1;display:flex;flex-direction:column;gap:6px;
+  transition:background .3s,border-color .3s
+}
+.demo-card:hover{background:var(--bg-card-hover);border-color:var(--accent)}
+.demo-card .cl{font-size:10px;color:var(--text-secondary);letter-spacing:.04em;text-transform:uppercase}
+.demo-card .cv{font-size:26px;font-weight:700;font-family:var(--font-mono);font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.demo-card .cd{font-size:13px;font-weight:500}
+.demo-card .cd.up{color:var(--up)}.demo-card .cd.dn{color:var(--down)}
+
+.demo-comp{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+/* TABLE DEMO */
+.tw{background:var(--bg-card);border:1px solid var(--border-main);border-radius:var(--card-radius);overflow:hidden;transition:background .3s;width:100%}
+.tw table{width:100%;border-collapse:collapse}
+.tw th{padding:10px 16px;font-size:10px;font-weight:500;color:var(--text-secondary);text-align:left;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border-sub)}
+.tw th.r{text-align:right}
+.tw td{padding:10px 16px;font-size:13px;border-bottom:1px solid var(--border-sub)}
+.tw td.r{text-align:right;font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.tw tr:last-child td{border-bottom:none}
+.tw tbody tr{transition:background .1s}
+.tw tbody tr:hover{background:var(--bg-card-hover)}
+
+/* QUICKSTART QUICKSTART */
+.qs{
+  background:var(--code-bg);border:1px solid var(--border-sub);border-radius:10px;
+  padding:20px 24px;font-family:var(--font-mono);font-size:13px;line-height:2;
+  overflow-x:auto;position:relative;color:#c4c4c8;margin-bottom:28px
+}
+.qs .prompt{color:var(--text-tertiary)}
+.qs .cmd{color:var(--str)}
+.qs .out{color:var(--num)}
+.qs .comment{color:#6b6b72}
+
+/* CARD GRID */
+.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:28px}
+.ci{padding:14px 16px;border-radius:8px;border:1px solid var(--border-sub);background:var(--bg-input);transition:all .2s}
+.ci:hover{border-color:var(--accent);background:var(--bg-card)}
+.ci .ci-n{font-size:13px;font-weight:600;color:var(--text-primary);font-family:var(--font-mono)}
+.ci .ci-d{font-size:11px;color:var(--text-tertiary);margin-top:2px;line-height:1.5}
 
 /* THEME GRID */
-.theme-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
-.theme-card { display: flex; flex-direction: column; padding: 16px; border-radius: 8px; border: 1px solid var(--border-sub); background: var(--bg-input); cursor: pointer; transition: all 0.2s; }
-.theme-card:hover { border-color: var(--accent); background: var(--bg-card); }
-.theme-card .tc-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
-.theme-card .tc-desc { font-size: 11px; color: var(--text-tertiary); line-height: 1.5; flex: 1; }
-.theme-card .tc-bar { display: flex; gap: 2px; margin-top: auto; height: 6px; border-radius: 3px; overflow: hidden; }
-.theme-card .tc-bar span { flex: 1; }
-
-/* PHILOSOPHY */
-.philosophy-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border-sub); border: 1px solid var(--border-sub); border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
-.phil-card { background: var(--bg-root); padding: 26px 28px; transition: background 0.3s; }
-.phil-card:hover { background: var(--bg-card); }
-.phil-card .num { font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary); margin-bottom: 10px; letter-spacing: 0.04em; }
-.phil-card .title { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 8px; }
-.phil-card .body { font-size: 13px; color: var(--text-secondary); line-height: 1.7; font-weight: 300; }
-.style-anchors { font-size: 13px; color: var(--text-secondary); padding: 16px 20px; border-radius: 8px; background: var(--bg-card); line-height: 1.7; }
-
-/* COLOR */
-.color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
-.color-card { padding: 10px; border-radius: 8px; border: 1px solid var(--border-sub); display: flex; flex-direction: column; gap: 6px; background: var(--bg-input); }
-.color-card .swatch { height: 38px; border-radius: 5px; }
-.color-card .name { font-size: 10px; font-family: var(--font-mono); color: var(--text-secondary); }
-.color-card .code { font-size: 10px; font-family: var(--font-mono); color: var(--text-secondary); }
-
-/* TYPOGRAPHY */
-.type-grid { display: flex; flex-direction: column; gap: 6px; }
-.type-row { display: flex; align-items: baseline; gap: 20px; padding: 10px 16px; border-radius: 6px; border: 1px solid var(--border-sub); transition: background 0.2s; }
-.type-row:hover { background: var(--bg-card); }
-.type-row .token { width: 104px; font-size: 10px; font-family: var(--font-mono); color: var(--text-secondary); flex-shrink: 0; }
-.type-row .demo { flex: 1; min-width: 0; }
-
-/* SPACING */
-.space-grid { display: flex; flex-direction: column; gap: 3px; }
-.space-row { display: flex; align-items: center; gap: 14px; }
-.space-row .label { width: 80px; font-size: 10px; font-family: var(--font-mono); color: var(--text-secondary); flex-shrink: 0; }
-.space-row .bar-wrap { flex: 1; max-width: 400px; }
-.space-row .bar { height: 10px; border-radius: 3px; background: var(--accent); opacity: 0.7; transition: background 0.3s, width 0.4s; }
-.space-row .val { font-size: 10px; font-family: var(--font-mono); color: var(--text-secondary); }
-
-/* COMPONENTS */
-.comp-group { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 28px; }
-.btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 18px; border-radius: var(--btn-radius); font-size: 13px; font-family: var(--font-body); font-weight: 500; cursor: pointer; transition: all 0.2s; border: none; text-decoration: none; }
-.btn-primary { background: var(--accent); color: #fff; }
-.btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
-.btn-secondary { background: transparent; color: var(--text-primary); border: 1px solid var(--border-main); }
-.btn-secondary:hover { border-color: var(--accent); background: var(--bg-card-hover); }
-.btn-ghost { background: transparent; color: var(--text-secondary); }
-.btn-ghost:hover { color: var(--text-primary); background: var(--bg-card-hover); }
-.btn-danger { background: var(--error); color: #fff; }
-.btn-danger:hover { opacity: 0.9; }
-.card-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 28px; }
-.demo-card { background: var(--bg-card); border: var(--card-border); border-radius: var(--card-radius); padding: 22px 26px; min-width: 170px; flex: 1; display: flex; flex-direction: column; gap: 6px; transition: background 0.3s, border-color 0.3s; box-shadow: var(--card-shadow); }
-.demo-card:hover { background: var(--bg-card-hover); border-color: var(--accent); }
-.demo-card .card-label { font-size: 10px; color: var(--text-secondary); letter-spacing: 0.04em; text-transform: uppercase; }
-.demo-card .card-value { font-size: 28px; font-weight: 700; font-family: var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: -0.04em; }
-.demo-card .card-delta { font-size: 14px; font-weight: 500; }
-.demo-card .card-delta.up { color: var(--up); }
-.demo-card .card-delta.down { color: var(--down); }
-.table-wrap { background: var(--bg-card); border: 1px solid var(--border-main); border-radius: var(--card-radius); overflow: hidden; transition: background 0.3s, border-color 0.3s; }
-.demo-table { width: 100%; border-collapse: collapse; }
-.demo-table th { padding: 10px 18px; font-size: 10px; font-weight: 500; color: var(--text-secondary); letter-spacing: 0.05em; text-align: left; text-transform: uppercase; border-bottom: 1px solid var(--border-sub); }
-.demo-table th.num { text-align: right; }
-.demo-table td { padding: 10px 18px; font-size: 13px; border-bottom: 1px solid var(--border-sub); }
-.demo-table td.num { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
-.demo-table tbody tr:last-child td { border-bottom: none; }
-.demo-table tbody tr { transition: background 0.15s; }
-.demo-table tbody tr:hover { background: var(--bg-card-hover); }
-.demo-table .up { color: var(--up); }
-.demo-table .down { color: var(--down); }
-
-/* CODE */
-.code-block { background: var(--code-bg); border: 1px solid var(--border-sub); border-radius: 8px; padding: 18px 20px; font-family: var(--font-mono); font-size: 12px; line-height: 1.9; overflow-x: auto; margin-top: 14px; color: #e8e8ed; }
-.code-block .cm { color: #8e8e96; user-select: none; }
-.code-block .kw { color: #7b9cff; }
-.code-block .str { color: #34a853; }
-.code-block .num { color: #ffa726; }
+.tg{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.tc{padding:14px;border-radius:8px;border:1px solid var(--border-sub);background:var(--bg-input);cursor:pointer;transition:all .2s}
+.tc:hover{border-color:var(--accent);background:var(--bg-card)}
+.tc .tn{font-size:12px;font-weight:600;margin-bottom:2px}
+.tc .td{font-size:10px;color:var(--text-tertiary);line-height:1.5}
+.tc .tb{display:flex;gap:2px;margin-top:10px;height:5px;border-radius:3px;overflow:hidden}
+.tc .tb span{flex:1}
 
 /* FOOTER */
-footer { padding: 36px 0; text-align: center; font-size: 12px; color: var(--text-tertiary); border-top: 1px solid var(--border-main); }
-footer a { color: var(--accent); text-decoration: none; transition: opacity 0.2s; }
-footer a:hover { opacity: 0.8; }
-
-/* SCROLLBAR */
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border-main); border-radius: 3px; }
-
-/* ANIMATIONS */
-.fade-in { opacity: 0; transform: translateY(12px); animation: fadeUp 0.6s ease forwards; }
-.fade-in:nth-child(1) { animation-delay: 0.05s; }
-.fade-in:nth-child(2) { animation-delay: 0.1s; }
-.fade-in:nth-child(3) { animation-delay: 0.15s; }
-.fade-in:nth-child(4) { animation-delay: 0.2s; }
-@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+footer{padding:32px 0;text-align:center;font-size:12px;color:var(--text-tertiary)}
+footer a{color:var(--accent)}
 
 /* RESPONSIVE */
-@media (max-width: 640px) {
-  .wrap { padding: 0 20px; }
-  .hero h1 { font-size: 30px; }
-  .philosophy-grid { grid-template-columns: 1fr; }
-  .top-bar { padding: 10px 16px; }
-  .type-row { flex-wrap: wrap; gap: 6px; }
-  .type-row .token { width: auto; }
+@media(max-width:768px){
+  .wrap{padding:0 16px}
+  .hero h1{font-size:32px}
+  .split{grid-template-columns:1fr}
+  .metrics{grid-template-columns:repeat(2,1fr)}
+  .nav{padding:0 12px;flex-wrap:wrap;height:auto;padding:8px 12px;gap:6px}
+  .nav-r{flex-wrap:wrap}
 }
 </style>
 </head>
 <body>
 
-<!-- ==================== TOP BAR ==================== -->
-<header class="top-bar">
-  <div class="top-bar-left">
-    <div class="top-bar-logo"><span class="dot"></span> Libra&nbsp;<span style="font-weight:400;letter-spacing:0;color:var(--text-secondary);font-size:12px;">Design</span></div>
+<!-- ============ NAV ============ -->
+<nav class="nav">
+  <div class="nav-l">
+    <div class="nav-logo"><span class="dot"></span> Libra</div>
+    <span class="nav-ver">v0.1.2</span>
   </div>
-  <div class="top-bar-right">
-    <details class="theme-selector" id="themeSelector">
-      <summary><span id="currentThemeLabel">Terminal</span></summary>
-      <div class="theme-menu" id="themeMenu"></div>
-    </details>
-    <div class="mix-group" id="presetGroup">
+  <div class="nav-r">
+    <div class="theme-dd" id="themeDropdown">
+      <button class="theme-dd-btn" id="currentThemeBtn">Terminal</button>
+      <div class="theme-dd-menu" id="themeMenu"></div>
+    </div>
+    <div class="mix-g" id="presetGroup">
       <button data-mix="0">🌙</button>
       <button data-mix="0.7" class="active">🌤</button>
       <button data-mix="1">☀</button>
     </div>
-    <button class="lang-btn" id="langToggle" onclick="toggleLang()">
+    <button class="nav-btn" onclick="window.open('https://github.com/goodie1972/libra-design')">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      <span>Star</span>
+    </button>
+    <button class="nav-btn" onclick="toggleLang()">
       <span id="langIndicator">EN</span>
     </button>
   </div>
-</header>
+</nav>
 
-<!-- ==================== HERO ==================== -->
+<!-- ============ HERO ============ -->
 <div class="hero">
   <div class="wrap">
-    <h1 class="zh">⚖️ Libra <span class="accent">Design</span></h1>
-    <h1 class="en">⚖️ Libra <span class="accent">Design</span></h1>
-    <div class="subtitle zh">
-      <strong>极致审美的设计语言，专为 Go/Rust 量身定制。</strong><br>
-      多语言金融设计系统 — 一份令牌，全语言消费
+    <h1>极致审美的<span class="hl">设计语言</span><br>专为 Go/Rust 量身定制</h1>
+    <p class="sub">多语言金融设计系统 — 一份令牌，Go/Rust/TS 三语言消费。<br>不是又一个 React 组件库，是 Go/Rust 原生的设计系统。</p>
+    <div class="hero-tags">
+      <span class="tag go">🐹 Go Native</span>
+      <span class="tag rs">🦀 Rust Native</span>
+      <span class="tag ts">📘 TypeScript</span>
     </div>
-    <div class="subtitle en">
-      <strong>Extreme aesthetics, tailored for Go and Rust.</strong><br>
-      Multi-language financial design system — one token set, all languages.
-    </div>
-    <div class="presets">
-      <span class="tag go">Go Native</span>
-      <span class="tag rust">Rust (Coming)</span>
-      <span class="tag ts">TypeScript</span>
-    </div>
-    <div class="presets" style="margin-top:14px;">
-      <button data-mix="0" class="btn btn-secondary" style="padding:7px 18px;font-size:12px;">🌙 <span class="zh">暗色</span><span class="en">Dark</span></button>
-      <button data-mix="0.7" class="btn btn-primary" style="padding:7px 18px;font-size:12px;">🌤 <span class="zh">柔光</span><span class="en">Soft</span></button>
-      <button data-mix="1" class="btn btn-secondary" style="padding:7px 18px;font-size:12px;">☀ <span class="zh">亮色</span><span class="en">Light</span></button>
+
+    <!-- METRICS -->
+    <div class="metrics" style="margin-top:28px">
+      <div class="metric"><div class="num" style="color:var(--accent)">6.5</div><div class="lb">单二进制</div><div class="note">MB · 无运行时</div></div>
+      <div class="metric"><div class="num" style="color:var(--up)">15</div><div class="lb">冷启动</div><div class="note">ms · 零预热</div></div>
+      <div class="metric"><div class="num" style="color:var(--down)">124</div><div class="lb">组件总数</div><div class="note">React+Go+Rust</div></div>
+      <div class="metric"><div class="num" style="color:var(--accent)">0</div><div class="lb">运行时依赖</div><div class="note">零 npm · 零 Chromium</div></div>
     </div>
   </div>
 </div>
 
-<!-- ==================== THEME SLIDER ==================== -->
-<div class="slider-section">
+<!-- ============ COMPONENT SHOWCASE ============ -->
+<div class="sec">
   <div class="wrap">
-    <div class="slider-wrap">
-      <label class="zh">暗⸺亮</label>
-      <label class="en">Dark⸺Light</label>
-      <input type="range" id="mixSlider" min="0" max="1" step="0.01" value="0.7">
-      <span class="mix-label" id="mixLabel">70%</span>
+    <div class="sl">组件展示</div>
+    <h2>所见即所得 · 代码即预览</h2>
+    <p class="desc">每个组件都有实时预览和可复制代码。切换主题时所有组件同步变色。</p>
+
+    <!-- BUTTON -->
+    <h3>Button · 按钮</h3>
+    <div class="split">
+      <div class="split-preview">
+        <button class="demo-btn" data-variant="default">主要操作</button>
+        <button class="demo-btn" data-variant="secondary">次要</button>
+        <button class="demo-btn" data-variant="ghost">文字按钮</button>
+        <button class="demo-btn" data-variant="danger">危险</button>
+      </div>
+      <div class="split-code">
+        <button class="copy-btn" onclick="copyCode(this,'btn')">复制</button>
+        <pre id="btn-code"><span class="cm">// Go templ</span>
+templ Button(<span class="str">"default"</span>, <span class="str">"lg"</span>, false, nil) { 买入 }
+
+<span class="cm">// React</span>
+&lt;<span class="kw">Button</span> variant=<span class="str">"default"</span>&gt;主要操作&lt;/<span class="kw">Button</span>&gt;</pre>
+      </div>
+    </div>
+
+    <!-- CARDS -->
+    <h3>PriceDisplay · 金融卡片</h3>
+    <div class="split">
+      <div class="split-preview" style="gap:12px">
+        <div class="demo-card"><div class="cl">上证指数</div><div class="cv" style="color:var(--up)">3,382.45</div><div class="cd up">+1.23%</div></div>
+        <div class="demo-card"><div class="cl">深证成指</div><div class="cv" style="color:var(--down)">10,876.32</div><div class="cd dn">-0.45%</div></div>
+        <div class="demo-card"><div class="cl">创业板指</div><div class="cv" style="color:var(--up)">2,154.78</div><div class="cd up">+0.88%</div></div>
+      </div>
+      <div class="split-code">
+        <button class="copy-btn" onclick="copyCode(this,'card')">复制</button>
+        <pre id="card-code"><span class="cm">// Go templ</span>
+components.<span class="kw">PriceDisplay</span>(<span class="num">1689.50</span>, <span class="num">2.15</span>, <span class="str">"up"</span>)
+
+<span class="cm">// React</span>
+&lt;<span class="kw">PriceDisplay</span> value={<span class="num">1689.50</span>} change={<span class="num">2.15</span>} trend=<span class="str">"up"</span>/&gt;</pre>
+      </div>
+    </div>
+
+    <!-- BADGES + TAGS -->
+    <h3>Badge · Tag · 标签体系</h3>
+    <div class="split">
+      <div class="split-preview" style="gap:6px">
+        <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:4px;font-size:11px;font-weight:600;background:rgba(239,83,80,.12);color:var(--up)">涨</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:4px;font-size:11px;font-weight:600;background:rgba(38,166,154,.12);color:var(--down)">跌</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:4px;font-size:11px;font-weight:600;background:rgba(158,158,158,.12);color:var(--flat)">平</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500;background:rgba(52,168,83,.1);color:var(--success)">成功</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500;background:rgba(251,188,4,.1);color:var(--warning)">警告</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500;background:rgba(234,67,53,.1);color:var(--error)">错误</span>
+      </div>
+      <div class="split-code">
+        <button class="copy-btn" onclick="copyCode(this,'tag')">复制</button>
+        <pre id="tag-code"><span class="cm">// Go templ</span>
+components.<span class="kw">Badge</span>(<span class="str">"涨"</span>, <span class="str">"up"</span>)
+components.<span class="kw">Tag</span>(<span class="str">"成功"</span>, <span class="str">"success"</span>)
+
+<span class="cm">// React</span>
+&lt;<span class="kw">Badge</span> variant=<span class="str">"up"</span>&gt;涨&lt;/<span class="kw">Badge</span>&gt;
+&lt;<span class="kw">Tag</span> variant=<span class="str">"success"</span>&gt;成功&lt;/<span class="kw">Tag</span>&gt;</pre>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <h3>Table · 数据表格</h3>
+    <div class="split">
+      <div class="split-preview">
+        <div class="tw">
+          <table><thead><tr><th>代码</th><th>名称</th><th class="r">现价</th><th class="r">涨幅</th></tr></thead>
+          <tbody>
+            <tr><td>sh600519</td><td>贵州茅台</td><td class="r">1,689.50</td><td class="r" style="color:var(--up)">+2.15%</td></tr>
+            <tr><td>sz000858</td><td>五粮液</td><td class="r">142.80</td><td class="r" style="color:var(--down)">-1.34%</td></tr>
+            <tr><td>sh601398</td><td>工商银行</td><td class="r">5.89</td><td class="r" style="color:var(--up)">+0.51%</td></tr>
+          </tbody></table>
+        </div>
+      </div>
+      <div class="split-code">
+        <button class="copy-btn" onclick="copyCode(this,'table')">复制</button>
+        <pre id="table-code"><span class="cm">// Go templ (with HTMX auto-refresh)</span>
+components.<span class="kw">Table</span>(headers, rows, templ.Attributes{
+  <span class="str">"hx-get"</span>:    <span class="str">"/stocks"</span>,
+  <span class="str">"hx-trigger"</span>: <span class="str">"every 30s"</span>,
+})
+
+<span class="cm">// React</span>
+&lt;<span class="kw">StockTable</span> data={stocks} /&gt;</pre>
+      </div>
+    </div>
+
+    <!-- ALERT + STATISTIC -->
+    <h3>Alert · Statistic · 反馈</h3>
+    <div class="split">
+      <div class="split-preview" style="flex-direction:column;gap:8px;align-items:stretch">
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;background:rgba(74,108,247,.08);border:1px solid rgba(74,108,247,.25);font-size:12px">
+          <span style="color:var(--accent);font-size:14px">ℹ</span>
+          <span>操作成功完成</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;background:rgba(234,67,53,.08);border:1px solid rgba(234,67,53,.25);font-size:12px">
+          <span style="color:var(--error);font-size:14px">✕</span>
+          <span>网络连接超时，请重试</span>
+        </div>
+      </div>
+      <div class="split-code">
+        <button class="copy-btn" onclick="copyCode(this,'alert')">复制</button>
+        <pre id="alert-code"><span class="cm">// Go templ</span>
+components.<span class="kw">Alert</span>(<span class="str">"操作成功完成"</span>, <span class="str">"success"</span>)
+components.<span class="kw">Alert</span>(<span class="str">"网络连接超时"</span>, <span class="str">"error"</span>)
+
+<span class="cm">// React</span>
+&lt;<span class="kw">Alert</span> type=<span class="str">"success"</span>&gt;操作成功完成&lt;/<span class="kw">Alert</span>&gt;</pre>
+      </div>
+    </div>
+
+    <!-- CALENDAR -->
+    <h3>Calendar · 金融日历</h3>
+    <div class="split">
+      <div class="split-preview" style="flex-direction:column;align-items:stretch">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;width:100%">
+          <span style="font-size:14px;font-weight:600">2026年6月</span>
+          <div style="display:flex;gap:6px">
+            <button style="width:26px;height:26px;border-radius:4px;border:1px solid var(--border-main);background:var(--bg-input);cursor:pointer;font-size:12px;color:var(--text-secondary)">‹</button>
+            <button style="width:26px;height:26px;border-radius:4px;border:1px solid var(--border-main);background:var(--bg-input);cursor:pointer;font-size:12px;color:var(--text-secondary)">›</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;width:100%">
+          <span style="font-size:10px;color:var(--text-tertiary);padding:4px 0">日</span>
+          <span style="font-size:10px;color:var(--text-tertiary);padding:4px 0">一</span>
+          <span style="font-size:10px;color:var(--text-tertiary);padding:4px 0">二</span>
+          <span style="font-size:10px;color:var(--text-tertiary);padding:4px 0">三</span>
+          <span style="font-size:10px;color:var(--text-tertiary);padding:4px 0">四</span>
+          <span style="font-size:10px;color:var(--text-tertiary);padding:4px 0">五</span>
+          <span style="font-size:10px;color:var(--text-tertiary);padding:4px 0">六</span>
+          <span style="font-size:12px;color:var(--text-tertiary);padding:6px 0">1</span><span style="font-size:12px;color:var(--text-tertiary);padding:6px 0">2</span>
+          <span style="font-size:12px;color:var(--text-tertiary);padding:6px 0">3</span><span style="font-size:12px;color:var(--text-tertiary);padding:6px 0">4</span>
+          <span style="font-size:12px;color:var(--text-tertiary);padding:6px 0">5</span><span style="font-size:12px;color:var(--text-tertiary);padding:6px 0">6</span>
+          <span style="font-size:12px;color:var(--text-tertiary);padding:6px 0">7</span>
+          <span style="font-size:12px;padding:6px 0">8</span><span style="font-size:12px;padding:6px 0">9</span>
+          <span style="font-size:12px;padding:6px 0">10</span><span style="font-size:12px;padding:6px 0">11</span>
+          <span style="font-size:12px;padding:6px 0">12</span><span style="font-size:12px;padding:6px 0">13</span>
+          <span style="font-size:12px;padding:6px 0">14</span>
+          <span style="font-size:12px;padding:6px 0;background:rgba(245,158,11,.1);color:var(--accent);font-weight:600;border-radius:4px">15 <div style="font-size:8px;margin-top:1px;color:var(--up)">●</div></span>
+          <span style="font-size:12px;padding:6px 0">16</span>
+          <span style="font-size:12px;padding:6px 0">17</span>
+          <span style="font-size:12px;padding:6px 0">18</span>
+          <span style="font-size:12px;padding:6px 0">19</span>
+          <span style="font-size:12px;padding:6px 0;background:rgba(38,166,154,.1);color:var(--down);font-weight:600;border-radius:4px">20 <div style="font-size:8px;margin-top:1px;color:var(--down)">●</div></span>
+          <span style="font-size:12px;padding:6px 0">21</span>
+          <span style="font-size:12px;padding:6px 0">22</span>
+          <span style="font-size:12px;padding:6px 0">23</span>
+          <span style="font-size:12px;padding:6px 0">24</span>
+          <span style="font-size:12px;padding:6px 0;background:rgba(99,99,106,.1);border-radius:4px">25 <div style="font-size:8px;color:var(--text-tertiary)">●</div></span>
+          <span style="font-size:12px;padding:6px 0">26</span>
+          <span style="font-size:12px;padding:6px 0">27</span>
+          <span style="font-size:12px;padding:6px 0">28</span>
+          <span style="font-size:12px;padding:6px 0">29</span>
+          <span style="font-size:12px;padding:6px 0">30</span>
+        </div>
+      </div>
+      <div class="split-code">
+        <button class="copy-btn" onclick="copyCode(this,'cal')">复制</button>
+        <pre id="cal-code"><span class="cm">// Go templ — 财报/除息日历</span>
+events := []<span class="kw">CalendarEvent</span>{
+  {Day: <span class="num">15</span>, Type: <span class="str">"earnings"</span>},
+  {Day: <span class="num">20</span>, Type: <span class="str">"dividend"</span>},
+}
+components.<span class="kw">Calendar</span>(<span class="num">2026</span>, <span class="num">6</span>, events)
+
+<span class="cm">// React</span>
+&lt;<span class="kw">Calendar</span> year={<span class="num">2026</span>} month={<span class="num">6</span>} events={events} /&gt;</pre>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ==================== THEMES SHOWCASE ==================== -->
-<section>
+<!-- ============ QUICKSTART ============ -->
+<div class="sec">
   <div class="wrap">
-    <div class="section-label zh">主题预设</div>
-    <div class="section-label en">Theme Presets</div>
-    <h2>
-      <span class="zh">10 套金融术语主题</span>
-      <span class="en">10 financial-terms themes</span>
-    </h2>
-    <p class="desc zh">每套主题 = 17 暗色端点色 + 17 亮色端点色。点击下方卡片切换到该主题的默认混合比例。</p>
-    <p class="desc en">Each theme = 17 dark + 17 light endpoint colors. Click a card to preview.</p>
-    <div class="theme-grid" id="themeGrid"></div>
-  </div>
-</section>
+    <div class="sl">30 秒上手</div>
+    <h2>选择你的语言</h2>
 
-<!-- ==================== PHILOSOPHY ==================== -->
-<section>
-  <div class="wrap">
-    <div class="section-label zh">设计哲学</div>
-    <div class="section-label en">Philosophy</div>
-    <h2><span class="zh">每一行代码都是审美选择</span><span class="en">Every line of code is an aesthetic choice</span></h2>
-    <div class="philosophy-grid">
-      <div class="phil-card fade-in">
-        <div class="num">01</div>
-        <div class="title zh">一页一主角</div><div class="title en">One Sovereign Per View</div>
-        <div class="body zh">每页只有一个视觉锚点。图表页主角是图表，侧栏、标题、工具栏都是配角。</div>
-        <div class="body en">Every view has exactly one visual anchor. When the chart speaks, the sidebar listens.</div>
-      </div>
-      <div class="phil-card fade-in">
-        <div class="num">02</div>
-        <div class="title zh">细节即信仰</div><div class="title en">Details Are Dogma</div>
-        <div class="body zh">1px 的偏差不是 bug，是信仰的裂缝。完美不是没有东西可加，而是没有东西可减。</div>
-        <div class="body en">A 1px misalignment is not a bug, it's a crack in faith. Perfection is achieved when nothing remains to remove.</div>
-      </div>
-      <div class="phil-card fade-in">
-        <div class="num">03</div>
-        <div class="title zh">留白即呼吸</div><div class="title en">Space Is Breath</div>
-        <div class="body zh">密集是焦虑的，松弛是自信的。4px 基数体系确保每一次呼吸都节奏一致。</div>
-        <div class="body en">Density is anxiety. Space is confidence. Our 4px baseline ensures every breath follows the same rhythm.</div>
-      </div>
-      <div class="phil-card fade-in">
-        <div class="num">04</div>
-        <div class="title zh">克制即力量</div><div class="title en">Restraint Is Power</div>
-        <div class="body zh">全界面只有两种有彩色。90% 中性色 + 10% 强调色 = 100% 清晰。</div>
-        <div class="body en">Two accent colors across the entire surface. 90% neutral + 10% accent = 100% clarity.</div>
-      </div>
+    <div class="lang-tabs" id="langTabs">
+      <button class="lang-tab active" data-lang="go" onclick="switchLang('go')">🐹 Go</button>
+      <button class="lang-tab" data-lang="rust" onclick="switchLang('rust')">🦀 Rust</button>
+      <button class="lang-tab" data-lang="ts" onclick="switchLang('ts')">📘 TypeScript</button>
     </div>
-    <div class="style-anchors">
-      <span class="zh">风格锚定：<strong style="color:var(--text-primary);">Linear</strong> 的暗色克制 + <strong style="color:var(--text-primary);">Stripe</strong> 的排版精度 + <strong style="color:var(--text-primary);">Bloomberg Terminal</strong> 的金融基因</span>
-      <span class="en">Anchored by <strong style="color:var(--text-primary);">Linear</strong>'s dark restraint, <strong style="color:var(--text-primary);">Stripe</strong>'s typographic precision, <strong style="color:var(--text-primary);">Bloomberg Terminal</strong>'s financial DNA.</span>
+
+    <!-- GO -->
+    <div class="lang-panel" id="lang-go">
+      <div class="qs"><span class="comment"># 安装 CLI（单二进制，3 MB）</span><br><span class="prompt">$ </span><span class="cmd">go install github.com/libra/go-cli/cmd/libra@latest</span><br><span class="prompt">$ </span><span class="cmd">libra init</span><br><span class="out">✓ 已生成 tokens.css (4289 字节)</span><br><br><span class="comment">// 在 Go 代码中直接使用色值</span><br><span class="prompt">$ </span><span class="cmd">go get github.com/libra/go-tokens</span><br><br><span class="kw">import</span> <span class="str">"github.com/libra/go-tokens"</span><br><br>upColor := tokens.<span class="kw">ColorUp</span>    <span class="comment">// "#ef5350"</span><br>mid := tokens.<span class="kw">LerpColor</span>(<span class="str">"#0c0c0e"</span>, <span class="str">"#ffffff"</span>, <span class="num">0.5</span>)<br>css := tokens.<span class="kw">GenerateCSS</span>()</div>
+    </div>
+
+    <!-- RUST -->
+    <div class="lang-panel" id="lang-rust" style="display:none">
+      <div class="qs"><span class="comment"># Cargo.toml</span><br><span class="kw">libra-tokens</span> = { path = <span class="str">"../rust-tokens"</span> }<br><br><span class="comment">// 在 Rust 中使用</span><br><span class="kw">use</span> libra_tokens::colors::{COLOR_UP, dark};<br><br><span class="kw">let</span> bg = dark::BG_ROOT;  <span class="comment">// "#0c0c0e"</span><br><span class="kw">let</span> mid = libra_tokens::lerp::<span class="kw">lerp_color</span>(<span class="str">"#0c0c0e"</span>, <span class="str">"#ffffff"</span>, <span class="num">0.5</span>);</div>
+    </div>
+
+    <!-- TS -->
+    <div class="lang-panel" id="lang-ts" style="display:none">
+      <div class="qs"><span class="comment"># 安装设计 Token</span><br><span class="prompt">$ </span><span class="cmd">npm install @libra-design/tokens</span><br><br><span class="comment">// 在入口文件引入</span><br><span class="kw">import</span> <span class="str">'@libra-design/tokens/css'</span><br><br><span class="comment">// React 组件</span><br><span class="kw">import</span> { Button, Card, StockTable } <span class="kw">from</span> <span class="str">'@libra-design/react'</span><br><br><span class="comment">// 主题引擎</span><br><span class="kw">import</span> { applyPreset } <span class="kw">from</span> <span class="str">'@libra-design/theme'</span><br>applyPreset(<span class="str">'terminal'</span>);  <span class="comment">// 📈 10 套命名主题</span></div>
     </div>
   </div>
-</section>
+</div>
 
-<!-- ==================== COLOR SYSTEM ==================== -->
-<section>
+<!-- ============ THEMES ============ -->
+<div class="sec">
   <div class="wrap">
-    <div class="section-label zh">色彩系统</div><div class="section-label en">Color System</div>
-    <h2><span class="zh">90% 中性色，10% 强调色</span><span class="en">90% neutral, 10% accent</span></h2>
-    <h3 class="zh">涨跌色 — 仅有的两种有彩色</h3><h3 class="en">Up & Down — The only two chromatic colors</h3>
-    <div class="color-grid" style="margin-bottom:20px;">
-      <div class="color-card"><div class="swatch" style="background:#ef5350;"></div><div class="name">--up</div><div class="code">#ef5350</div></div>
-      <div class="color-card"><div class="swatch" style="background:#26a69a;"></div><div class="name">--down</div><div class="code">#26a69a</div></div>
-      <div class="color-card"><div class="swatch" style="background:#9e9e9e;"></div><div class="name">--flat</div><div class="code">#9e9e9e</div></div>
-    </div>
-    <h3 class="zh">表面体系 — 四层堆叠</h3><h3 class="en">Surface Stack — Four-tier elevation</h3>
-    <p class="desc zh">层次靠明度区分，不依赖阴影。</p><p class="desc en">Depth through luminance, not shadows.</p>
-    <div class="color-grid" style="margin-bottom:20px;">
-      <div class="color-card"><div class="swatch" style="background:#0c0c0e;"></div><div class="name">--bg-root</div><div class="code" id="demo-bg-root">#0c0c0e</div></div>
-      <div class="color-card"><div class="swatch" style="background:#121214;"></div><div class="name">--bg-card</div><div class="code" id="demo-bg-card">#121214</div></div>
-      <div class="color-card"><div class="swatch" style="background:#18181b;"></div><div class="name">--bg-card-hover</div><div class="code" id="demo-bg-hover">#18181b</div></div>
-      <div class="color-card"><div class="swatch" style="background:#1e1e22;"></div><div class="name">--border-main</div><div class="code" id="demo-border">#1e1e22</div></div>
+    <div class="sl">主题预设</div>
+    <h2>10 套金融术语主题</h2>
+    <p class="desc">每套 = 17 暗色端点色 + 17 亮色端点色。点击即可切换到该主题。</p>
+    <div class="tg" id="themeGrid"></div>
+  </div>
+</div>
+
+<!-- ============ PACKAGE MATRIX ============ -->
+<div class="sec">
+  <div class="wrap">
+    <div class="sl">包矩阵</div>
+    <h2>Go · Rust · TS 三语言覆盖</h2>
+    <div class="cg">
+      <div class="ci"><div class="ci-n">go-tokens</div><div class="ci-d">🐹 色值常量 + LerpColor + CSS 生成</div></div>
+      <div class="ci"><div class="ci-n">go-cli</div><div class="ci-d">🐹 单二进制 CLI · libra init</div></div>
+      <div class="ci"><div class="ci-n">go-templ</div><div class="ci-d">🐹 40 个金融 templ 组件</div></div>
+      <div class="ci"><div class="ci-n">go-mcp</div><div class="ci-d">🐹 MCP Server · 13ms 冷启动</div></div>
+      <div class="ci"><div class="ci-n">go-server</div><div class="ci-d">🐹 单二进制仪表盘 · 6.5MB</div></div>
+      <div class="ci"><div class="ci-n">rust-tokens</div><div class="ci-d">🦀 crate · 色值+主题+CSS 生成</div></div>
+      <div class="ci"><div class="ci-n">rust-leptos</div><div class="ci-d">🦀 20 个 Leptos 组件</div></div>
+      <div class="ci"><div class="ci-n">@libra-design/tokens</div><div class="ci-d">📘 CSS 变量 + TS 类型</div></div>
+      <div class="ci"><div class="ci-n">@libra-design/theme</div><div class="ci-d">📘 双主题混合引擎</div></div>
+      <div class="ci"><div class="ci-n">@libra-design/react</div><div class="ci-d">📘 64 个 React 金融组件</div></div>
     </div>
   </div>
-</section>
+</div>
 
-<!-- ==================== TYPOGRAPHY ==================== -->
-<section>
-  <div class="wrap">
-    <div class="section-label zh">字体系统</div><div class="section-label en">Typography</div>
-    <h2><span class="zh">字体即声音</span><span class="en">Type is voice</span></h2>
-    <p class="desc zh">Inter 服务于正文清晰可读，JetBrains Mono 承载数字严谨对齐。所有数值强制等宽 + tabular-nums。</p>
-    <p class="desc en">Inter for clarity. JetBrains Mono for precision. Every numeric value uses tabular-nums.</p>
-    <div class="type-grid">
-      <div class="type-row"><span class="token">--text-4xl <span style="color:var(--text-tertiary);">40px</span></span><span class="demo" style="font-size:40px;font-weight:700;font-family:var(--font-mono);letter-spacing:-0.04em;">3,382.45</span></div>
-      <div class="type-row"><span class="token">--text-3xl <span style="color:var(--text-tertiary);">32px</span></span><span class="demo" style="font-size:32px;font-weight:700;font-family:var(--font-mono);letter-spacing:-0.04em;">+1.23%</span></div>
-      <div class="type-row"><span class="token">--text-2xl <span style="color:var(--text-tertiary);">24px</span></span><span class="demo" style="font-size:24px;font-weight:600;letter-spacing:-0.03em;"><span class="zh">贵州茅台</span><span class="en">Kweichow Moutai</span></span></div>
-      <div class="type-row"><span class="token">--text-base <span style="color:var(--text-tertiary);">13px</span></span><span class="demo" style="font-size:13px;">sh600519 · 1,689.50 · <span style="color:var(--up);">+2.13%</span></span></div>
-      <div class="type-row"><span class="token">--text-sm <span style="color:var(--text-tertiary);">12px</span></span><span class="demo" style="font-size:12px;color:var(--text-secondary);"><span class="zh">代码 名称 现价 涨幅 成交额</span><span class="en">Code · Name · Price · Change · Volume</span></span></div>
-      <div class="type-row"><span class="token">--text-xs <span style="color:var(--text-tertiary);">10px</span></span><span class="demo" style="font-size:10px;color:var(--text-tertiary);font-family:var(--font-mono);">3,382 &nbsp; 3,383 &nbsp; 3,381 &nbsp; 3,384</span></div>
-    </div>
-  </div>
-</section>
-
-<!-- ==================== COMPONENTS ==================== -->
-<section>
-  <div class="wrap">
-    <div class="section-label zh">组件画廊</div><div class="section-label en">Component Gallery</div>
-    <h2><span class="zh">做的少，做的好</span><span class="en">Fewer components, better care</span></h2>
-    <h3 class="zh">按钮 · Button</h3>
-    <div class="comp-group">
-      <button class="btn btn-primary"><span class="zh">主要操作</span><span class="en">Primary</span></button>
-      <button class="btn btn-secondary"><span class="zh">次要操作</span><span class="en">Secondary</span></button>
-      <button class="btn btn-ghost"><span class="zh">文字按钮</span><span class="en">Ghost</span></button>
-      <button class="btn btn-danger"><span class="zh">危险操作</span><span class="en">Danger</span></button>
-    </div>
-    <h3 class="zh">金融卡片 · Financial Cards</h3>
-    <div class="card-row">
-      <div class="demo-card"><div class="card-label"><span class="zh">上证指数</span><span class="en">SSE Index</span></div><div class="card-value" style="color:var(--up);">3,382.45</div><div class="card-delta up">+1.23%</div></div>
-      <div class="demo-card"><div class="card-label"><span class="zh">深证成指</span><span class="en">SZSE Index</span></div><div class="card-value" style="color:var(--down);">10,876.32</div><div class="card-delta down">-0.45%</div></div>
-      <div class="demo-card"><div class="card-label"><span class="zh">创业板指</span><span class="en">ChiNext Index</span></div><div class="card-value" style="color:var(--up);">2,154.78</div><div class="card-delta up">+0.88%</div></div>
-    </div>
-    <h3 class="zh">表格 · Table</h3>
-    <div class="table-wrap">
-      <table class="demo-table">
-        <thead><tr><th><span class="zh">代码</span><span class="en">Code</span></th><th><span class="zh">名称</span><span class="en">Name</span></th><th class="num"><span class="zh">现价</span><span class="en">Price</span></th><th class="num"><span class="zh">涨幅</span><span class="en">%</span></th><th class="num"><span class="zh">成交额</span><span class="en">Volume</span></th></tr></thead>
-        <tbody>
-          <tr><td>sh600519</td><td><span class="zh">贵州茅台</span><span class="en">Kweichow Moutai</span></td><td class="num">1,689.50</td><td class="num up">+2.15%</td><td class="num">17.23 亿</td></tr>
-          <tr><td>sz000858</td><td><span class="zh">五粮液</span><span class="en">Wuliangye</span></td><td class="num">142.80</td><td class="num down">-1.34%</td><td class="num">4.10 亿</td></tr>
-          <tr><td>sh601398</td><td><span class="zh">工商银行</span><span class="en">ICBC</span></td><td class="num">5.89</td><td class="num up">+0.51%</td><td class="num">7.33 亿</td></tr>
-          <tr><td>sz300750</td><td><span class="zh">宁德时代</span><span class="en">CATL</span></td><td class="num">196.35</td><td class="num down">-2.87%</td><td class="num">10.25 亿</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<!-- ==================== GO/RUST NATIVE ==================== -->
-<section>
-  <div class="wrap">
-    <div class="section-label zh">Go/Rust 原生</div><div class="section-label en">Go/Rust Native</div>
-    <h2><span class="zh">零 npm 依赖的色值引擎</span><span class="en">Zero npm dependency color engine</span></h2>
-    <p class="desc zh">Go 后端开发者不应该为了用一套色值而引入 Node 生态。直接 `go get`，在 main.go 里 import，不需要 package.json。</p>
-    <p class="desc en">Go developers shouldn't import Node's ecosystem just to use a set of colors. Just `go get` and import in your main.go. No package.json needed.</p>
-
-    <h3 class="zh">Go — 色值常量 + LerpColor + CSS 生成</h3>
-    <div class="code-block">
-<span class="cm">// go get github.com/libra/go-tokens</span><br>
-<span class="kw">import</span> <span class="str">"github.com/libra/go-tokens"</span><br><br>
-<span class="cm">// 涨跌色常量</span><br>upColor := tokens.ColorUp    <span class="cm">// "#ef5350"</span><br>downColor := tokens.ColorDown  <span class="cm">// "#26a69a"</span><br><br>
-<span class="cm">// 颜色插值（gamma-aware）</span><br>mid := tokens.LerpColor(<span class="str">"#0c0c0e"</span>, <span class="str">"#ffffff"</span>, 0.5)<br><br>
-<span class="cm">// 生成完整 tokens.css（78 个 CSS 变量）</span><br>css := tokens.GenerateCSS()<br>os.WriteFile(<span class="str">"tokens.css"</span>, []byte(css), 0644)
-    </div>
-
-    <h3 class="zh" style="margin-top:24px;">CLI — 单二进制，零依赖</h3>
-    <div class="code-block">
-<span class="cm"># go install</span><br>go install github.com/libra/go-cli/cmd/libra@latest<br>libra init <span class="cm"># → tokens.css (4289 bytes, 78 CSS vars)</span>
-    </div>
-
-    <h3 class="zh" style="margin-top:24px;">MCP Server — AI Agent 设计令牌消费</h3>
-    <div class="code-block">
-<span class="cm"># 安装 Go 原生 MCP Server（单二进制，10ms 冷启动）</span><br>go install github.com/libra/go-mcp@latest<br><br>
-<span class="cm"># 3 tools + 2 resources</span><br>get_design_tokens  <span class="cm">// 完整设计令牌 JSON</span><br>generate_css       <span class="cm">// 生成 tokens.css</span><br>lerp_color         <span class="cm">// hex 颜色线性插值</span>
-    </div>
-  </div>
-</section>
-
-<!-- ==================== GETTING STARTED ==================== -->
-<section>
-  <div class="wrap">
-    <div class="section-label zh">快速开始</div><div class="section-label en">Getting Started</div>
-    <h2><span class="zh">三行命令，拥抱极致</span><span class="en">Three commands to embrace the extreme</span></h2>
-    <div class="code-block">
-<span class="cm"><span class="zh"># 安装设计 Token</span><span class="en"># Install design tokens</span></span><br>npm install @libra-design/tokens<br><br>
-<span class="cm"><span class="zh"># 在入口文件引入</span><span class="en"># Import in your entry</span></span><br><span class="kw">import</span> <span class="str">'@libra-design/tokens/css'</span>
-    </div>
-    <div class="code-block" style="margin-top:12px;">
-<span class="cm"><span class="zh"># 主题引擎（浏览器环境）</span><span class="en"># Theme engine (browser)</span></span><br>npm install @libra-design/theme<br><br>
-<span class="kw">import</span> { applyPreset } <span class="kw">from</span> <span class="str">'@libra-design/theme'</span><br>applyPreset(<span class="str">'terminal'</span>);  <span class="cm"><span class="zh">// 📈 Terminal 主题</span><span class="en">// 📈 Terminal</span></span><br>applyPreset(<span class="str">'claude'</span>);    <span class="cm"><span class="zh">// 🎨 任选命名主题</span><span class="en">// 🎨 Named themes</span></span>
-    </div>
-    <div class="code-block" style="margin-top:12px;">
-<span class="cm"><span class="zh"># React 组件库（44+ 组件，含金融组件）</span><span class="en"># React component library (44+ components)</span></span><br>npm install @libra-design/react<br><br>
-<span class="kw">import</span> { KLineChart, OrderBook, HeatmapSector, Button, Card } <span class="kw">from</span> <span class="str">'@libra-design/react'</span>
-    </div>
-    <div class="code-block" style="margin-top:12px;">
-<span class="cm"><span class="zh"># CLI 安装组件（类似 shadcn）</span><span class="en"># CLI components (shadcn-style)</span></span><br>npx @libra-design/cli init<br>npx @libra-design/cli add button card table
-    </div>
-  </div>
-</section>
-
-<!-- ==================== MCP ==================== -->
-<section>
-  <div class="wrap">
-    <div class="section-label zh">AI 集成</div><div class="section-label en">AI Integration</div>
-    <h2><span class="zh">给 AI 装上 Libra 的眼睛</span><span class="en">Give AI eyes for Libra</span></h2>
-    <p class="desc zh">@libra-design/mcp-server 将设计系统暴露为 MCP 工具，Go 原生二进制 10ms 冷启动。</p>
-    <p class="desc en">@libra-design/mcp-server exposes Libra as MCP tools. Go native binary, 10ms cold start.</p>
-    <div class="code-block">
-<span class="cm">~/.claude/settings.json</span><br>{<br>&nbsp;&nbsp;<span class="str">"mcpServers"</span>: {<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"libra"</span>: {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"command"</span>: <span class="str">"libra-mcp"</span><br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;}<br>}
-    </div>
-  </div>
-</section>
-
+<!-- ============ FOOTER ============ -->
 <footer>
   <div class="wrap">
     <a href="https://github.com/goodie1972/libra-design">GitHub</a> · <a href="https://www.npmjs.com/org/libra-design">npm</a> · MIT<br>
-    <span class="zh" style="font-size:11px;">极致审美的设计语言，专为 Go/Rust 量身定制</span>
-    <span class="en" style="font-size:11px;">Extreme aesthetics, tailored for Go and Rust</span>
+    <span style="font-size:11px;color:var(--text-tertiary)">极致审美的设计语言，专为 Go/Rust 量身定制</span>
   </div>
 </footer>
 
 <script>
 // ============================================================
-// ALL THEME DEFINITIONS (10 named themes)
+// ALL 10 THEMES (34 colors each)
 // ============================================================
 var ALL_THEMES = [
-  {id:"terminal",name:"Terminal",desc:"Bloomberg Terminal 黑底琥珀字",dark:{"bg-root":"#0c0c0e","bg-main":"#0c0c0e","bg-sidebar":"#0c0c0e","bg-card":"#151518","bg-card-hover":"#1c1c20","bg-input":"#1c1c20","bg-chart":"#0c0c0e","bg-sub-panel":"#151518","border-main":"#252528","border-sub":"#1c1c20","border-input":"#252528","text-primary":"#e8e8ed","text-secondary":"#a1a1a8","text-tertiary":"#6b6b72","accent":"#f59e0b","accent-hover":"#fbbf24","grid-line":"#1a1a1e"},light:{"bg-root":"#faf8f5","bg-main":"#faf8f5","bg-sidebar":"#faf8f5","bg-card":"#ffffff","bg-card-hover":"#f5f0e8","bg-input":"#f0ebe0","bg-chart":"#faf8f5","bg-sub-panel":"#ffffff","border-main":"#d4c8b0","border-sub":"#e8dcc8","border-input":"#d4c8b0","text-primary":"#1a1814","text-secondary":"#5c5548","text-tertiary":"#8c8470","accent":"#d97706","accent-hover":"#b45309","grid-line":"#f0ebe0"}},
+  {id:"terminal",name:"Terminal",desc:"Bloomberg Terminal 黑底琥珀",dark:{"bg-root":"#0c0c0e","bg-main":"#0c0c0e","bg-sidebar":"#0c0c0e","bg-card":"#151518","bg-card-hover":"#1c1c20","bg-input":"#1c1c20","bg-chart":"#0c0c0e","bg-sub-panel":"#151518","border-main":"#252528","border-sub":"#1c1c20","border-input":"#252528","text-primary":"#e8e8ed","text-secondary":"#a1a1a8","text-tertiary":"#6b6b72","accent":"#f59e0b","accent-hover":"#fbbf24","grid-line":"#1a1a1e"},light:{"bg-root":"#faf8f5","bg-main":"#faf8f5","bg-sidebar":"#faf8f5","bg-card":"#ffffff","bg-card-hover":"#f5f0e8","bg-input":"#f0ebe0","bg-chart":"#faf8f5","bg-sub-panel":"#ffffff","border-main":"#d4c8b0","border-sub":"#e8dcc8","border-input":"#d4c8b0","text-primary":"#1a1814","text-secondary":"#5c5548","text-tertiary":"#8c8470","accent":"#d97706","accent-hover":"#b45309","grid-line":"#f0ebe0"}},
   {id:"ticker",name:"Ticker",desc:"交易所大屏 深蓝亮白",dark:{"bg-root":"#0a1628","bg-main":"#0a1628","bg-sidebar":"#0a1628","bg-card":"#0f1f3d","bg-card-hover":"#142850","bg-input":"#142850","bg-chart":"#0a1628","bg-sub-panel":"#0f1f3d","border-main":"#1a3560","border-sub":"#142850","border-input":"#1a3560","text-primary":"#e8f0fe","text-secondary":"#90a4cc","text-tertiary":"#5a7099","accent":"#3b82f6","accent-hover":"#60a5fa","grid-line":"#0f1f3d"},light:{"bg-root":"#f0f4fa","bg-main":"#f0f4fa","bg-sidebar":"#f0f4fa","bg-card":"#ffffff","bg-card-hover":"#e8edf5","bg-input":"#e0e7f2","bg-chart":"#f0f4fa","bg-sub-panel":"#ffffff","border-main":"#c0cce0","border-sub":"#d8e0ee","border-input":"#c0cce0","text-primary":"#0f1a30","text-secondary":"#4a5a78","text-tertiary":"#7888a0","accent":"#2563eb","accent-hover":"#1d4ed8","grid-line":"#e0e7f2"}},
   {id:"vault",name:"Vault",desc:"私人银行 暖暗金棕",dark:{"bg-root":"#161412","bg-main":"#161412","bg-sidebar":"#161412","bg-card":"#1c1a16","bg-card-hover":"#242118","bg-input":"#242118","bg-chart":"#161412","bg-sub-panel":"#1c1a16","border-main":"#2c2820","border-sub":"#242118","border-input":"#2c2820","text-primary":"#e8e0d0","text-secondary":"#a09888","text-tertiary":"#706858","accent":"#c9a84c","accent-hover":"#d4b868","grid-line":"#1c1a16"},light:{"bg-root":"#f8f6f2","bg-main":"#f8f6f2","bg-sidebar":"#f8f6f2","bg-card":"#ffffff","bg-card-hover":"#f0ece4","bg-input":"#e8e4d8","bg-chart":"#f8f6f2","bg-sub-panel":"#ffffff","border-main":"#d0c8b8","border-sub":"#e0d8cc","border-input":"#d0c8b8","text-primary":"#1a1612","text-secondary":"#5c5040","text-tertiary":"#8c7c68","accent":"#a08030","accent-hover":"#8c6c28","grid-line":"#e8e4d8"}},
   {id:"margin",name:"Margin",desc:"保证金交易 极致暗红",dark:{"bg-root":"#08080a","bg-main":"#08080a","bg-sidebar":"#08080a","bg-card":"#0e0e12","bg-card-hover":"#141418","bg-input":"#141418","bg-chart":"#08080a","bg-sub-panel":"#0e0e12","border-main":"#1a1a20","border-sub":"#141418","border-input":"#1a1a20","text-primary":"#f0f0f4","text-secondary":"#8c8c94","text-tertiary":"#5c5c64","accent":"#ef4444","accent-hover":"#f87171","grid-line":"#0e0e12"},light:{"bg-root":"#fafafa","bg-main":"#fafafa","bg-sidebar":"#fafafa","bg-card":"#ffffff","bg-card-hover":"#f4f4f4","bg-input":"#ececec","bg-chart":"#fafafa","bg-sub-panel":"#ffffff","border-main":"#d0d0d0","border-sub":"#e4e4e4","border-input":"#d0d0d0","text-primary":"#0a0a0c","text-secondary":"#4a4a50","text-tertiary":"#787880","accent":"#dc2626","accent-hover":"#b91c1c","grid-line":"#ececec"}},
-  {id:"ledger",name:"Ledger",desc:"账簿报表 暖纸白会计蓝",dark:{"bg-root":"#1a1814","bg-main":"#1a1814","bg-sidebar":"#1a1814","bg-card":"#201e18","bg-card-hover":"#28261e","bg-input":"#28261e","bg-chart":"#1a1814","bg-sub-panel":"#201e18","border-main":"#302e24","border-sub":"#28261e","border-input":"#302e24","text-primary":"#e8e4d8","text-secondary":"#a09888","text-tertiary":"#706858","accent":"#1e3a8a","accent-hover":"#2563eb","grid-line":"#201e18"},light:{"bg-root":"#faf8f3","bg-main":"#faf8f3","bg-sidebar":"#faf8f3","bg-card":"#ffffff","bg-card-hover":"#f4f0e8","bg-input":"#ece8dc","bg-chart":"#faf8f3","bg-sub-panel":"#ffffff","border-main":"#d4cec0","border-sub":"#e4ded4","border-input":"#d4cec0","text-primary":"#1a1612","text-secondary":"#504838","text-tertiary":"#807860","accent":"#1e40af","accent-hover":"#1e3a8a","grid-line":"#ece8dc"}},
-  {id:"prospectus",name:"Prospectus",desc:"招股书 纯白深蓝黑",dark:{"bg-root":"#0f1117","bg-main":"#0f1117","bg-sidebar":"#0f1117","bg-card":"#161820","bg-card-hover":"#1c1e28","bg-input":"#1c1e28","bg-chart":"#0f1117","bg-sub-panel":"#161820","border-main":"#242630","border-sub":"#1c1e28","border-input":"#242630","text-primary":"#e4e6ec","text-secondary":"#989aa8","text-tertiary":"#686a78","accent":"#1a1a2e","accent-hover":"#2a2a4e","grid-line":"#161820"},light:{"bg-root":"#ffffff","bg-main":"#ffffff","bg-sidebar":"#f8f9fa","bg-card":"#ffffff","bg-card-hover":"#f4f5f8","bg-input":"#ecedf0","bg-chart":"#ffffff","bg-sub-panel":"#fafafa","border-main":"#d0d2d8","border-sub":"#e0e2e8","border-input":"#d0d2d8","text-primary":"#0f1117","text-secondary":"#484a58","text-tertiary":"#787a88","accent":"#e63946","accent-hover":"#c1121f","grid-line":"#ecedf0"}},
+  {id:"ledger",name:"Ledger",desc:"账簿报表 暖纸白蓝",dark:{"bg-root":"#1a1814","bg-main":"#1a1814","bg-sidebar":"#1a1814","bg-card":"#201e18","bg-card-hover":"#28261e","bg-input":"#28261e","bg-chart":"#1a1814","bg-sub-panel":"#201e18","border-main":"#302e24","border-sub":"#28261e","border-input":"#302e24","text-primary":"#e8e4d8","text-secondary":"#a09888","text-tertiary":"#706858","accent":"#1e3a8a","accent-hover":"#2563eb","grid-line":"#201e18"},light:{"bg-root":"#faf8f3","bg-main":"#faf8f3","bg-sidebar":"#faf8f3","bg-card":"#ffffff","bg-card-hover":"#f4f0e8","bg-input":"#ece8dc","bg-chart":"#faf8f3","bg-sub-panel":"#ffffff","border-main":"#d4cec0","border-sub":"#e4ded4","border-input":"#d4cec0","text-primary":"#1a1612","text-secondary":"#504838","text-tertiary":"#807860","accent":"#1e40af","accent-hover":"#1e3a8a","grid-line":"#ece8dc"}},
+  {id:"prospectus",name:"Prospectus",desc:"招股书 纯白深蓝",dark:{"bg-root":"#0f1117","bg-main":"#0f1117","bg-sidebar":"#0f1117","bg-card":"#161820","bg-card-hover":"#1c1e28","bg-input":"#1c1e28","bg-chart":"#0f1117","bg-sub-panel":"#161820","border-main":"#242630","border-sub":"#1c1e28","border-input":"#242630","text-primary":"#e4e6ec","text-secondary":"#989aa8","text-tertiary":"#686a78","accent":"#1a1a2e","accent-hover":"#2a2a4e","grid-line":"#161820"},light:{"bg-root":"#ffffff","bg-main":"#ffffff","bg-sidebar":"#f8f9fa","bg-card":"#ffffff","bg-card-hover":"#f4f5f8","bg-input":"#ecedf0","bg-chart":"#ffffff","bg-sub-panel":"#fafafa","border-main":"#d0d2d8","border-sub":"#e0e2e8","border-input":"#d0d2d8","text-primary":"#0f1117","text-secondary":"#484a58","text-tertiary":"#787a88","accent":"#e63946","accent-hover":"#c1121f","grid-line":"#ecedf0"}},
   {id:"arbitrage",name:"Arbitrage",desc:"量化套利 高对比赛紫",dark:{"bg-root":"#050508","bg-main":"#050508","bg-sidebar":"#050508","bg-card":"#0a0a10","bg-card-hover":"#101018","bg-input":"#101018","bg-chart":"#050508","bg-sub-panel":"#0a0a10","border-main":"#1a1a28","border-sub":"#101018","border-input":"#1a1a28","text-primary":"#f0f0f8","text-secondary":"#8888a0","text-tertiary":"#585870","accent":"#7c3aed","accent-hover":"#8b5cf6","grid-line":"#0a0a10"},light:{"bg-root":"#f8f8fc","bg-main":"#f8f8fc","bg-sidebar":"#f8f8fc","bg-card":"#ffffff","bg-card-hover":"#f0f0f8","bg-input":"#e8e8f4","bg-chart":"#f8f8fc","bg-sub-panel":"#ffffff","border-main":"#c8c8d8","border-sub":"#dcdce8","border-input":"#c8c8d8","text-primary":"#08080c","text-secondary":"#484860","text-tertiary":"#787890","accent":"#6d28d9","accent-hover":"#5b21b6","grid-line":"#e8e8f4"}},
   {id:"circuit",name:"Circuit",desc:"80年代CRT 绿字黑底",dark:{"bg-root":"#0a0a0a","bg-main":"#0a0a0a","bg-sidebar":"#0a0a0a","bg-card":"#0e0e0e","bg-card-hover":"#141414","bg-input":"#141414","bg-chart":"#0a0a0a","bg-sub-panel":"#0e0e0e","border-main":"#1a3a1a","border-sub":"#0e1e0e","border-input":"#1a3a1a","text-primary":"#22c55e","text-secondary":"#16a34a","text-tertiary":"#15803d","accent":"#22c55e","accent-hover":"#4ade80","grid-line":"#0e1e0e"},light:{"bg-root":"#f0faf0","bg-main":"#f0faf0","bg-sidebar":"#f0faf0","bg-card":"#ffffff","bg-card-hover":"#e8f5e8","bg-input":"#dcefdc","bg-chart":"#f0faf0","bg-sub-panel":"#ffffff","border-main":"#b0d0b0","border-sub":"#c8e0c8","border-input":"#b0d0b0","text-primary":"#0a1a0a","text-secondary":"#2a5a2a","text-tertiary":"#4a7a4a","accent":"#15803d","accent-hover":"#166534","grid-line":"#dcefdc"}},
   {id:"candlestick",name:"Candlestick",desc:"K线图表 深灰金黄",dark:{"bg-root":"#0d0e10","bg-main":"#0d0e10","bg-sidebar":"#0d0e10","bg-card":"#131416","bg-card-hover":"#191a1c","bg-input":"#191a1c","bg-chart":"#0d0e10","bg-sub-panel":"#131416","border-main":"#1e1e22","border-sub":"#16181a","border-input":"#1e1e22","text-primary":"#e4e4e8","text-secondary":"#94949c","text-tertiary":"#606068","accent":"#f8b500","accent-hover":"#fcd34d","grid-line":"#13161a"},light:{"bg-root":"#f5f5f7","bg-main":"#f5f5f7","bg-sidebar":"#f5f5f7","bg-card":"#ffffff","bg-card-hover":"#f0f0f2","bg-input":"#eaeaee","bg-chart":"#f5f5f7","bg-sub-panel":"#ffffff","border-main":"#d0d0d4","border-sub":"#e0e0e4","border-input":"#d0d0d4","text-primary":"#0d0e10","text-secondary":"#505058","text-tertiary":"#808088","accent":"#d4a000","accent-hover":"#b88600","grid-line":"#eaeaee"}},
-  {id:"clearing",name:"Clearing",desc:"清算所B2B 灰白克制",dark:{"bg-root":"#18181b","bg-main":"#18181b","bg-sidebar":"#18181b","bg-card":"#1e1e22","bg-card-hover":"#242428","bg-input":"#242428","bg-chart":"#18181b","bg-sub-panel":"#1e1e22","border-main":"#2a2a30","border-sub":"#242428","border-input":"#2a2a30","text-primary":"#e4e4e8","text-secondary":"#9898a0","text-tertiary":"#686870","accent":"#52525b","accent-hover":"#71717a","grid-line":"#1e1e22"},light:{"bg-root":"#f5f5f5","bg-main":"#f5f5f5","bg-sidebar":"#f5f5f5","bg-card":"#ffffff","bg-card-hover":"#f0f0f0","bg-input":"#e8e8e8","bg-chart":"#f5f5f5","bg-sub-panel":"#ffffff","border-main":"#c8c8cc","border-sub":"#dcdce0","border-input":"#c8c8cc","text-primary":"#18181b","text-secondary":"#48484c","text-tertiary":"#78787c","accent":"#52525b","accent-hover":"#3f3f46","grid-line":"#e8e8e8"}}
+  {id:"clearing",name:"Clearing",desc:"清算所B2B 灰白专业",dark:{"bg-root":"#18181b","bg-main":"#18181b","bg-sidebar":"#18181b","bg-card":"#1e1e22","bg-card-hover":"#242428","bg-input":"#242428","bg-chart":"#18181b","bg-sub-panel":"#1e1e22","border-main":"#2a2a30","border-sub":"#242428","border-input":"#2a2a30","text-primary":"#e4e4e8","text-secondary":"#9898a0","text-tertiary":"#686870","accent":"#52525b","accent-hover":"#71717a","grid-line":"#1e1e22"},light:{"bg-root":"#f5f5f5","bg-main":"#f5f5f5","bg-sidebar":"#f5f5f5","bg-card":"#ffffff","bg-card-hover":"#f0f0f0","bg-input":"#e8e8e8","bg-chart":"#f5f5f5","bg-sub-panel":"#ffffff","border-main":"#c8c8cc","border-sub":"#dcdce0","border-input":"#c8c8cc","text-primary":"#18181b","text-secondary":"#48484c","text-tertiary":"#78787c","accent":"#52525b","accent-hover":"#3f3f46","grid-line":"#e8e8e8"}}
 ];
 
-// ============================================================
-// FULL DARK/LIGHT ENDPOINTS (loaded from current theme)
-// ============================================================
 var CURRENT_THEME = null;
-
-// Default endpoints (Terminal theme)
-var DARK = {
-  'bg-root':'#0c0c0e','bg-main':'#0c0c0e','bg-sidebar':'#0c0c0e',
-  'bg-card':'#151518','bg-card-hover':'#1c1c20','bg-input':'#1c1c20',
-  'bg-chart':'#0c0c0e','bg-sub-panel':'#151518',
-  'border-main':'#252528','border-sub':'#1c1c20','border-input':'#252528',
-  'text-primary':'#e8e8ed','text-secondary':'#a1a1a8','text-tertiary':'#6b6b72',
-  'accent':'#f59e0b','accent-hover':'#fbbf24',
-  'grid-line':'#1a1a1e','code-bg':'#08080a'
-};
-var LIGHT = {
-  'bg-root':'#faf8f5','bg-main':'#faf8f5','bg-sidebar':'#faf8f5',
-  'bg-card':'#ffffff','bg-card-hover':'#f5f0e8','bg-input':'#f0ebe0',
-  'bg-chart':'#faf8f5','bg-sub-panel':'#ffffff',
-  'border-main':'#d4c8b0','border-sub':'#e8dcc8','border-input':'#d4c8b0',
-  'text-primary':'#1a1814','text-secondary':'#5c5548','text-tertiary':'#8c8470',
-  'accent':'#d97706','accent-hover':'#b45309',
-  'grid-line':'#f0ebe0','code-bg':'#1a1a1e'
-};
+var DARK={}, LIGHT={};
 
 // ============================================================
 // THEME ENGINE
 // ============================================================
-function lerpColor(h1, h2, t) {
-  var c1=parseInt(h1.slice(1),16),c2=parseInt(h2.slice(1),16);
-  var r1=(c1>>16)&0xff,g1=(c1>>8)&0xff,b1=c1&0xff;
-  var r2=(c2>>16)&0xff,g2=(c2>>8)&0xff,b2=c2&0xff;
-  var r=Math.round(Math.sqrt((1-t)*r1*r1+t*r2*r2));
-  var g=Math.round(Math.sqrt((1-t)*g1*g1+t*g2*g2));
-  var b=Math.round(Math.sqrt((1-t)*b1*b1+t*b2*b2));
-  return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
-}
-function lerpLinear(h1, h2, t) {
-  var c1=parseInt(h1.slice(1),16),c2=parseInt(h2.slice(1),16);
-  var r1=(c1>>16)&0xff,g1=(c1>>8)&0xff,b1=c1&0xff;
-  var r2=(c2>>16)&0xff,g2=(c2>>8)&0xff,b2=c2&0xff;
-  return '#'+((1<<24)+(Math.round(r1+(r2-r1)*t)<<16)+(Math.round(g1+(g2-g1)*t)<<8)+Math.round(b1+(b2-b1)*t)).toString(16).slice(1);
-}
-function textCurve(t){return 1-Math.pow(1-t,5);}
-function borderCurve(t){return 1-Math.pow(1-t,2);}
+function lerpColor(h1,h2,t){var c1=parseInt(h1.slice(1),16),c2=parseInt(h2.slice(1),16);var r1=(c1>>16)&0xff,g1=(c1>>8)&0xff,b1=c1&0xff;var r2=(c2>>16)&0xff,g2=(c2>>8)&0xff,b2=c2&0xff;var r=Math.round(Math.sqrt((1-t)*r1*r1+t*r2*r2));var g=Math.round(Math.sqrt((1-t)*g1*g1+t*g2*g2));var b=Math.round(Math.sqrt((1-t)*b1*b1+t*b2*b2));return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1)}
+function lerpLinear(h1,h2,t){var c1=parseInt(h1.slice(1),16),c2=parseInt(h2.slice(1),16);var r1=(c1>>16)&0xff,g1=(c1>>8)&0xff,b1=c1&0xff;var r2=(c2>>16)&0xff,g2=(c2>>8)&0xff,b2=c2&0xff;return '#'+((1<<24)+(Math.round(r1+(r2-r1)*t)<<16)+(Math.round(g1+(g2-g1)*t)<<8)+Math.round(b1+(b2-b1)*t)).toString(16).slice(1)}
+function textCurve(t){return 1-Math.pow(1-t,5)}
+function borderCurve(t){return 1-Math.pow(1-t,2)}
 
-function applyMix(t) {
-  var root = document.documentElement.style;
-  var tt = textCurve(t), bt = borderCurve(t);
-  root.setProperty('--bg-root',       lerpColor(DARK['bg-root'], LIGHT['bg-root'], t));
-  root.setProperty('--bg-main',       lerpColor(DARK['bg-main'], LIGHT['bg-main'], t));
-  root.setProperty('--bg-sidebar',    lerpColor(DARK['bg-sidebar'], LIGHT['bg-sidebar'], t));
-  root.setProperty('--bg-card',       lerpColor(DARK['bg-card'], LIGHT['bg-card'], t));
-  root.setProperty('--bg-card-hover', lerpColor(DARK['bg-card-hover'], LIGHT['bg-card-hover'], t));
-  root.setProperty('--bg-input',      lerpColor(DARK['bg-input'], LIGHT['bg-input'], t));
-  root.setProperty('--bg-chart',      lerpColor(DARK['bg-chart'], LIGHT['bg-chart'], t));
-  root.setProperty('--bg-sub-panel',  lerpColor(DARK['bg-sub-panel'], LIGHT['bg-sub-panel'], t));
-  root.setProperty('--border-main',   lerpColor(DARK['border-main'], LIGHT['border-main'], bt));
-  root.setProperty('--border-sub',    lerpColor(DARK['border-sub'], LIGHT['border-sub'], bt));
-  root.setProperty('--border-input',  lerpColor(DARK['border-input'], LIGHT['border-input'], bt));
-  root.setProperty('--text-primary',  lerpLinear(DARK['text-primary'], LIGHT['text-primary'], tt));
-  root.setProperty('--text-secondary',lerpLinear(DARK['text-secondary'], LIGHT['text-secondary'], tt));
-  root.setProperty('--text-tertiary', lerpLinear(DARK['text-tertiary'], LIGHT['text-tertiary'], tt));
-  root.setProperty('--accent',        lerpLinear(DARK['accent'], LIGHT['accent'], tt));
-  root.setProperty('--accent-hover',  lerpLinear(DARK['accent-hover'], LIGHT['accent-hover'], tt));
-  root.setProperty('--grid-line',     lerpColor(DARK['grid-line'], LIGHT['grid-line'], bt));
-  root.setProperty('--code-bg',       lerpColor(DARK['code-bg'], LIGHT['code-bg'], t));
-  root.setProperty('--vol-up',        'rgba(239,83,80,'+(0.5+t*0.1).toFixed(2)+')');
-  root.setProperty('--vol-down',      'rgba(38,166,154,'+(0.5+t*0.1).toFixed(2)+')');
-  root.setProperty('--btn-radius',    Math.round(8+t*12)+'px');
-  root.setProperty('--card-radius',   Math.round(10+t*2)+'px');
-  root.setProperty('--card-shadow',   t<0.01?'none':'0 1px 3px rgba(0,0,0,'+(t*0.04).toFixed(2)+'), 0 3px 12px rgba(0,0,0,'+(t*0.024).toFixed(3)+')');
-  root.setProperty('--card-border',   t>0.5?'none':'1px solid var(--border-main)');
-  document.getElementById('demo-bg-root').textContent = lerpColor(DARK['bg-root'], LIGHT['bg-root'], t);
-  document.getElementById('demo-bg-card').textContent = lerpColor(DARK['bg-card'], LIGHT['bg-card'], t);
-  document.getElementById('demo-bg-hover').textContent = lerpColor(DARK['bg-card-hover'], LIGHT['bg-card-hover'], t);
-  document.getElementById('demo-border').textContent = lerpColor(DARK['border-main'], LIGHT['border-main'], bt);
+function applyMix(t){
+  var root=document.documentElement.style,tt=textCurve(t),bt=borderCurve(t);
+  ['bg-root','bg-main','bg-sidebar','bg-card','bg-card-hover','bg-input','bg-chart','bg-sub-panel'].forEach(function(k){root.setProperty('--'+k,lerpColor(DARK[k],LIGHT[k],t))});
+  ['border-main','border-sub','border-input'].forEach(function(k){root.setProperty('--'+k,lerpColor(DARK[k],LIGHT[k],bt))});
+  ['text-primary','text-secondary','text-tertiary','accent','accent-hover'].forEach(function(k){root.setProperty('--'+k,lerpLinear(DARK[k],LIGHT[k],tt))});
+  root.setProperty('--grid-line',lerpColor(DARK['grid-line'],LIGHT['grid-line'],bt));
+  root.setProperty('--code-bg',lerpColor(DARK['bg-root'],LIGHT['bg-root'],t));
+  root.setProperty('--btn-radius',Math.round(8+t*12)+'px');
+  root.setProperty('--card-radius',Math.round(10+t*2)+'px');
+  root.setProperty('--card-shadow',t<0.01?'none':'0 1px 3px rgba(0,0,0,'+(t*0.04).toFixed(2)+')');
+  root.setProperty('--card-border',t>0.5?'none':'1px solid var(--border-main)');
+}
+
+function loadTheme(id){
+  var t=ALL_THEMES.find(function(th){return th.id===id});if(!t)return;
+  var d=t.dark,l=t.light;
+  ['bg-root','bg-main','bg-sidebar','bg-card','bg-card-hover','bg-input','bg-chart','bg-sub-panel','border-main','border-sub','border-input','text-primary','text-secondary','text-tertiary','accent','accent-hover','grid-line'].forEach(function(k){DARK[k]=d[k];LIGHT[k]=l[k]});
+  DARK['code-bg']='#08080a';LIGHT['code-bg']='#1a1a1e';
+  CURRENT_THEME=id;
+  applyMix(parseFloat(document.getElementById('mixSlider')?document.getElementById('mixSlider').value:'0.7'));
+}
+
+function setTheme(id){
+  var t=ALL_THEMES.find(function(th){return th.id===id});if(!t)return;
+  document.getElementById('currentThemeBtn').textContent=t.name;
+  loadTheme(id);
+  document.querySelectorAll('#themeMenu .theme-dd-item').forEach(function(b){b.classList.toggle('active',b.dataset.theme===id)});
+  document.querySelectorAll('#themeGrid .tc').forEach(function(c){c.style.borderColor=c.dataset.theme===id?'var(--accent)':''});
 }
 
 // ============================================================
-// LOAD THEME (embedded data, works offline)
+// RENDER THEMES
 // ============================================================
-function loadTheme(themeId) {
-  var t = ALL_THEMES.find(function(th){return th.id===themeId;});
-  if (!t) return;
-  var d = t.dark, l = t.light;
-  var keys = ['bg-root','bg-main','bg-sidebar','bg-card','bg-card-hover','bg-input','bg-chart','bg-sub-panel','border-main','border-sub','border-input','text-primary','text-secondary','text-tertiary','accent','accent-hover','grid-line'];
-  keys.forEach(function(k) { DARK[k] = d[k]; LIGHT[k] = l[k]; });
-  DARK['code-bg'] = '#08080a'; LIGHT['code-bg'] = '#1a1a1e';
-  CURRENT_THEME = t.id;
-  applyMix(parseFloat(document.getElementById('mixSlider').value));
-}
+function renderThemes(){
+  var menu=document.getElementById('themeMenu');
+  var grid=document.getElementById('themeGrid');
+  ALL_THEMES.forEach(function(t){
+    var btn=document.createElement('button');btn.className='theme-dd-item';btn.dataset.theme=t.id;
+    btn.onclick=function(){setTheme(t.id)};
+    var dot=document.createElement('span');dot.className='theme-dot';dot.style.background=t.dark.accent;
+    btn.appendChild(dot);btn.appendChild(document.createTextNode(t.name));menu.appendChild(btn);
 
-function setTheme(themeId) {
-  var t = ALL_THEMES.find(function(th){return th.id===themeId;});
-  if (!t) return;
-  document.getElementById('currentThemeLabel').textContent = t.name;
-  document.getElementById('themeSelector').removeAttribute('open');
-  loadTheme(themeId);
-  // Update active state in menu
-  document.querySelectorAll('#themeMenu button').forEach(function(b) {
-    b.classList.toggle('active', b.dataset.theme === themeId);
-  });
-  // Update theme grid cards
-  document.querySelectorAll('#themeGrid .theme-card').forEach(function(c) {
-    c.style.borderColor = c.dataset.theme === themeId ? 'var(--accent)' : '';
+    var card=document.createElement('div');card.className='tc';card.dataset.theme=t.id;card.onclick=function(){setTheme(t.id)};
+    var cn=document.createElement('div');cn.className='tn';cn.textContent=t.name;card.appendChild(cn);
+    var cd=document.createElement('div');cd.className='td';cd.textContent=t.desc;card.appendChild(cd);
+    var bar=document.createElement('div');bar.className='tb';
+    [t.dark['bg-root'],t.dark['bg-card'],t.dark['bg-input'],t.dark['border-main'],t.dark.accent,t.light['bg-root'],t.light['bg-card'],t.light['bg-input'],t.light['border-main'],t.light.accent].forEach(function(c){var s=document.createElement('span');s.style.background=c;bar.appendChild(s)});
+    card.appendChild(bar);grid.appendChild(card);
   });
 }
 
 // ============================================================
-// RENDER THEME MENU + THEME GRID
+// COPY CODE
 // ============================================================
-function renderThemes() {
-  var menu = document.getElementById('themeMenu');
-  var grid = document.getElementById('themeGrid');
-  ALL_THEMES.forEach(function(t) {
-    // Dropdown menu item
-    var btn = document.createElement('button');
-    btn.dataset.theme = t.id;
-    btn.onclick = function(){setTheme(t.id);};
-    var swatch = document.createElement('span');
-    swatch.className = 'theme-swatch';
-    swatch.style.background = t.dark.accent;
-    btn.appendChild(swatch);
-    var nameSpan = document.createElement('span');
-    nameSpan.className = 'theme-name';
-    nameSpan.textContent = t.name;
-    btn.appendChild(nameSpan);
-    menu.appendChild(btn);
-
-    // Grid card
-    var card = document.createElement('div');
-    card.className = 'theme-card';
-    card.dataset.theme = t.id;
-    card.onclick = function(){setTheme(t.id);};
-    var cName = document.createElement('div');
-    cName.className = 'tc-name';
-    cName.textContent = t.name;
-    card.appendChild(cName);
-    var cDesc = document.createElement('div');
-    cDesc.className = 'tc-desc';
-    cDesc.textContent = t.desc;
-    card.appendChild(cDesc);
-    // Color bar (bottom aligned via flex)
-    var bar = document.createElement('div');
-    bar.className = 'tc-bar';
-    var cols = [t.dark['bg-root'],t.dark['bg-card'],t.dark['bg-input'],t.dark['border-main'],t.light['bg-root'],t.light['bg-card'],t.light['bg-input'],t.light['border-main'],t.dark.accent,t.light.accent,t.dark['text-primary'],t.light['text-primary']];
-    cols.forEach(function(c) {
-      var s = document.createElement('span');
-      s.style.background = c;
-      bar.appendChild(s);
-    });
-    card.appendChild(bar);
-    grid.appendChild(card);
-  });
+function copyCode(btn,id){
+  var code=document.getElementById(id+'-code');
+  if(!code)return;
+  var text=code.textContent.replace(/\s+/g,' ').trim();
+  navigator.clipboard.writeText(text).then(function(){btn.textContent='✓ 已复制';setTimeout(function(){btn.textContent='复制'},1500)});
 }
 
 // ============================================================
-// LANGUAGE TOGGLE
+// LANGUAGE SWITCH
 // ============================================================
-function toggleLang() {
-  var html = document.documentElement;
-  var current = html.getAttribute('data-lang');
-  var next = current === 'zh' ? 'en' : 'zh';
-  html.setAttribute('data-lang', next);
-  document.getElementById('langIndicator').textContent = next === 'zh' ? 'EN' : '中';
-}
-document.getElementById('langIndicator').textContent = 'EN';
-
-// ============================================================
-// CONTROLS
-// ============================================================
-var slider = document.getElementById('mixSlider');
-var label = document.getElementById('mixLabel');
-var presetBtns = document.querySelectorAll('#presetGroup button');
-var heroBtns = document.querySelectorAll('.hero .presets button:not(.tag)');
-
-function setMix(t) {
-  applyMix(t);
-  slider.value = t;
-  label.textContent = Math.round(t*100) + '%';
-  [presetBtns, heroBtns].forEach(function(group) {
-    group.forEach(function(b) {
-      b.classList.toggle('active', Math.abs(parseFloat(b.dataset.mix) - t) < 0.01);
-    });
-  });
+function switchLang(lang){
+  document.querySelectorAll('#langTabs .lang-tab').forEach(function(t){t.classList.toggle('active',t.dataset.lang===lang)});
+  document.querySelectorAll('.lang-panel').forEach(function(p){p.style.display='none'});
+  var panel=document.getElementById('lang-'+lang);if(panel)panel.style.display='block';
 }
 
-slider.addEventListener('input', function() { setMix(parseFloat(this.value)); });
-presetBtns.forEach(function(b) {
-  b.addEventListener('click', function() { setMix(parseFloat(this.dataset.mix)); });
-});
-heroBtns.forEach(function(b) {
-  b.addEventListener('click', function() { setMix(parseFloat(this.dataset.mix)); });
-});
+// ============================================================
+// LANG TOGGLE
+// ============================================================
+function toggleLang(){
+  var html=document.documentElement;
+  var next=html.getAttribute('data-lang')==='zh'?'en':'zh';
+  html.setAttribute('data-lang',next);
+  document.getElementById('langIndicator').textContent=next==='zh'?'EN':'中';
+}
+document.getElementById('langIndicator').textContent='EN';
 
+// ============================================================
+// INIT
+// ============================================================
 renderThemes();
 setTheme('terminal');
 </script>
