@@ -1,1 +1,43 @@
-{"id":"vault","name":"Vault","description":"私人银行金库风格。暖暗底金棕字——沉稳厚重。适合资产管理和财富管理。","dark":{"bg-root":"#161412","bg-main":"#161412","bg-sidebar":"#161412","bg-card":"#1c1a16","bg-card-hover":"#242118","bg-input":"#242118","bg-chart":"#161412","bg-sub-panel":"#1c1a16","border-main":"#2c2820","border-sub":"#242118","border-input":"#2c2820","text-primary":"#e8e0d0","text-secondary":"#a09888","text-tertiary":"#706858","accent":"#c9a84c","accent-hover":"#d4b868","grid-line":"#1c1a16"},"light":{"bg-root":"#f8f6f2","bg-main":"#f8f6f2","bg-sidebar":"#f8f6f2","bg-card":"#ffffff","bg-card-hover":"#f0ece4","bg-input":"#e8e4d8","bg-chart":"#f8f6f2","bg-sub-panel":"#ffffff","border-main":"#d0c8b8","border-sub":"#e0d8cc","border-input":"#d0c8b8","text-primary":"#1a1612","text-secondary":"#5c5040","text-tertiary":"#8c7c68","accent":"#a08030","accent-hover":"#8c6c28","grid-line":"#e8e4d8"}}
+{
+  "id": "vault",
+  "name": "Vault",
+  "description": "私人银行金库风格。暖暗底金棕字——沉稳厚重。适合资产管理和财富管理。",
+  "dark": {
+    "bg-root": "#161412",
+    "bg-main": "#161412",
+    "bg-sidebar": "#161412",
+    "bg-card": "#1c1a16",
+    "bg-card-hover": "#242118",
+    "bg-input": "#242118",
+    "bg-chart": "#161412",
+    "bg-sub-panel": "#1c1a16",
+    "border-main": "#2c2820",
+    "border-sub": "#242118",
+    "border-input": "#2c2820",
+    "text-primary": "#e8e0d0",
+    "text-secondary": "#b0a898",
+    "text-tertiary": "#8a8a92",
+    "accent": "#c9a84c",
+    "accent-hover": "#d4b868",
+    "grid-line": "#1c1a16"
+  },
+  "light": {
+    "bg-root": "#f8f6f2",
+    "bg-main": "#f8f6f2",
+    "bg-sidebar": "#f8f6f2",
+    "bg-card": "#ffffff",
+    "bg-card-hover": "#f0ece4",
+    "bg-input": "#e8e4d8",
+    "bg-chart": "#f8f6f2",
+    "bg-sub-panel": "#ffffff",
+    "border-main": "#d0c8b8",
+    "border-sub": "#e0d8cc",
+    "border-input": "#d0c8b8",
+    "text-primary": "#1a1612",
+    "text-secondary": "#3a3428",
+    "text-tertiary": "#5c5440",
+    "accent": "#a08030",
+    "accent-hover": "#8c6c28",
+    "grid-line": "#e8e4d8"
+  }
+}

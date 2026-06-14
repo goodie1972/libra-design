@@ -1,1 +1,43 @@
-{"id":"candlestick","name":"Candlestick","description":"K线图表专用配色。深灰底多色均线——为嵌入图表的mini主题优化。","dark":{"bg-root":"#0d0e10","bg-main":"#0d0e10","bg-sidebar":"#0d0e10","bg-card":"#131416","bg-card-hover":"#191a1c","bg-input":"#191a1c","bg-chart":"#0d0e10","bg-sub-panel":"#131416","border-main":"#1e1e22","border-sub":"#16181a","border-input":"#1e1e22","text-primary":"#e4e4e8","text-secondary":"#94949c","text-tertiary":"#606068","accent":"#f8b500","accent-hover":"#fcd34d","grid-line":"#13161a"},"light":{"bg-root":"#f5f5f7","bg-main":"#f5f5f7","bg-sidebar":"#f5f5f7","bg-card":"#ffffff","bg-card-hover":"#f0f0f2","bg-input":"#eaeaee","bg-chart":"#f5f5f7","bg-sub-panel":"#ffffff","border-main":"#d0d0d4","border-sub":"#e0e0e4","border-input":"#d0d0d4","text-primary":"#0d0e10","text-secondary":"#505058","text-tertiary":"#808088","accent":"#d4a000","accent-hover":"#b88600","grid-line":"#eaeaee"}}
+{
+  "id": "candlestick",
+  "name": "Candlestick",
+  "description": "K线图表专用配色。深灰底多色均线——为嵌入图表的mini主题优化。",
+  "dark": {
+    "bg-root": "#0d0e10",
+    "bg-main": "#0d0e10",
+    "bg-sidebar": "#0d0e10",
+    "bg-card": "#131416",
+    "bg-card-hover": "#191a1c",
+    "bg-input": "#191a1c",
+    "bg-chart": "#0d0e10",
+    "bg-sub-panel": "#131416",
+    "border-main": "#1e1e22",
+    "border-sub": "#16181a",
+    "border-input": "#1e1e22",
+    "text-primary": "#e4e4e8",
+    "text-secondary": "#94949c",
+    "text-tertiary": "#8a8a92",
+    "accent": "#f8b500",
+    "accent-hover": "#fcd34d",
+    "grid-line": "#13161a"
+  },
+  "light": {
+    "bg-root": "#f5f5f7",
+    "bg-main": "#f5f5f7",
+    "bg-sidebar": "#f5f5f7",
+    "bg-card": "#ffffff",
+    "bg-card-hover": "#f0f0f2",
+    "bg-input": "#eaeaee",
+    "bg-chart": "#f5f5f7",
+    "bg-sub-panel": "#ffffff",
+    "border-main": "#d0d0d4",
+    "border-sub": "#e0e0e4",
+    "border-input": "#d0d0d4",
+    "text-primary": "#0d0e10",
+    "text-secondary": "#505058",
+    "text-tertiary": "#5c5440",
+    "accent": "#d4a000",
+    "accent-hover": "#b88600",
+    "grid-line": "#eaeaee"
+  }
+}

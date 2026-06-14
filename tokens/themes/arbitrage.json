@@ -1,1 +1,43 @@
-{"id":"arbitrage","name":"Arbitrage","description":"量化套利风格。高对比锐利边框——为算法交易而生。精确锐利。","dark":{"bg-root":"#050508","bg-main":"#050508","bg-sidebar":"#050508","bg-card":"#0a0a10","bg-card-hover":"#101018","bg-input":"#101018","bg-chart":"#050508","bg-sub-panel":"#0a0a10","border-main":"#1a1a28","border-sub":"#101018","border-input":"#1a1a28","text-primary":"#f0f0f8","text-secondary":"#8888a0","text-tertiary":"#585870","accent":"#7c3aed","accent-hover":"#8b5cf6","grid-line":"#0a0a10"},"light":{"bg-root":"#f8f8fc","bg-main":"#f8f8fc","bg-sidebar":"#f8f8fc","bg-card":"#ffffff","bg-card-hover":"#f0f0f8","bg-input":"#e8e8f4","bg-chart":"#f8f8fc","bg-sub-panel":"#ffffff","border-main":"#c8c8d8","border-sub":"#dcdce8","border-input":"#c8c8d8","text-primary":"#08080c","text-secondary":"#484860","text-tertiary":"#787890","accent":"#6d28d9","accent-hover":"#5b21b6","grid-line":"#e8e8f4"}}
+{
+  "id": "arbitrage",
+  "name": "Arbitrage",
+  "description": "量化套利风格。高对比锐利边框——为算法交易而生。精确锐利。",
+  "dark": {
+    "bg-root": "#050508",
+    "bg-main": "#050508",
+    "bg-sidebar": "#050508",
+    "bg-card": "#0a0a10",
+    "bg-card-hover": "#101018",
+    "bg-input": "#101018",
+    "bg-chart": "#050508",
+    "bg-sub-panel": "#0a0a10",
+    "border-main": "#1a1a28",
+    "border-sub": "#101018",
+    "border-input": "#1a1a28",
+    "text-primary": "#f0f0f8",
+    "text-secondary": "#a0a0b4",
+    "text-tertiary": "#8a8a92",
+    "accent": "#7c3aed",
+    "accent-hover": "#8b5cf6",
+    "grid-line": "#0a0a10"
+  },
+  "light": {
+    "bg-root": "#f8f8fc",
+    "bg-main": "#f8f8fc",
+    "bg-sidebar": "#f8f8fc",
+    "bg-card": "#ffffff",
+    "bg-card-hover": "#f0f0f8",
+    "bg-input": "#e8e8f4",
+    "bg-chart": "#f8f8fc",
+    "bg-sub-panel": "#ffffff",
+    "border-main": "#c8c8d8",
+    "border-sub": "#dcdce8",
+    "border-input": "#c8c8d8",
+    "text-primary": "#08080c",
+    "text-secondary": "#2e2e40",
+    "text-tertiary": "#505060",
+    "accent": "#6d28d9",
+    "accent-hover": "#5b21b6",
+    "grid-line": "#e8e8f4"
+  }
+}

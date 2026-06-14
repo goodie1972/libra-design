@@ -1,1 +1,43 @@
-{"id":"ticker","name":"Ticker","description":"交易所大屏风格。深蓝底亮白字——为实时行情而生。高对比，远距离可读。","dark":{"bg-root":"#0a1628","bg-main":"#0a1628","bg-sidebar":"#0a1628","bg-card":"#0f1f3d","bg-card-hover":"#142850","bg-input":"#142850","bg-chart":"#0a1628","bg-sub-panel":"#0f1f3d","border-main":"#1a3560","border-sub":"#142850","border-input":"#1a3560","text-primary":"#e8f0fe","text-secondary":"#90a4cc","text-tertiary":"#5a7099","accent":"#3b82f6","accent-hover":"#60a5fa","grid-line":"#0f1f3d"},"light":{"bg-root":"#f0f4fa","bg-main":"#f0f4fa","bg-sidebar":"#f0f4fa","bg-card":"#ffffff","bg-card-hover":"#e8edf5","bg-input":"#e0e7f2","bg-chart":"#f0f4fa","bg-sub-panel":"#ffffff","border-main":"#c0cce0","border-sub":"#d8e0ee","border-input":"#c0cce0","text-primary":"#0f1a30","text-secondary":"#4a5a78","text-tertiary":"#7888a0","accent":"#2563eb","accent-hover":"#1d4ed8","grid-line":"#e0e7f2"}}
+{
+  "id": "ticker",
+  "name": "Ticker",
+  "description": "交易所大屏风格。深蓝底亮白字——为实时行情而生。高对比，远距离可读。",
+  "dark": {
+    "bg-root": "#0a1628",
+    "bg-main": "#0a1628",
+    "bg-sidebar": "#0a1628",
+    "bg-card": "#0f1f3d",
+    "bg-card-hover": "#142850",
+    "bg-input": "#142850",
+    "bg-chart": "#0a1628",
+    "bg-sub-panel": "#0f1f3d",
+    "border-main": "#1a3560",
+    "border-sub": "#142850",
+    "border-input": "#1a3560",
+    "text-primary": "#e8f0fe",
+    "text-secondary": "#a8b8d8",
+    "text-tertiary": "#788cb0",
+    "accent": "#3b82f6",
+    "accent-hover": "#60a5fa",
+    "grid-line": "#0f1f3d"
+  },
+  "light": {
+    "bg-root": "#f0f4fa",
+    "bg-main": "#f0f4fa",
+    "bg-sidebar": "#f0f4fa",
+    "bg-card": "#ffffff",
+    "bg-card-hover": "#e8edf5",
+    "bg-input": "#e0e7f2",
+    "bg-chart": "#f0f4fa",
+    "bg-sub-panel": "#ffffff",
+    "border-main": "#c0cce0",
+    "border-sub": "#d8e0ee",
+    "border-input": "#c0cce0",
+    "text-primary": "#0f1a30",
+    "text-secondary": "#283850",
+    "text-tertiary": "#506078",
+    "accent": "#2563eb",
+    "accent-hover": "#1d4ed8",
+    "grid-line": "#e0e7f2"
+  }
+}

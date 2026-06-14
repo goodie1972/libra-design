@@ -1,1 +1,43 @@
-{"id":"margin","name":"Margin","description":"保证金交易风格。极致暗底红绿强调——为高风险场景而生。对比度拉满。","dark":{"bg-root":"#08080a","bg-main":"#08080a","bg-sidebar":"#08080a","bg-card":"#0e0e12","bg-card-hover":"#141418","bg-input":"#141418","bg-chart":"#08080a","bg-sub-panel":"#0e0e12","border-main":"#1a1a20","border-sub":"#141418","border-input":"#1a1a20","text-primary":"#f0f0f4","text-secondary":"#8c8c94","text-tertiary":"#5c5c64","accent":"#ef4444","accent-hover":"#f87171","grid-line":"#0e0e12"},"light":{"bg-root":"#fafafa","bg-main":"#fafafa","bg-sidebar":"#fafafa","bg-card":"#ffffff","bg-card-hover":"#f4f4f4","bg-input":"#ececec","bg-chart":"#fafafa","bg-sub-panel":"#ffffff","border-main":"#d0d0d0","border-sub":"#e4e4e4","border-input":"#d0d0d0","text-primary":"#0a0a0c","text-secondary":"#4a4a50","text-tertiary":"#787880","accent":"#dc2626","accent-hover":"#b91c1c","grid-line":"#ececec"}}
+{
+  "id": "margin",
+  "name": "Margin",
+  "description": "保证金交易风格。极致暗底红绿强调——为高风险场景而生。对比度拉满。",
+  "dark": {
+    "bg-root": "#08080a",
+    "bg-main": "#08080a",
+    "bg-sidebar": "#08080a",
+    "bg-card": "#0e0e12",
+    "bg-card-hover": "#141418",
+    "bg-input": "#141418",
+    "bg-chart": "#08080a",
+    "bg-sub-panel": "#0e0e12",
+    "border-main": "#1a1a20",
+    "border-sub": "#141418",
+    "border-input": "#1a1a20",
+    "text-primary": "#f0f0f4",
+    "text-secondary": "#8c8c94",
+    "text-tertiary": "#5c5c64",
+    "accent": "#ef4444",
+    "accent-hover": "#f87171",
+    "grid-line": "#0e0e12"
+  },
+  "light": {
+    "bg-root": "#fafafa",
+    "bg-main": "#fafafa",
+    "bg-sidebar": "#fafafa",
+    "bg-card": "#ffffff",
+    "bg-card-hover": "#f4f4f4",
+    "bg-input": "#ececec",
+    "bg-chart": "#fafafa",
+    "bg-sub-panel": "#ffffff",
+    "border-main": "#d0d0d0",
+    "border-sub": "#e4e4e4",
+    "border-input": "#d0d0d0",
+    "text-primary": "#0a0a0c",
+    "text-secondary": "#3a3428",
+    "text-tertiary": "#5c5440",
+    "accent": "#dc2626",
+    "accent-hover": "#b91c1c",
+    "grid-line": "#ececec"
+  }
+}
