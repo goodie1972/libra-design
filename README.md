@@ -38,23 +38,33 @@
 | `@libra-design/react` | TS | 40+ React 金融组件 | `npm i @libra-design/react` |
 | `@libra-design/cli` | TS | `libra init/add` 命令 | `npx @libra-design/cli init` |
 | `@libra-design/mcp-server` | TS | MCP Server for AI | `npx @libra-design/mcp-server` |
-| `go-tokens` | **Go** | 色值常量 + LerpColor + CSS 生成 | `git clone → go build` |
-| `go-templ` | **Go** | 40 个金融 templ 组件 | `git clone → go build` |
-| `go-cli` | **Go** | 单二进制 `libra init` CLI | `git clone → go build` |
-| `go-mcp` | **Go** | MCP Server 单二进制 | `git clone → go build` |
-| `rust-tokens` | **Rust** | crate，build.rs 读取 tokens JSON | Phase C |
-| `rust-leptos` | **Rust** | 10 个 Leptos 金融组件 | Phase C |
+| `go-tokens` | **Go** | 色值常量 + LerpColor + CSS 生成 | `go get github.com/goodie1972/go-tokens` |
+| `go-templ` | **Go** | 40 个金融 templ 组件 | `go get github.com/goodie1972/go-templ` |
+| `go-cli` | **Go** | 单二进制 `libra init` CLI | `go install github.com/goodie1972/go-cli/cmd/libra@latest` |
+| `go-mcp` | **Go** | MCP Server 单二进制 | `go install github.com/goodie1972/go-mcp@latest` |
+| `rust-tokens` | **Rust** | crate 色值+主题+CSS | `cargo add libra-tokens` |
+| `rust-leptos` | **Rust** | 20 个 Leptos 组件 | `cargo add libra-leptos` |
 
 ---
 
 ## Go 开发者 — 5 秒上手
 
 ```bash
-# 克隆仓库并在本地构建（单二进制）
-git clone https://github.com/goodie1972/libra-design
-cd libra-design/packages/go-cli
-go build -o libra.exe .
-./libra.exe init  # → tokens.css
+# 一键安装（独立仓库）
+go install github.com/goodie1972/go-cli/cmd/libra@latest
+libra init  # → tokens.css
+
+# 在 Go 项目中使用色值常量
+go get github.com/goodie1972/go-tokens
+```
+
+```go
+import "github.com/goodie1972/go-tokens"
+
+func main() {
+    upColor := tokens.ColorUp  // "#ef5350"
+    css := tokens.GenerateCSS()
+}
 ```
 
 ```templ
