@@ -16,6 +16,7 @@
 | **MCP Server** | ✅ Go 二进制 13ms | ❌ | ❌ | ❌ | ❌ |
 | **后端集成** | go get 零 npm | ❌ 需 npm | ❌ 需 npm | ❌ 需 Chromium | go get |
 | **CLI 安装** | `go install` 3 MB | `npx` ~200 MB | `npm` ~95 MB | `go install` 50MB+ | `templui` ~8 MB |
+| **单二进制应用** | **✅ 6.5 MB (go-server)** | ❌ | ❌ | ❌ (50-100 MB) | ❌ |
 | **npm audit 漏洞** | **0** (无 npm) | n/a | n/a | n/a | **0** (无 npm) |
 | **实测启动(最快)** | **13 ms** | — | — | 2-5 s | <10 ms |
 
@@ -29,6 +30,7 @@
 |------|------|--------|--------|
 | **`libra` (go-cli)** | **3.0 MB** | 1 | 零依赖 |
 | **`libra-mcp` (go-mcp)** | **3.3 MB** | 1 | 零依赖 |
+| **`libra-server` (go-server)** | **6.5 MB** | **1** | **零依赖（含 HTTP 服务 + 40 组件）** |
 | templUI (axzilla/templui) | ~8 MB | 1 | 零依赖 |
 | GoShip.it (haatos/goshipit) | ~7 MB | 1 | 零依赖 |
 | wailsjs 应用 | 50-100 MB | ~1000+ | 嵌入 Chromium |
@@ -195,4 +197,55 @@ go mod graph | wc -l
 Go 生态:   Libra 是唯一提供 MCP + 金融组件 + 单二进制 CLI 的设计系统
 Rust 生态:  Libra 是第一个为 Leptos 提供设计令牌 + 金融组件的 crate
 JS 生态:   Libra 组件数量达 shadcn 1.6 倍, 且有 22 个竞品零覆盖的金融组件
+```
+
+---
+
+## 七、单二进制能力 — Go 封装哲学
+
+> Go 的封装：一个二进制文件 = 完整金融 UI + HTTP 服务器 + 40 个组件 + CSS 生成
+
+### go-server 实测数据
+
+| 指标 | 数据 |
+|------|------|
+| **单二进制体积** | **6.5 MB** (strip 后) |
+| **组件数** | 40 go-templ 组件 |
+| **HTTP 服务** | 内嵌 net/http |
+| **JS 交互** | HTMX 2.0 |
+| **CSS** | 运行时由 go-tokens.GenerateCSS() 生成 |
+| **启动时间** | ~15 ms |
+| **部署** | 一个文件，scp 即上线 |
+| **构建命令** | `go build -o server.exe .` |
+
+### "封装"能力对标
+
+| 维度 | Libra go-server | wailsjs 应用 | Tauri (Rust) | npm SPA |
+|------|---------------|-------------|-------------|---------|
+| **交付物** | 1 个二进制 | 1 个二进制 + .dll | 1 个二进制 + 系统 WebView | 文件夹 + node_modules |
+| **部署** | `scp server.exe` | 解压安装器 | 一个文件 | `npm install + build` |
+| **体积** | **6.5 MB** | 50-100 MB | ~3 MB + WebView | 200+ MB |
+| **启动** | **15 ms** | 2-5 s | ~1 s | ~3 s |
+| **桌面** | 浏览器访问 | 原生窗口 | 原生窗口 | 浏览器 |
+| **离线** | ✅ 完全离线 | ✅ 完全离线 | ✅ 需 WebView | ❌ npm 需网络 |
+
+### 一句话
+
+> `libra-server.exe` 一个 6.5 MB 的文件 **= 部署一个带 40 个金融组件的完整仪表盘**。
+> 不需要 Node.js、不需要 `npm install`、不需要 Docker。——这就是 Go 的封装哲学。
+
+### 使用方式
+
+```bash
+# 1. 构建
+cd packages/go-server
+go build -ldflags="-w -s" -o server.exe .
+# 产出: server.exe (6.5 MB, 单文件)
+
+# 2. 部署
+scp server.exe user@server:~
+ssh user@server ./server.exe
+
+# 3. 访问
+open http://server:8080
 ```
