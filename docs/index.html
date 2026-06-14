@@ -173,6 +173,17 @@ h3{font-size:13px;font-weight:500;color:var(--text-secondary);margin-bottom:12px
 .demo-card .cd{font-size:13px;font-weight:500}
 .demo-card .cd.up{color:var(--up)}.demo-card .cd.dn{color:var(--down)}
 
+/* DEMO BUTTONS */
+.demo-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 18px;border-radius:var(--btn-radius);font-size:13px;font-family:var(--font-body);font-weight:500;cursor:pointer;transition:all .15s;border:none;text-decoration:none}
+.demo-btn[data-variant=default]{background:var(--accent);color:#fff}
+.demo-btn[data-variant=default]:hover{background:var(--accent-hover);transform:translateY(-1px)}
+.demo-btn[data-variant=secondary]{background:transparent;color:var(--text-primary);border:1px solid var(--border-main)}
+.demo-btn[data-variant=secondary]:hover{border-color:var(--accent);background:var(--bg-card-hover)}
+.demo-btn[data-variant=ghost]{background:transparent;color:var(--text-secondary)}
+.demo-btn[data-variant=ghost]:hover{color:var(--text-primary);background:var(--bg-card-hover)}
+.demo-btn[data-variant=danger]{background:var(--error);color:#fff}
+.demo-btn[data-variant=danger]:hover{opacity:.9;transform:translateY(-1px)}
+
 .demo-comp{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 
 /* TABLE DEMO */
