@@ -15,8 +15,8 @@
     "border-sub": "#242428",
     "border-input": "#2a2a30",
     "text-primary": "#e4e4e8",
-    "text-secondary": "#b0b0b6",
-    "text-tertiary": "#8a8a92",
+    "text-secondary": "#c0c0c6",
+    "text-tertiary": "#a0a0a8",
     "accent": "#52525b",
     "accent-hover": "#71717a",
     "grid-line": "#1e1e22"
