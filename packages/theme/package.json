@@ -1,7 +1,7 @@
 {
   "name": "@libra-design/theme",
-  "version": "0.1.2",
-  "description": "Libra 极致审美的设计语言，专为Go/Rust量身定制。双主题混合引擎 — gamma-aware 暗色↔亮色无缝过渡。",
+  "version": "0.1.3",
+  "description": "Libra \u6781\u81f4\u5ba1\u7f8e\u7684\u8bbe\u8ba1\u8bed\u8a00\uff0c\u4e13\u4e3aGo/Rust\u91cf\u8eab\u5b9a\u5236\u3002\u53cc\u4e3b\u9898\u6df7\u5408\u5f15\u64ce \u2014 gamma-aware \u6697\u8272\u2194\u4eae\u8272\u65e0\u7f1d\u8fc7\u6e21\u3002",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",

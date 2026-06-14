@@ -38,10 +38,10 @@
 | `@libra-design/react` | TS | 40+ React 金融组件 | `npm i @libra-design/react` |
 | `@libra-design/cli` | TS | `libra init/add` 命令 | `npx @libra-design/cli init` |
 | `@libra-design/mcp-server` | TS | MCP Server for AI | `npx @libra-design/mcp-server` |
-| `go-tokens` | **Go** | 色值常量 + LerpColor + CSS 生成 | `go get github.com/libra/go-tokens` |
-| `go-templ` | **Go** | 10 个金融 templ 组件 | `go get github.com/libra/go-templ` |
-| `go-cli` | **Go** | 单二进制 `libra init` CLI | `go install github.com/libra/go-cli/cmd/libra@latest` |
-| `go-mcp` | **Go** | MCP Server 单二进制 | `go install github.com/libra/go-mcp@latest` |
+| `go-tokens` | **Go** | 色值常量 + LerpColor + CSS 生成 | `git clone → go build` |
+| `go-templ` | **Go** | 40 个金融 templ 组件 | `git clone → go build` |
+| `go-cli` | **Go** | 单二进制 `libra init` CLI | `git clone → go build` |
+| `go-mcp` | **Go** | MCP Server 单二进制 | `git clone → go build` |
 | `rust-tokens` | **Rust** | crate，build.rs 读取 tokens JSON | Phase C |
 | `rust-leptos` | **Rust** | 10 个 Leptos 金融组件 | Phase C |
 
@@ -50,30 +50,11 @@
 ## Go 开发者 — 5 秒上手
 
 ```bash
-# 生成 tokens.css（单二进制，无 npm）
-go install github.com/libra/go-cli/cmd/libra@latest
-libra init
-
-# 在你的 Go 项目里直接用色值常量
-go get github.com/libra/go-tokens
-```
-
-```go
-import "github.com/libra/go-tokens"
-
-func main() {
-    // 涨跌色常量
-    upColor := tokens.ColorUp    // "#ef5350"
-    downColor := tokens.ColorDown // "#26a69a"
-
-    // 颜色插值
-    mid := tokens.LerpColor("#0c0c0e", "#ffffff", 0.5)
-    // → "#858586"
-
-    // 生成完整 tokens.css
-    css := tokens.GenerateCSS()
-    os.WriteFile("tokens.css", []byte(css), 0644)
-}
+# 克隆仓库并在本地构建（单二进制）
+git clone https://github.com/goodie1972/libra-design
+cd libra-design/packages/go-cli
+go build -o libra.exe .
+./libra.exe init  # → tokens.css
 ```
 
 ```templ

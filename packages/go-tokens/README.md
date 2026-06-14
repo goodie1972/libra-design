@@ -11,8 +11,12 @@ JS/TS 设计系统 50+ 竞品。Go 原生设计令牌——**零**。
 ## 安装
 
 ```bash
-go get github.com/libra/go-tokens
+git clone https://github.com/goodie1972/libra-design
+cd libra-design/packages/go-tokens
+go build ./...
 ```
+
+Go 包是 monorepo 子目录，使用 `replace` 指令引用本地依赖。`go build ./...` 在当前仓库根目录工作。
 
 ## API
 

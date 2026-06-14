@@ -9,7 +9,9 @@ npm CLI 需要 Node 运行时 + 200MB node_modules。Go 版本是单二进制，
 ## 安装
 
 ```bash
-go install github.com/libra/go-cli/cmd/libra@latest
+git clone https://github.com/goodie1972/libra-design
+cd libra-design/packages/go-cli
+go build -o libra.exe .
 ```
 
 ## 用法

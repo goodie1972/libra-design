@@ -1,7 +1,7 @@
 {
   "name": "@libra-design/react",
-  "version": "0.1.2",
-  "description": "Libra 极致审美的设计语言，专为Go/Rust量身定制。React 金融组件库 — 40+ 组件。",
+  "version": "0.1.3",
+  "description": "Libra \u6781\u81f4\u5ba1\u7f8e\u7684\u8bbe\u8ba1\u8bed\u8a00\uff0c\u4e13\u4e3aGo/Rust\u91cf\u8eab\u5b9a\u5236\u3002React \u91d1\u878d\u7ec4\u4ef6\u5e93 \u2014 40+ \u7ec4\u4ef6\u3002",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
