@@ -1,7 +1,7 @@
 {
   "name": "@libra-design/cli",
-  "version": "0.1.3",
-  "description": "Libra \u6781\u81f4\u5ba1\u7f8e\u7684\u8bbe\u8ba1\u8bed\u8a00\uff0c\u4e13\u4e3aGo/Rust\u91cf\u8eab\u5b9a\u5236\u3002CLI \u5de5\u5177 \u2014 init/add \u7ec4\u4ef6\u5b89\u88c5\u3002",
+  "version": "0.1.4",
+  "description": "Libra 极致审美的设计语言，专为Go/Rust量身定制。CLI 工具 — init/add 组件安装。Go 原生版单二进制 3MB。",
   "type": "module",
   "main": "./dist/index.js",
   "bin": {
@@ -19,7 +19,10 @@
     "libra",
     "cli",
     "design-system",
-    "components"
+    "components",
+    "go",
+    "shadcn",
+    "theme"
   ],
   "license": "MIT",
   "dependencies": {

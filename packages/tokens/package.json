@@ -1,7 +1,7 @@
 {
   "name": "@libra-design/tokens",
-  "version": "0.1.3",
-  "description": "Libra \u6781\u81f4\u5ba1\u7f8e\u7684\u8bbe\u8ba1\u8bed\u8a00\uff0c\u4e13\u4e3aGo/Rust\u91cf\u8eab\u5b9a\u5236\u3002\u8bbe\u8ba1\u4ee4\u724c \u2014 CSS \u53d8\u91cf + TypeScript \u7c7b\u578b\u5b9a\u4e49\u3002",
+  "version": "0.1.4",
+  "description": "Libra 极致审美的设计语言，专为Go/Rust量身定制。设计令牌 — 语言无关 JSON，Go/Rust/TS 三语言绑定。CSS 变量 + TypeScript 类型定义。",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -31,7 +31,7 @@
     "go",
     "rust",
     "multi-language",
-    "language-agnostic"
+    "theme"
   ],
   "license": "MIT",
   "devDependencies": {
