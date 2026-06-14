@@ -21,7 +21,7 @@ Go 包是 monorepo 子目录，使用 `replace` 指令引用本地依赖。`go b
 ## API
 
 ```go
-import "github.com/libra/go-tokens"
+import "github.com/goodie1972/go-tokens"
 
 // 语义色常量
 tokens.ColorUp      // "#ef5350" — 涨/阳线/正值

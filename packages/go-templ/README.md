@@ -31,7 +31,7 @@ Libra 设计系统 — Go templ 金融级组件库。
 package main
 
 import (
-    "github.com/libra/go-templ/components"
+    "github.com/goodie1972/go-templ/components"
     "net/http"
 )
 
@@ -59,4 +59,4 @@ go build ./...
 ## 依赖
 
 - `github.com/a-h/templ` — Go 模板引擎
-- `github.com/libra/go-tokens` — Libra 设计令牌
+- `github.com/goodie1972/go-tokens` — Libra 设计令牌

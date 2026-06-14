@@ -9,7 +9,7 @@ npm MCP Server 需要 `npx` + Node 运行时，冷启动 500ms+。Go 版本 10ms
 ## 安装
 
 ```bash
-go install github.com/libra/go-mcp@latest
+go install github.com/goodie1972/go-mcp@latest
 libra-mcp
 ```
 

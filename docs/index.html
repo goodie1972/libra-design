@@ -202,7 +202,7 @@ footer::before{content:'';position:absolute;top:0;left:50%;transform:translateX(
     <p class="sub fade-up delay-2">多语言金融设计系统 — 一份令牌，Go/Rust/TS 三语言消费。<br>不是又一个 React 组件库，是 Go/Rust 原生的设计系统。</p>
     <div class="hero-tags fade-up delay-3">
       <span class="tag go">🐹 Go Native</span>
-      <span class="tag rs">🦀 Rust Native</span>
+      <span class="tag rs">🦀 Rust (crates.io)</span>
       <span class="tag ts">📘 TypeScript</span>
     </div>
 
@@ -333,7 +333,7 @@ components.Calendar(<span class="num">2026</span>, <span class="num">6</span>, e
       <div class="qs"><span class="comment"># 一键安装（独立仓库）</span><br><span class="prompt">$ </span><span class="cmd">go install github.com/goodie1972/go-cli/cmd/libra@latest</span><br><span class="prompt">$ </span><span class="cmd">libra init</span><br><span class="out">✓ 已生成 tokens.css (4289 字节)</span><br><br><span class="comment">// 在代码中使用色值常量</span><br><span class="prompt">$ </span><span class="cmd">go get github.com/goodie1972/go-tokens</span><br><span class="kw">import</span> <span class="str">"github.com/goodie1972/go-tokens"</span><br>upColor := tokens.ColorUp  <span class="comment">// "#ef5350"</span></div>
     </div>
     <div class="lang-panel" id="lang-rust" style="display:none">
-      <div class="qs"><span class="comment">// Cargo.toml</span><br><span class="kw">libra-tokens</span> = { path = <span class="str">"../rust-tokens"</span> }<br><br><span class="kw">use</span> libra_tokens::colors::dark;<br><span class="kw">let</span> bg = dark::BG_ROOT;  <span class="comment">// "#0c0c0e"</span></div>
+      <div class="qs"><span class="comment"># 安装库</span><br><span class="prompt">$ </span><span class="cmd">cargo add libra-tokens</span><br><span class="prompt">$ </span><span class="cmd">cargo add libra-leptos</span><br><br><span class="comment">// 在代码中使用</span><br><span class="kw">use</span> libra_tokens::colors::dark;<br><span class="kw">let</span> bg = dark::BG_ROOT;  <span class="comment">// "#0c0c0e"</span></div>
     </div>
     <div class="lang-panel" id="lang-ts" style="display:none">
       <div class="qs"><span class="comment"># TS 用户</span><br><span class="prompt">$ </span><span class="cmd">npm install @libra-design/tokens @libra-design/react</span><br><br><span class="kw">import</span> <span class="str">'@libra-design/tokens/css'</span><br><span class="kw">import</span> { Button, StockTable } <span class="kw">from</span> <span class="str">'@libra-design/react'</span></div>

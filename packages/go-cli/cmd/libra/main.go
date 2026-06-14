@@ -3,7 +3,7 @@
 //   libra init         生成 tokens.css（当前目录）
 //   libra init --out path/to/tokens.css  指定输出路径
 //
-// 安装: go install github.com/libra/go-cli/cmd/libra@latest
+// 安装: git clone 后本地 go build
 package main
 
 import (

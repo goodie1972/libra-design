@@ -4,7 +4,7 @@
 >
 > JS/TS 设计系统是红海（50+ 竞品），Go/Rust 领域目前是**零**。Libra 从这里打进去。
 
-**Libra** 是一套面向金融数据的多语言设计系统：**Go 原生色值引擎 + Rust 原生组件（开发中）+ React 组件库 + MCP AI 集成**。核心资产不是 React 组件——是**色值体系 + 双主题混合引擎 + 金融审美**，抽离为语言无关的 JSON，从 Go 单点突破。
+**Libra** 是一套面向金融数据的多语言设计系统：**Go 原生色值引擎 + Rust 原生组件 + React 组件库 + MCP AI 集成**。核心资产不是 React 组件——是**色值体系 + 双主题混合引擎 + 金融审美**，抽离为语言无关的 JSON，从 Go 单点突破。
 
 ```
 设计令牌 JSON（语言无关）
@@ -42,8 +42,8 @@
 | `go-templ` | **Go** | 40 个金融 templ 组件 | `go get github.com/goodie1972/go-templ` |
 | `go-cli` | **Go** | 单二进制 `libra init` CLI | `go install github.com/goodie1972/go-cli/cmd/libra@latest` |
 | `go-mcp` | **Go** | MCP Server 单二进制 | `go install github.com/goodie1972/go-mcp@latest` |
-| `rust-tokens` | **Rust** | crate 色值+主题+CSS | `cargo add libra-tokens` |
-| `rust-leptos` | **Rust** | 20 个 Leptos 组件 | `cargo add libra-leptos` |
+| `libra-tokens` | **Rust** | crate 色值+主题+CSS | `cargo add libra-tokens` ✅ crates.io |
+| `libra-leptos` | **Rust** | 20 个 Leptos 组件 | `cargo add libra-leptos` ✅ crates.io |
 
 ---
 
@@ -76,14 +76,20 @@ func main() {
 
 ---
 
-## Rust 开发者 — 即将到来
+## Rust 开发者 — 5 秒上手
+
+```bash
+cargo add libra-tokens
+cargo add libra-leptos
+```
 
 ```rust
-// Phase C 预览
-use libra_tokens::colors::DARK_ENDPOINT;
-use libra_tokens::lerp_color;
+use libra_tokens::colors::dark;
+use libra_tokens::lerp::lerp_color;
 
-let bg = lerp_color(&DARK_ENDPOINT.bg_root, &LIGHT_ENDPOINT.bg_root, 0.7);
+let bg = dark::BG_ROOT;  // "#0c0c0e"
+let mid = lerp_color("#0c0c0e", "#ffffff", 0.5);
+// → "#858586"
 ```
 
 ---
