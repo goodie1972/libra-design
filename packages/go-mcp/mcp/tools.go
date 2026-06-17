@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/libra/go-tokens"
+	"github.com/goodie1972/go-tokens"
 )
 
 // registerTools 返回所有可用工具的定义

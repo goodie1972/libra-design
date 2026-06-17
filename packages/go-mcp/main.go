@@ -16,7 +16,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/libra/go-mcp/mcp"
+	"github.com/goodie1972/go-mcp/mcp"
 )
 
 func main() {

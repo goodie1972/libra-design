@@ -1,0 +1,133 @@
+package components
+
+import "fmt"
+
+// ThemeEntry 主题条目 — 用于 ThemeSwitcher 的选项。
+type ThemeEntry struct {
+	ID     string
+	Name   string
+	Accent string // 主题 accent 色预览
+}
+
+// 10 套默认主题选项。
+var DefaultThemes = []ThemeEntry{
+	{ID: "terminal", Name: "Terminal", Accent: "#f59e0b"},
+	{ID: "ticker", Name: "Ticker", Accent: "#3b82f6"},
+	{ID: "vault", Name: "Vault", Accent: "#d4a853"},
+	{ID: "margin", Name: "Margin", Accent: "#ef4444"},
+	{ID: "ledger", Name: "Ledger", Accent: "#1e40af"},
+	{ID: "prospectus", Name: "Prospectus", Accent: "#1a1a2e"},
+	{ID: "arbitrage", Name: "Arbitrage", Accent: "#7c3aed"},
+	{ID: "circuit", Name: "Circuit", Accent: "#22c55e"},
+	{ID: "candlestick", Name: "Candlestick", Accent: "#f8b500"},
+	{ID: "clearing", Name: "Clearing", Accent: "#52525b"},
+}
+
+// ThemeSwitcher 主题切换器 — 10 套命名金融主题 + 亮暗模式。
+//
+// 纯 HTML 渲染，无内联 JS。交互通过 name 属性配合服务端路由（HTMX/form submit）处理。
+// 前端 JS 交互可用 data-theme-id / data-mix 属性挂载。
+//
+// 参数:
+//   - activeTheme: 当前激活主题 ID
+//   - mixPercent:  混合比例 0-100
+//   - themes:      可选主题列表，空时用 DefaultThemes
+//   - attrs:       额外 HTML 属性
+templ ThemeSwitcher(activeTheme string, mixPercent int, themes []ThemeEntry, attrs templ.Attributes) {
+	if len(themes) == 0 {
+		themes = DefaultThemes
+	}
+	<style>
+		.libra-theme-switcher{display:flex;flex-direction:column;gap:var(--space-3);font-family:var(--font-body)}
+		.libra-theme-switcher__section{display:flex;flex-direction:column;gap:var(--space-2)}
+		.libra-theme-switcher__label{font-size:11px;font-weight:var(--weight-medium);letter-spacing:.05em;text-transform:uppercase;color:var(--text-tertiary)}
+		.libra-theme-switcher__palette{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--space-1)}
+		.libra-theme-switcher__swatch{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;border:none;background:none;cursor:pointer;padding:0;transition:all .15s ease}
+		.libra-theme-switcher__swatch:hover{transform:scale(1.1)}
+		.libra-theme-switcher__swatch--active{box-shadow:0 0 0 2px var(--accent),0 0 0 3px var(--bg-card)}
+		.libra-theme-switcher__color{width:16px;height:16px;border-radius:4px}
+		.libra-theme-switcher__active-name{font-size:11px;color:var(--text-tertiary)}
+		.libra-theme-switcher__modes{display:inline-flex;border-radius:8px;background:var(--bg-card-hover);padding:2px}
+		.libra-theme-switcher__mode{border-radius:6px;padding:6px 12px;font-size:12px;font-weight:var(--weight-medium);border:none;background:none;color:var(--text-secondary);cursor:pointer;transition:all .15s ease}
+		.libra-theme-switcher__mode:hover{color:var(--text-primary)}
+		.libra-theme-switcher__mode--active{background:var(--accent);color:#fff;box-shadow:0 1px 2px rgba(0,0,0,.1)}
+		.libra-theme-switcher__slider-row{display:flex;align-items:center;gap:var(--space-2);padding-top:var(--space-1)}
+		.libra-theme-switcher__slider-label{font-size:10px;color:var(--text-tertiary)}
+		.libra-theme-switcher__slider{flex:1;height:6px;border-radius:3px;background:var(--border-main);appearance:none;cursor:pointer}
+		.libra-theme-switcher__slider::-webkit-slider-thumb{appearance:none;width:14px;height:14px;border-radius:50%;background:var(--accent);border:2px solid var(--accent);box-shadow:0 1px 2px rgba(0,0,0,.15)}
+		.libra-theme-switcher__percent{font-size:10px;font-variant-numeric:tabular-nums;color:var(--text-secondary);min-width:28px;text-align:right}
+	</style>
+	<div class="libra-theme-switcher" { attrs... }>
+		<!-- 色板选择 -->
+		<div class="libra-theme-switcher__section">
+			<span class="libra-theme-switcher__label">Theme</span>
+			<div class="libra-theme-switcher__palette">
+				for _, t := range themes {
+					<button
+						class={ "libra-theme-switcher__swatch", templ.KV("libra-theme-switcher__swatch--active", t.ID == activeTheme) }
+						type="submit"
+						name="libra-theme"
+						value={ t.ID }
+						title={ t.Name }
+						aria-label={ t.Name }
+						aria-pressed={ fmt.Sprintf("%t", t.ID == activeTheme) }
+						data-theme-id={ t.ID }
+					>
+						<span class="libra-theme-switcher__color" style={ fmt.Sprintf("background-color:%s", t.Accent) }></span>
+					</button>
+				}
+			</div>
+			<span class="libra-theme-switcher__active-name">{ activeTheme }</span>
+		</div>
+
+		<!-- 亮暗模式 -->
+		<div class="libra-theme-switcher__section">
+			<span class="libra-theme-switcher__label">Mode</span>
+			<div class="libra-theme-switcher__modes" role="radiogroup" aria-label="Theme brightness mode">
+				<button
+					class={ "libra-theme-switcher__mode", templ.KV("libra-theme-switcher__mode--active", mixPercent == 0) }
+					type="submit"
+					name="libra-mix"
+					value="0"
+					role="radio"
+					aria-checked={ fmt.Sprintf("%t", mixPercent == 0) }
+				>🌙 暗色</button>
+				<button
+					class={ "libra-theme-switcher__mode", templ.KV("libra-theme-switcher__mode--active", mixPercent == 70) }
+					type="submit"
+					name="libra-mix"
+					value="70"
+					role="radio"
+					aria-checked={ fmt.Sprintf("%t", mixPercent == 70) }
+				>🌤️ 柔光</button>
+				<button
+					class={ "libra-theme-switcher__mode", templ.KV("libra-theme-switcher__mode--active", mixPercent == 100) }
+					type="submit"
+					name="libra-mix"
+					value="100"
+					role="radio"
+					aria-checked={ fmt.Sprintf("%t", mixPercent == 100) }
+				>☀️ 亮色</button>
+			</div>
+		</div>
+
+		<!-- 混合滑块 -->
+		<div class="libra-theme-switcher__section">
+			<div class="libra-theme-switcher__slider-row">
+				<span class="libra-theme-switcher__slider-label">dark</span>
+				<input
+					class="libra-theme-switcher__slider"
+					type="range"
+					min="0"
+					max="100"
+					name="libra-mix"
+					value={ fmt.Sprintf("%d", mixPercent) }
+					aria-label="Theme brightness slider"
+					data-libra-mix-slider="true"
+				/>
+				<span class="libra-theme-switcher__slider-label">light</span>
+				<span class="libra-theme-switcher__percent">{ fmt.Sprintf("%d%%", mixPercent) }</span>
+			</div>
+		</div>
+	</div>
+}

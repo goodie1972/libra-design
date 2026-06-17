@@ -189,3 +189,5 @@ export { Segmented } from './components/segmented';
 export type { SegmentedProps, SegmentedOption } from './components/segmented';
 export { DatePicker } from './components/datepicker';
 export type { DatePickerProps } from './components/datepicker';
+export { ThemeSwitcher } from './components/theme-switcher';
+export type { ThemeSwitcherProps, ThemeOption } from './components/theme-switcher';

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/libra/go-tokens"
+	"github.com/goodie1972/go-tokens"
 )
 
 // registerResources 返回所有可用资源

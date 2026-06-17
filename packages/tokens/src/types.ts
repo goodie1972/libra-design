@@ -83,6 +83,39 @@ export const LIGHT_ENDPOINT = {
 /** 所有主题变量名 */
 export type ThemeVariable = keyof typeof DARK_ENDPOINT;
 
+/** 单个端点的 17 色集合（与 tokens/themes/*.json 的 dark/light 结构对齐） */
+export type ThemeColors = typeof DARK_ENDPOINT;
+
+/**
+ * 完整主题定义 — 与 `tokens/themes/*.json` 一一对应。
+ * `dark`/`light` 的 key 集合与 DARK_ENDPOINT/LIGHT_ENDPOINT 完全一致。
+ */
+export interface Theme {
+  id: string;
+  name: string;
+  description: string;
+  dark: ThemeColors;
+  light: ThemeColors;
+}
+
+/**
+ * 10 套命名主题 ID — 与 Rust `list_themes()` 输出、`tokens/themes/*.json` 文件名一致。
+ *
+ * 注意：`ThemeId`（控制端点配色）与 `ThemePreset`（控制暗→亮混合比例）是正交概念。
+ * 二者可叠加：`applyTheme('terminal')` 切换端点，`applyMix(0.7)` 在该主题暗亮之间过渡。
+ */
+export type ThemeId =
+  | 'terminal'
+  | 'ticker'
+  | 'vault'
+  | 'margin'
+  | 'ledger'
+  | 'prospectus'
+  | 'arbitrage'
+  | 'circuit'
+  | 'candlestick'
+  | 'clearing';
+
 /** 字号定义 */
 export const FONT_SIZES = {
   xs: 10,

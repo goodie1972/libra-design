@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/libra/go-tokens"
+	"github.com/goodie1972/go-tokens"
 )
 
 func main() {

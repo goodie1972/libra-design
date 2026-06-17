@@ -15,8 +15,8 @@ import (
 	"net/http"
 
 	"github.com/a-h/templ"
-	components "github.com/libra/go-templ/components"
-	tokens "github.com/libra/go-tokens"
+	components "github.com/goodie1972/go-templ/components"
+	tokens "github.com/goodie1972/go-tokens"
 )
 
 var version = "0.1.0"

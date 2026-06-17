@@ -1,0 +1,43 @@
+{
+  "id": "circuit",
+  "name": "Circuit",
+  "description": "80年代CRT终端风格。绿字黑底荧光感——为复古极客和调试而生。",
+  "dark": {
+    "bg-root": "#0a0a0a",
+    "bg-main": "#0a0a0a",
+    "bg-sidebar": "#0a0a0a",
+    "bg-card": "#0e0e0e",
+    "bg-card-hover": "#141414",
+    "bg-input": "#141414",
+    "bg-chart": "#0a0a0a",
+    "bg-sub-panel": "#0e0e0e",
+    "border-main": "#1a3a1a",
+    "border-sub": "#0e1e0e",
+    "border-input": "#1a3a1a",
+    "text-primary": "#22c55e",
+    "text-secondary": "#16a34a",
+    "text-tertiary": "#6ee89a",
+    "accent": "#22c55e",
+    "accent-hover": "#6ee89a",
+    "grid-line": "#0e1e0e"
+  },
+  "light": {
+    "bg-root": "#f0faf0",
+    "bg-main": "#f0faf0",
+    "bg-sidebar": "#f0faf0",
+    "bg-card": "#ffffff",
+    "bg-card-hover": "#e8f5e8",
+    "bg-input": "#dcefdc",
+    "bg-chart": "#f0faf0",
+    "bg-sub-panel": "#ffffff",
+    "border-main": "#b0d0b0",
+    "border-sub": "#c8e0c8",
+    "border-input": "#b0d0b0",
+    "text-primary": "#0a1a0a",
+    "text-secondary": "#2a5a2a",
+    "text-tertiary": "#2a5a2a",
+    "accent": "#15803d",
+    "accent-hover": "#166534",
+    "grid-line": "#dcefdc"
+  }
+}

@@ -1,5 +1,5 @@
 import { DARK_ENDPOINT, LIGHT_ENDPOINT } from '@libra-design/tokens';
-import type { ThemeMix, ThemePreset, ThemeVariable } from '@libra-design/tokens';
+import type { ThemeMix, ThemePreset, ThemeVariable, ThemeColors } from '@libra-design/tokens';
 
 /**
  * libra 双主题混合引擎
@@ -7,12 +7,31 @@ import type { ThemeMix, ThemePreset, ThemeVariable } from '@libra-design/tokens'
  * 在暗色（t=0）和亮色（t=1）之间无缝过渡。
  * 三种预置模式：暗色(0) / 柔光(0.7) / 亮色(1) + 手调滑块。
  *
+ * 支持与命名主题正交组合：先 applyTheme('ticker') 切换色板，
+ * 再 applyMix(0.3) 调整亮暗比例。
+ *
  * @example
  * ```ts
- * import { applyMix } from '@libra-design/theme';
- * applyMix(0.7); // 柔光模式
+ * import { applyMix, applyTheme } from '@libra-design/theme';
+ * applyTheme('terminal'); // 切换到 Bloomberg Terminal 风格
+ * applyMix(0.7);          // 柔光模式
  * ```
  */
+
+/** 当前暗色端点（默认为 tokens 中的 DARK_ENDPOINT，可被 applyTheme 替换） */
+let _dark: ThemeColors = DARK_ENDPOINT;
+
+/** 当前亮色端点（默认为 tokens 中的 LIGHT_ENDPOINT，可被 applyTheme 替换） */
+let _light: ThemeColors = LIGHT_ENDPOINT;
+
+/**
+ * 替换混合引擎使用的暗色/亮色端点。
+ * 由 themes.ts 的 applyTheme() 调用。
+ */
+export function _setEndpoints(dark: ThemeColors, light: ThemeColors): void {
+  _dark = dark;
+  _light = light;
+}
 
 /* ============================================================
    颜色插值
@@ -105,31 +124,31 @@ export function applyMix(t: ThemeMix, root: HTMLElement = document.documentEleme
   const bt = borderCurve(t); // 边框中等加速
 
   // 背景系 — gamma 插值
-  style.setProperty('--bg-root',       lerpColor(DARK_ENDPOINT['bg-root'],       LIGHT_ENDPOINT['bg-root'],       t));
-  style.setProperty('--bg-main',       lerpColor(DARK_ENDPOINT['bg-main'],       LIGHT_ENDPOINT['bg-main'],       t));
-  style.setProperty('--bg-sidebar',    lerpColor(DARK_ENDPOINT['bg-sidebar'],    LIGHT_ENDPOINT['bg-sidebar'],    t));
-  style.setProperty('--bg-card',       lerpColor(DARK_ENDPOINT['bg-card'],       LIGHT_ENDPOINT['bg-card'],       t));
-  style.setProperty('--bg-card-hover', lerpColor(DARK_ENDPOINT['bg-card-hover'], LIGHT_ENDPOINT['bg-card-hover'], t));
-  style.setProperty('--bg-input',      lerpColor(DARK_ENDPOINT['bg-input'],      LIGHT_ENDPOINT['bg-input'],      t));
-  style.setProperty('--bg-chart',      lerpColor(DARK_ENDPOINT['bg-chart'],      LIGHT_ENDPOINT['bg-chart'],      t));
-  style.setProperty('--bg-sub-panel',  lerpColor(DARK_ENDPOINT['bg-sub-panel'],  LIGHT_ENDPOINT['bg-sub-panel'],  t));
+  style.setProperty('--bg-root',       lerpColor(_dark['bg-root'],       _light['bg-root'],       t));
+  style.setProperty('--bg-main',       lerpColor(_dark['bg-main'],       _light['bg-main'],       t));
+  style.setProperty('--bg-sidebar',    lerpColor(_dark['bg-sidebar'],    _light['bg-sidebar'],    t));
+  style.setProperty('--bg-card',       lerpColor(_dark['bg-card'],       _light['bg-card'],       t));
+  style.setProperty('--bg-card-hover', lerpColor(_dark['bg-card-hover'], _light['bg-card-hover'], t));
+  style.setProperty('--bg-input',      lerpColor(_dark['bg-input'],      _light['bg-input'],      t));
+  style.setProperty('--bg-chart',      lerpColor(_dark['bg-chart'],      _light['bg-chart'],      t));
+  style.setProperty('--bg-sub-panel',  lerpColor(_dark['bg-sub-panel'],  _light['bg-sub-panel'],  t));
 
   // 边框系 — gamma + 平方加速
-  style.setProperty('--border-main',   lerpColor(DARK_ENDPOINT['border-main'],   LIGHT_ENDPOINT['border-main'],   bt));
-  style.setProperty('--border-sub',    lerpColor(DARK_ENDPOINT['border-sub'],    LIGHT_ENDPOINT['border-sub'],    bt));
-  style.setProperty('--border-input',  lerpColor(DARK_ENDPOINT['border-input'],  LIGHT_ENDPOINT['border-input'],  bt));
+  style.setProperty('--border-main',   lerpColor(_dark['border-main'],   _light['border-main'],   bt));
+  style.setProperty('--border-sub',    lerpColor(_dark['border-sub'],    _light['border-sub'],    bt));
+  style.setProperty('--border-input',  lerpColor(_dark['border-input'],  _light['border-input'],  bt));
 
   // 文字系 — linear RGB + 五次方加速（关键：避免灰色带）
-  style.setProperty('--text-primary',  lerpLinear(DARK_ENDPOINT['text-primary'],   LIGHT_ENDPOINT['text-primary'],   tt));
-  style.setProperty('--text-secondary',lerpLinear(DARK_ENDPOINT['text-secondary'], LIGHT_ENDPOINT['text-secondary'], tt));
-  style.setProperty('--text-tertiary', lerpLinear(DARK_ENDPOINT['text-tertiary'],  LIGHT_ENDPOINT['text-tertiary'],  tt));
+  style.setProperty('--text-primary',  lerpLinear(_dark['text-primary'],   _light['text-primary'],   tt));
+  style.setProperty('--text-secondary',lerpLinear(_dark['text-secondary'], _light['text-secondary'], tt));
+  style.setProperty('--text-tertiary', lerpLinear(_dark['text-tertiary'],  _light['text-tertiary'],  tt));
 
   // 交互色
-  style.setProperty('--accent',        lerpLinear(DARK_ENDPOINT.accent,        LIGHT_ENDPOINT.accent,        tt));
-  style.setProperty('--accent-hover',  lerpLinear(DARK_ENDPOINT['accent-hover'], LIGHT_ENDPOINT['accent-hover'], tt));
+  style.setProperty('--accent',        lerpLinear(_dark.accent,        _light.accent,        tt));
+  style.setProperty('--accent-hover',  lerpLinear(_dark['accent-hover'], _light['accent-hover'], tt));
 
   // 图表辅助
-  style.setProperty('--grid-line',     lerpColor(DARK_ENDPOINT['grid-line'], LIGHT_ENDPOINT['grid-line'], bt));
+  style.setProperty('--grid-line',     lerpColor(_dark['grid-line'], _light['grid-line'], bt));
   style.setProperty('--vol-up',        `rgba(239,83,80,${(0.5 + t * 0.1).toFixed(2)})`);
   style.setProperty('--vol-down',      `rgba(38,166,154,${(0.5 + t * 0.1).toFixed(2)})`);
 
