@@ -8,6 +8,11 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/test-setup.ts'],
+    // 强制 NODE_ENV=test，确保 React 加载 development 构建（含 act 函数）。
+    // 修复当 shell 全局 NODE_ENV=production 时 react.act 报 "is not a function" 的问题。
+    env: {
+      NODE_ENV: 'test',
+    },
   },
   resolve: {
     alias: {
