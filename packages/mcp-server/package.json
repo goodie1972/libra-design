@@ -1,6 +1,6 @@
 {
   "name": "@libra-design/mcp-server",
-  "version": "0.1.4",
+  "version": "0.1.8",
   "description": "Libra 极致审美的设计语言，专为Go/Rust量身定制。MCP Server — AI Agent (Claude/Cursor) 设计令牌消费。Go 二进制 13ms。",
   "type": "module",
   "main": "./dist/index.js",

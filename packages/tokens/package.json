@@ -1,6 +1,6 @@
 {
   "name": "@libra-design/tokens",
-  "version": "0.1.4",
+  "version": "0.1.8",
   "description": "Libra 极致审美的设计语言，专为Go/Rust量身定制。设计令牌 — 语言无关 JSON，Go/Rust/TS 三语言绑定。CSS 变量 + TypeScript 类型定义。",
   "type": "module",
   "main": "./dist/index.js",

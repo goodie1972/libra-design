@@ -1,6 +1,6 @@
 [package]
 name = "libra-tokens"
-version = "0.1.0"
+version = "0.1.8"
 edition = "2021"
 description = "Libra Design System — Rust design tokens: color constants, lerp, CSS generation, theme loading. The Rust-native counterpart of go-tokens."
 license = "MIT"
