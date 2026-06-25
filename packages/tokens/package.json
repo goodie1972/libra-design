@@ -18,8 +18,8 @@
     "dist"
   ],
   "scripts": {
-    "dev": "vite build --watch && cp src/index.css dist/index.css",
-    "build": "vite build && cp src/index.css dist/index.css",
+    "dev": "vite build --watch",
+    "build": "vite build",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
