@@ -1,0 +1,39 @@
+package components
+
+type TypePillProps struct {
+	Type string // "signal" | "script" | "bot"
+}
+
+func typePillConfig(t string) (label, bg, text string) {
+	switch t {
+	case "signal":
+		return "signal", "rgba(74, 108, 247, 0.08)", "#4a6cf7"
+	case "script":
+		return "script", "rgba(124, 58, 237, 0.1)", "#7c3aed"
+	case "bot":
+		return "bot", "rgba(6, 182, 212, 0.12)", "#06b6d4"
+	default:
+		return t, "rgba(158, 158, 158, 0.1)", "#9e9e9e"
+	}
+}
+
+templ TypePill(typeStr string, attrs templ.Attributes) {
+	<style>
+		.libra-typepill {
+			display: inline-flex;
+			align-items: center;
+			border-radius: 4px;
+			padding: 2px 8px;
+			font-size: 10px;
+			font-weight: var(--weight-medium);
+			line-height: 1.3;
+		}
+	</style>
+	<span 
+		class="libra-typepill"
+		style={ fmt.Sprintf("background-color: %s; color: %s;", typePillConfig(typeStr)) }
+		{ attrs... }
+	>
+		{ typePillConfig(typeStr) }
+	</span>
+}

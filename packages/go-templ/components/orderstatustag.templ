@@ -1,0 +1,39 @@
+package components
+
+func orderStatusTagConfig(status string) (label, bg, text string) {
+	switch status {
+	case "pending":
+		return "待处理", "rgba(251, 188, 4, 0.1)", "#fbbc04"
+	case "processing":
+		return "处理中", "rgba(74, 108, 247, 0.1)", "#4a6cf7"
+	case "completed":
+		return "已完成", "rgba(52, 168, 83, 0.1)", "#34a853"
+	case "failed":
+		return "失败", "rgba(234, 67, 53, 0.1)", "#ea4335"
+	case "cancelled":
+		return "已取消", "rgba(158, 158, 158, 0.1)", "#9e9e9e"
+	default:
+		return status, "rgba(158, 158, 158, 0.1)", "#9e9e9e"
+	}
+}
+
+templ OrderStatusTag(status string, attrs templ.Attributes) {
+	<style>
+		.libra-status {
+			display: inline-flex;
+			align-items: center;
+			border-radius: 4px;
+			padding: 2px 8px;
+			font-size: 11px;
+			font-weight: var(--weight-medium);
+			line-height: 1.3;
+		}
+	</style>
+	<span 
+		class="libra-status"
+		style={ fmt.Sprintf("background-color: %s; color: %s;", orderStatusTagConfig(status)) }
+		{ attrs... }
+	>
+		{ orderStatusTagConfig(status) }
+	</span>
+}

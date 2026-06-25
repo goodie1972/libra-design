@@ -1,0 +1,108 @@
+package components
+
+type WinRateCardProps struct {
+	WinRate   float64
+	WinCount  int
+	LossCount int
+}
+
+templ WinRateCard(props WinRateCardProps, attrs templ.Attributes) {
+	<style>
+		.libra-winrate {
+			background-color: var(--bg-card);
+			border: 1px solid var(--border-main);
+			border-radius: var(--card-radius);
+			padding: var(--space-4);
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+		.libra-winrate__ring {
+			position: relative;
+			width: 120px;
+			height: 120px;
+			margin-bottom: var(--space-3);
+		}
+		.libra-winrate__svg {
+			width: 100%;
+			height: 100%;
+			transform: rotate(-90deg);
+		}
+		.libra-winrate__center {
+			position: absolute;
+			inset: 0;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+		}
+		.libra-winrate__percent {
+			font-family: var(--font-mono);
+			font-size: 24px;
+			font-weight: var(--weight-bold);
+			color: var(--up);
+			font-variant-numeric: tabular-nums;
+		}
+		.libra-winrate__counts {
+			display: flex;
+			align-items: center;
+			gap: var(--space-3);
+			font-size: var(--text-sm);
+		}
+		.libra-winrate__divider {
+			width: 1px;
+			height: 12px;
+			background-color: var(--border-sub);
+		}
+		.libra-winrate__count {
+			display: flex;
+			align-items: center;
+			gap: 4px;
+		}
+		.libra-winrate__win {
+			font-family: var(--font-mono);
+			font-weight: var(--weight-semibold);
+			color: var(--up);
+			font-variant-numeric: tabular-nums;
+		}
+		.libra-winrate__loss {
+			font-family: var(--font-mono);
+			font-weight: var(--weight-semibold);
+			color: var(--down);
+			font-variant-numeric: tabular-nums;
+		}
+		.libra-winrate__label {
+			color: var(--text-tertiary);
+		}
+	</style>
+	<div class="libra-winrate" { attrs... }>
+		<div class="libra-winrate__ring">
+			<svg class="libra-winrate__svg" viewBox="0 0 100 100">
+				<circle cx="50" cy="50" r="45" fill="none" stroke="var(--border-main)" stroke-width="8" />
+				<circle 
+					cx="50" cy="50" r="45" 
+					fill="none" 
+					stroke="var(--up)" 
+					stroke-width="8" 
+					stroke-linecap="round"
+					stroke-dasharray="282.743"
+					stroke-dashoffset={ fmt.Sprintf("%.3f", 282.743 - (props.WinRate / 100.0) * 282.743) }
+				/>
+			</svg>
+			<div class="libra-winrate__center">
+				<span class="libra-winrate__percent">{ fmt.Sprintf("%.1f%%", props.WinRate) }</span>
+			</div>
+		</div>
+		<div class="libra-winrate__counts">
+			<div class="libra-winrate__count">
+				<span class="libra-winrate__win">{ props.WinCount }</span>
+				<span class="libra-winrate__label">盈</span>
+			</div>
+			<div class="libra-winrate__divider"></div>
+			<div class="libra-winrate__count">
+				<span class="libra-winrate__loss">{ props.LossCount }</span>
+				<span class="libra-winrate__label">亏</span>
+			</div>
+		</div>
+	</div>
+}

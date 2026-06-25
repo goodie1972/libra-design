@@ -1,0 +1,143 @@
+package components
+
+import "math"
+
+type DrawdownCardProps struct {
+	MaxDrawdown      float64
+	CurrentDrawdown  float64
+	RecoveryDays     int
+}
+
+func drawdownSeverity(dd float64) string {
+	abs := math.Abs(dd)
+	if abs > 20 {
+		return "high"
+	} else if abs > 10 {
+		return "medium"
+	}
+	return "low"
+}
+
+func drawdownLabel(severity string) string {
+	switch severity {
+	case "high":
+		return "高风险"
+	case "medium":
+		return "中风险"
+	default:
+		return "低风险"
+	}
+}
+
+templ DrawdownCard(props DrawdownCardProps, attrs templ.Attributes) {
+	<style>
+		.libra-dd {
+			background-color: var(--bg-card);
+			border: 1px solid var(--border-main);
+			border-radius: var(--card-radius);
+			padding: var(--space-4);
+		}
+		.libra-dd__header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: var(--space-3);
+		}
+		.libra-dd__label {
+			font-size: var(--text-sm);
+			color: var(--text-secondary);
+		}
+		.libra-dd__badge {
+			padding: 2px 8px;
+			border-radius: 4px;
+			font-size: 10px;
+			font-weight: var(--weight-medium);
+		}
+		.libra-dd__badge--high {
+			background-color: rgba(234, 67, 53, 0.1);
+			color: var(--error);
+		}
+		.libra-dd__badge--medium {
+			background-color: rgba(251, 188, 4, 0.1);
+			color: var(--warning);
+		}
+		.libra-dd__badge--low {
+			background-color: rgba(52, 168, 83, 0.1);
+			color: var(--success);
+		}
+		.libra-dd__value {
+			font-family: var(--font-mono);
+			font-size: 32px;
+			font-weight: var(--weight-bold);
+			color: var(--down);
+			font-variant-numeric: tabular-nums;
+			margin-bottom: var(--space-4);
+		}
+		.libra-dd__row {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			font-size: var(--text-xs);
+			margin-bottom: var(--space-2);
+		}
+		.libra-dd__row-label {
+			color: var(--text-tertiary);
+		}
+		.libra-dd__row-value {
+			font-family: var(--font-mono);
+			font-weight: var(--weight-medium);
+			font-variant-numeric: tabular-nums;
+		}
+		.libra-dd__row-value--down { color: var(--down); }
+		.libra-dd__row-value--normal { color: var(--text-primary); }
+		.libra-dd__progress {
+			height: 8px;
+			border-radius: 4px;
+			background-color: var(--bg-card-hover);
+			overflow: hidden;
+			margin-top: var(--space-4);
+		}
+		.libra-dd__progress-bar {
+			height: 100%;
+			border-radius: 4px;
+			transition: width 0.3s ease;
+		}
+		.libra-dd__progress-bar--high { background-color: var(--error); }
+		.libra-dd__progress-bar--medium { background-color: var(--warning); }
+		.libra-dd__progress-bar--low { background-color: var(--success); }
+	</style>
+	<div class="libra-dd" { attrs... }>
+		<div class="libra-dd__header">
+			<span class="libra-dd__label">最大回撤</span>
+			if drawdownSeverity(props.MaxDrawdown) == "high" {
+				<span class="libra-dd__badge libra-dd__badge--high">{ drawdownLabel(drawdownSeverity(props.MaxDrawdown)) }</span>
+			} else if drawdownSeverity(props.MaxDrawdown) == "medium" {
+				<span class="libra-dd__badge libra-dd__badge--medium">{ drawdownLabel(drawdownSeverity(props.MaxDrawdown)) }</span>
+			} else {
+				<span class="libra-dd__badge libra-dd__badge--low">{ drawdownLabel(drawdownSeverity(props.MaxDrawdown)) }</span>
+			}
+		</div>
+		<div class="libra-dd__value">{ fmt.Sprintf("%.2f%%", props.MaxDrawdown) }</div>
+		if props.CurrentDrawdown != 0 {
+			<div class="libra-dd__row">
+				<span class="libra-dd__row-label">当前回撤</span>
+				<span class="libra-dd__row-value libra-dd__row-value--down">{ fmt.Sprintf("%.2f%%", props.CurrentDrawdown) }</span>
+			</div>
+		}
+		if props.RecoveryDays > 0 {
+			<div class="libra-dd__row">
+				<span class="libra-dd__row-label">恢复天数</span>
+				<span class="libra-dd__row-value libra-dd__row-value--normal">{ props.RecoveryDays } 天</span>
+			</div>
+		}
+		<div class="libra-dd__progress">
+			if drawdownSeverity(props.MaxDrawdown) == "high" {
+				<div class="libra-dd__progress-bar libra-dd__progress-bar--high" style={ fmt.Sprintf("width: %.1f%%", math.Min(math.Abs(props.MaxDrawdown), 100)) }></div>
+			} else if drawdownSeverity(props.MaxDrawdown) == "medium" {
+				<div class="libra-dd__progress-bar libra-dd__progress-bar--medium" style={ fmt.Sprintf("width: %.1f%%", math.Min(math.Abs(props.MaxDrawdown), 100)) }></div>
+			} else {
+				<div class="libra-dd__progress-bar libra-dd__progress-bar--low" style={ fmt.Sprintf("width: %.1f%%", math.Min(math.Abs(props.MaxDrawdown), 100)) }></div>
+			}
+		</div>
+	</div>
+}

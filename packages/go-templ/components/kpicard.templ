@@ -1,0 +1,113 @@
+package components
+
+type KPICardProps struct {
+	Icon         string
+	Label        string
+	Value        string
+	Unit         string
+	Trend        string // "up" | "down" | "flat"
+	SubValue     string
+	SubLabel     string
+	AccentColor  string
+}
+
+func kpiCardTrendClass(trend string) string {
+	switch trend {
+	case "up":
+		return "libra-kpi__subvalue--up"
+	case "down":
+		return "libra-kpi__subvalue--down"
+	default:
+		return "libra-kpi__subvalue--flat"
+	}
+}
+
+templ KPICard(props KPICardProps, attrs templ.Attributes) {
+	<style>
+		.libra-kpi {
+			background-color: var(--bg-card);
+			border: 1px solid var(--border-main);
+			border-radius: var(--card-radius);
+			padding: var(--space-4);
+			font-family: var(--font-body);
+		}
+		.libra-kpi__header {
+			display: flex;
+			align-items: center;
+			gap: var(--space-2);
+			margin-bottom: var(--space-3);
+		}
+		.libra-kpi__icon {
+			width: 32px;
+			height: 32px;
+			border-radius: 8px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background-color: var(--bg-card-hover);
+			font-size: 18px;
+		}
+		.libra-kpi__label {
+			font-size: var(--text-sm);
+			color: var(--text-secondary);
+		}
+		.libra-kpi__value-row {
+			display: flex;
+			align-items: baseline;
+			gap: 4px;
+		}
+		.libra-kpi__value {
+			font-family: var(--font-mono);
+			font-size: 28px;
+			font-weight: var(--weight-bold);
+			color: var(--text-primary);
+			font-variant-numeric: tabular-nums;
+		}
+		.libra-kpi__unit {
+			font-size: var(--text-base);
+			color: var(--text-tertiary);
+		}
+		.libra-kpi__sub {
+			display: flex;
+			align-items: center;
+			gap: var(--space-2);
+			margin-top: var(--space-2);
+			font-size: var(--text-xs);
+		}
+		.libra-kpi__subvalue {
+			font-family: var(--font-mono);
+			font-weight: var(--weight-medium);
+			font-variant-numeric: tabular-nums;
+		}
+		.libra-kpi__subvalue--up { color: var(--up); }
+		.libra-kpi__subvalue--down { color: var(--down); }
+		.libra-kpi__subvalue--flat { color: var(--flat); }
+		.libra-kpi__sublabel {
+			color: var(--text-tertiary);
+		}
+	</style>
+	<div class="libra-kpi" { attrs... }>
+		<div class="libra-kpi__header">
+			if props.Icon != "" {
+				<div class="libra-kpi__icon">{ props.Icon }</div>
+			}
+			<span class="libra-kpi__label">{ props.Label }</span>
+		</div>
+		<div class="libra-kpi__value-row">
+			<span class="libra-kpi__value">{ props.Value }</span>
+			if props.Unit != "" {
+				<span class="libra-kpi__unit">{ props.Unit }</span>
+			}
+		</div>
+		if props.SubValue != "" || props.SubLabel != "" {
+			<div class="libra-kpi__sub">
+				if props.SubValue != "" {
+					<span class={ "libra-kpi__subvalue", kpiCardTrendClass(props.Trend) }>{ props.SubValue }</span>
+				}
+				if props.SubLabel != "" {
+					<span class="libra-kpi__sublabel">{ props.SubLabel }</span>
+				}
+			</div>
+		}
+	</div>
+}

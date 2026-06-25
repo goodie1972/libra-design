@@ -1,0 +1,121 @@
+package components
+
+import "math"
+
+type ProfitFactorCardProps struct {
+	ProfitFactor float64
+	GrossProfit  float64
+	GrossLoss    float64
+}
+
+func profitFactorStatus(pf float64) string {
+	if pf >= 1.5 {
+		return "优秀"
+	} else if pf >= 1.0 {
+		return "一般"
+	}
+	return "较差"
+}
+
+func profitFactorIsGood(pf float64) bool {
+	return pf >= 1.5
+}
+
+templ ProfitFactorCard(props ProfitFactorCardProps, attrs templ.Attributes) {
+	<style>
+		.libra-pf {
+			background-color: var(--bg-card);
+			border: 1px solid var(--border-main);
+			border-radius: var(--card-radius);
+			padding: var(--space-4);
+		}
+		.libra-pf__header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: var(--space-3);
+		}
+		.libra-pf__label {
+			font-size: var(--text-sm);
+			color: var(--text-secondary);
+		}
+		.libra-pf__badge {
+			padding: 2px 8px;
+			border-radius: 4px;
+			font-size: 10px;
+			font-weight: var(--weight-medium);
+		}
+		.libra-pf__badge--good {
+			background-color: rgba(239, 83, 80, 0.08);
+			color: var(--up);
+		}
+		.libra-pf__badge--warn {
+			background-color: rgba(251, 188, 4, 0.1);
+			color: var(--warning);
+		}
+		.libra-pf__value-row {
+			display: flex;
+			align-items: baseline;
+			gap: 4px;
+			margin-bottom: var(--space-4);
+		}
+		.libra-pf__value {
+			font-family: var(--font-mono);
+			font-size: 32px;
+			font-weight: var(--weight-bold);
+			font-variant-numeric: tabular-nums;
+		}
+		.libra-pf__value--good { color: var(--up); }
+		.libra-pf__value--warn { color: var(--warning); }
+		.libra-pf__value--bad { color: var(--down); }
+		.libra-pf__unit {
+			font-size: var(--text-base);
+			color: var(--text-tertiary);
+		}
+		.libra-pf__row {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			font-size: var(--text-xs);
+			margin-bottom: var(--space-2);
+		}
+		.libra-pf__row-label {
+			color: var(--text-tertiary);
+		}
+		.libra-pf__row-value {
+			font-family: var(--font-mono);
+			font-weight: var(--weight-medium);
+			font-variant-numeric: tabular-nums;
+		}
+		.libra-pf__row-value--up { color: var(--up); }
+		.libra-pf__row-value--down { color: var(--down); }
+	</style>
+	<div class="libra-pf" { attrs... }>
+		<div class="libra-pf__header">
+			<span class="libra-pf__label">盈亏比</span>
+			if profitFactorIsGood(props.ProfitFactor) {
+				<span class="libra-pf__badge libra-pf__badge--good">{ profitFactorStatus(props.ProfitFactor) }</span>
+			} else {
+				<span class="libra-pf__badge libra-pf__badge--warn">{ profitFactorStatus(props.ProfitFactor) }</span>
+			}
+		</div>
+		<div class="libra-pf__value-row">
+			if props.ProfitFactor >= 1.5 {
+				<span class="libra-pf__value libra-pf__value--good">{ fmt.Sprintf("%.2f", props.ProfitFactor) }</span>
+			} else if props.ProfitFactor >= 1.0 {
+				<span class="libra-pf__value libra-pf__value--warn">{ fmt.Sprintf("%.2f", props.ProfitFactor) }</span>
+			} else {
+				<span class="libra-pf__value libra-pf__value--bad">{ fmt.Sprintf("%.2f", props.ProfitFactor) }</span>
+			}
+			<span class="libra-pf__unit">:1</span>
+		</div>
+		<div class="libra-pf__row">
+			<span class="libra-pf__row-label">总盈利</span>
+			<span class="libra-pf__row-value libra-pf__row-value--up">+${ fmt.Sprintf("%.0f", props.GrossProfit) }</span>
+		</div>
+		<div class="libra-pf__row">
+			<span class="libra-pf__row-label">总亏损</span>
+			<span class="libra-pf__row-value libra-pf__row-value--down">-${ fmt.Sprintf("%.0f", props.GrossLoss) }</span>
+		</div>
+	</div>
+}

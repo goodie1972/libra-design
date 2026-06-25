@@ -191,3 +191,21 @@ export { DatePicker } from './components/datepicker';
 export type { DatePickerProps } from './components/datepicker';
 export { ThemeSwitcher } from './components/theme-switcher';
 export type { ThemeSwitcherProps, ThemeOption } from './components/theme-switcher';
+
+// Phase 10 — Quant Components
+export { KPICard } from './components/quant/kpi-card';
+export type { KPICardProps } from './components/quant/kpi-card';
+export { WinRateCard } from './components/quant/win-rate-card';
+export type { WinRateCardProps } from './components/quant/win-rate-card';
+export { ProfitFactorCard } from './components/quant/profit-factor-card';
+export type { ProfitFactorCardProps } from './components/quant/profit-factor-card';
+export { DrawdownCard } from './components/quant/drawdown-card';
+export type { DrawdownCardProps } from './components/quant/drawdown-card';
+export { StrategyRankingCard } from './components/quant/strategy-ranking-card';
+export type { StrategyRankingCardProps } from './components/quant/strategy-ranking-card';
+export { TypePill } from './components/quant/type-pill';
+export type { TypePillProps } from './components/quant/type-pill';
+export { ExchangeTag } from './components/quant/exchange-tag';
+export type { ExchangeTagProps } from './components/quant/exchange-tag';
+export { OrderStatusTag } from './components/quant/order-status-tag';
+export type { OrderStatusTagProps } from './components/quant/order-status-tag';

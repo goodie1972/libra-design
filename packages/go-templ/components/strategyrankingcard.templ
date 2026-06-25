@@ -1,0 +1,148 @@
+package components
+
+import "math"
+
+type StrategyRankingCardProps struct {
+	Rank         int
+	Name         string
+	Type         string // "signal" | "script" | "bot"
+	PnL          float64
+	PnLPercent   float64
+	TotalTrades  int
+	ProfitFactor float64
+	MaxPnL       float64
+}
+
+func strategyRankingIsPositive(pnl float64) bool {
+	return pnl >= 0
+}
+
+func strategyRankingProgress(pnl, maxPnL float64) float64 {
+	if maxPnL == 0 {
+		return 0
+	}
+	return math.Min((math.Abs(pnl) / maxPnL) * 100, 100)
+}
+
+templ StrategyRankingCard(props StrategyRankingCardProps, attrs templ.Attributes) {
+	<style>
+		.libra-ranking {
+			background-color: var(--bg-card);
+			border: 1px solid var(--border-main);
+			border-radius: var(--card-radius);
+			padding: var(--space-4);
+		}
+		.libra-ranking__header {
+			display: flex;
+			align-items: center;
+			gap: var(--space-3);
+			margin-bottom: var(--space-3);
+		}
+		.libra-ranking__rank {
+			width: 24px;
+			height: 24px;
+			border-radius: 4px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 11px;
+			font-weight: var(--weight-bold);
+		}
+		.libra-ranking__rank--top {
+			background-color: var(--accent);
+			color: white;
+		}
+		.libra-ranking__rank--normal {
+			background-color: var(--bg-card-hover);
+			color: var(--text-secondary);
+		}
+		.libra-ranking__name {
+			font-size: var(--text-base);
+			font-weight: var(--weight-medium);
+			color: var(--text-primary);
+			flex: 1;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+		.libra-ranking__pnl-row {
+			display: flex;
+			align-items: center;
+			gap: var(--space-2);
+			margin-bottom: var(--space-3);
+		}
+		.libra-ranking__pnl {
+			font-family: var(--font-mono);
+			font-size: 18px;
+			font-weight: var(--weight-bold);
+			font-variant-numeric: tabular-nums;
+		}
+		.libra-ranking__pnl--up { color: var(--up); }
+		.libra-ranking__pnl--down { color: var(--down); }
+		.libra-ranking__pnl-percent {
+			font-family: var(--font-mono);
+			font-size: var(--text-sm);
+			font-variant-numeric: tabular-nums;
+		}
+		.libra-ranking__progress {
+			height: 8px;
+			border-radius: 4px;
+			background-color: var(--bg-card-hover);
+			overflow: hidden;
+			margin-bottom: var(--space-3);
+		}
+		.libra-ranking__progress-bar {
+			height: 100%;
+			border-radius: 4px;
+			transition: width 0.3s ease;
+		}
+		.libra-ranking__progress-bar--up { background-color: var(--up); }
+		.libra-ranking__progress-bar--down { background-color: var(--down); }
+		.libra-ranking__footer {
+			display: flex;
+			align-items: center;
+			gap: var(--space-4);
+			font-size: var(--text-xs);
+			color: var(--text-tertiary);
+		}
+		.libra-ranking__stat {
+			font-family: var(--font-mono);
+			font-weight: var(--weight-medium);
+			font-variant-numeric: tabular-nums;
+			color: var(--text-secondary);
+		}
+	</style>
+	<div class="libra-ranking" { attrs... }>
+		<div class="libra-ranking__header">
+			if props.Rank <= 3 {
+				<div class="libra-ranking__rank libra-ranking__rank--top">{ props.Rank }</div>
+			} else {
+				<div class="libra-ranking__rank libra-ranking__rank--normal">{ props.Rank }</div>
+			}
+			<span class="libra-ranking__name">{ props.Name }</span>
+			@TypePill(props.Type, nil)
+		</div>
+		<div class="libra-ranking__pnl-row">
+			if strategyRankingIsPositive(props.PnL) {
+				<span class="libra-ranking__pnl libra-ranking__pnl--up">+${ fmt.Sprintf("%.0f", props.PnL) }</span>
+				<span class="libra-ranking__pnl-percent libra-ranking__pnl--up">(+{ fmt.Sprintf("%.1f%%", props.PnLPercent) })</span>
+			} else {
+				<span class="libra-ranking__pnl libra-ranking__pnl--down">-${ fmt.Sprintf("%.0f", math.Abs(props.PnL)) }</span>
+				<span class="libra-ranking__pnl-percent libra-ranking__pnl--down">({ fmt.Sprintf("%.1f%%", props.PnLPercent) })</span>
+			}
+		</div>
+		<div class="libra-ranking__progress">
+			if strategyRankingIsPositive(props.PnL) {
+				<div class="libra-ranking__progress-bar libra-ranking__progress-bar--up" style={ fmt.Sprintf("width: %.1f%%", strategyRankingProgress(props.PnL, props.MaxPnL)) }></div>
+			} else {
+				<div class="libra-ranking__progress-bar libra-ranking__progress-bar--down" style={ fmt.Sprintf("width: %.1f%%", strategyRankingProgress(props.PnL, props.MaxPnL)) }></div>
+			}
+		</div>
+		<div class="libra-ranking__footer">
+			<span>总计: <span class="libra-ranking__stat">{ props.TotalTrades }</span> 笔</span>
+			if props.ProfitFactor > 0 {
+				<span>PF: <span class="libra-ranking__stat">{ fmt.Sprintf("%.2f", props.ProfitFactor) }</span></span>
+			}
+		</div>
+	</div>
+}

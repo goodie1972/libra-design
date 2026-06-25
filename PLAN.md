@@ -217,12 +217,13 @@ print('ALL OK')
 ## 四、执行时间线
 
 ```
-Phase 4 ████████████████████  主题系统 (已完成)
-Phase 5 ████████████████████  表单闭环 (已完成)
-Phase 6 ████████████████████  反馈+展示 (已完成)
-Phase 7 ████████████████████  金融深度 (已完成)
-Phase 8 ████████████████████  Rust (已完成, crates.io 发布)
-Phase 9 ░░░░░░░░░░░░░░░░░░░░  文档站 / API reference / 二次开发接口 (计划中)
+Phase 4  ████████████████████  主题系统 (已完成)
+Phase 5  ████████████████████  表单闭环 (已完成)
+Phase 6  ████████████████████  反馈+展示 (已完成)
+Phase 7  ████████████████████  金融深度 (已完成)
+Phase 8  ████████████████████  Rust (已完成, crates.io 发布)
+Phase 9  ░░░░░░░░░░░░░░░░░░░░  文档站 / API reference / 二次开发接口 (计划中)
+Phase 10 ░░░░░░░░░░░░░░░░░░░░  量化组件库 (借鉴 QuantDinger, 明日开干)
 
 交付节奏: 每 Phase 完成后:
   1. npm test (133 tests)
@@ -235,7 +236,153 @@ Phase 9 ░░░░░░░░░░░░░░░░░░░░  文档站 
 
 ---
 
-## 五、竞品对标
+## 六、Phase 10 — 量化组件库（借鉴 QuantDinger）
+
+**灵感来源**: QuantDinger Vue 前端（`D:\bobo\python\quantdinger-vue-main`）经过生产验证的量化交易界面组件
+
+**背景**: Libra 当前 64 React 组件 + 40 Go 组件覆盖通用场景，但缺少**量化交易专属**的高频组件。QuantDinger 已有完整的生产级实现，可直接借鉴其设计语言并用 Libra 色值体系重新实现。
+
+### 6.1 目标
+
+```
+React 组件:  64 → 72 (+8 量化组件)
+Go 组件:    40 → 48 (+8 量化组件)
+```
+
+### 6.2 组件矩阵
+
+| # | 组件名 | 说明 | 对标 QuantDinger | 优先级 |
+|---|--------|------|------------------|--------|
+| 1 | `KPICard` | 通用 KPI 数值卡片，含 label/value/trend 三段式 | Dashboard KPI Card | 🔴 P0 |
+| 2 | `WinRateCard` | 胜率专用卡，SVG 环形进度 + 盈亏笔数 | `kpi-win-rate` | 🔴 P0 |
+| 3 | `ProfitFactorCard` | 盈亏比专用卡 | `kpi-profit-factor` | 🔴 P0 |
+| 4 | `DrawdownCard` | 最大回撤专用卡，负值红色语义 | `kpi-drawdown` | 🟡 P1 |
+| 5 | `StrategyRankingCard` | 策略排行卡，排名徽章+横向PnL进度条 | `ranking-card` | 🔴 P0 |
+| 6 | `TypePill` | 策略类型标签，signal/script/bot 三色语义 | `type-pill` | 🟡 P1 |
+| 7 | `ExchangeTag` | 交易所标识，Binance/OKX/Bitget 官方配色 | `exchange-tag` | 🟡 P1 |
+| 8 | `OrderStatusTag` | 订单状态，pending/processing/completed/failed 五态 | `status-tag` | 🟡 P1 |
+
+### 6.3 设计规格
+
+#### KPICard (通用)
+```tsx
+interface KPICardProps {
+  icon: string;          // Ant Design icon type
+  label: string;         // "胜率" / "盈亏比" / "总权益"
+  value: number | string;
+  unit?: string;         // "%" / ":1" / "$"
+  trend?: 'up' | 'down' | 'flat';
+  subValue?: string;      // 副标题数值
+  subLabel?: string;      // 副标题标签
+  accentColor?: string;   // 来自 Libra 语义色
+}
+
+// 布局结构
+┌─────────────────────┐
+│ [Icon]  Label        │  32x32 icon bg + label
+│                      │
+│  $  12,500.00       │  28px/700 mono font
+│  +$ 234 (+3.2%)     │  12px, 涨=Libra.up 跌=Libra.down
+└─────────────────────┘
+  border-radius: Libra.radii.card (10px)
+  border: 1px solid Libra.borderMain
+  box-shadow: none
+```
+
+#### WinRateCard (环形进度)
+```tsx
+// SVG 环形进度条，内嵌胜率数值
+┌──────────────┐
+│  [SVG Ring]  │   stroke-dasharray 动态计算
+│   73.5%      │   环形进度填充 Libra.up
+│  156/62     │   盈/亏 笔数
+└──────────────┘
+```
+
+#### StrategyRankingCard
+```tsx
+┌────────────────────────────────────────────┐
+│ [1] RSI-Overlay  [signal]  +$1,234  67% │  rank badge + name + type pill + pnl
+│ [████████████████████░░░░░░░░░░░░░░░░░] │  横向进度条，最大PnL为基准
+│      Total: 156笔  PF: 2.1                 │
+└────────────────────────────────────────────┘
+```
+
+#### TypePill (三色语义)
+```tsx
+// 色值来自 Libra design-tokens.json
+type: 'signal'  →  bg: "rgba(74, 108, 247, 0.08)"  text: accent blue
+type: 'script'  →  bg: "rgba(124, 58, 237, 0.1)"   text: accent purple
+type: 'bot'     →  bg: "rgba(6, 182, 212, 0.12)"   text: accent cyan
+```
+
+#### ExchangeTag
+```tsx
+// 交易所配色
+exchange: 'binance' →  bg: "rgba(240, 185, 11, 0.1)"  text: "#f0b90b"
+exchange: 'okx'      →  bg: "rgba(131, 106, 238, 0.1)" text: "#836aee"
+exchange: 'bitget'   →  bg: "rgba(0, 212, 255, 0.1)"   text: "#00d4ff"
+exchange: 'bybit'    →  bg: "rgba(255, 165, 0, 0.1)"   text: "#ffa500"
+```
+
+#### OrderStatusTag
+```tsx
+status: 'pending'    →  bg: "rgba(251, 188, 4, 0.1)"   text: warning
+status: 'processing' →  bg: "rgba(74, 108, 247, 0.1)"  text: accent
+status: 'completed'  →  bg: "rgba(52, 168, 83, 0.1)"   text: success
+status: 'failed'     →  bg: "rgba(234, 67, 53, 0.1)"   text: error
+status: 'cancelled'  →  bg: "rgba(158, 158, 158, 0.1)" text: flat
+```
+
+### 6.4 交付文件
+
+```
+packages/react/src/components/quant/
+├── kpi-card.tsx           # 通用 KPI 卡片
+├── win-rate-card.tsx       # 胜率环形
+├── profit-factor-card.tsx  # 盈亏比
+├── drawdown-card.tsx      # 最大回撤
+├── strategy-ranking-card.tsx  # 策略排行
+├── type-pill.tsx          # 策略类型标签
+├── exchange-tag.tsx       # 交易所标识
+├── order-status-tag.tsx   # 订单状态
+└── index.ts               # 导出全部
+
+packages/react/src/    → 改: storybook story
+packages/go-templ/     → 全部 8 组件 templ 版本
+```
+
+### 6.5 验收标准
+
+```bash
+# 1. 组件数量
+ls packages/react/src/components/quant/ | wc -l   # 应 = 9 (含 index.ts)
+
+# 2. Storybook 渲染
+npm -w packages/react run storybook &
+# 截图人工验收 8 个组件
+
+# 3. Go 编译
+cd packages/go-templ && templ generate ./...
+
+# 4. Libra 主题覆盖
+# 用 terminal 主题渲染全部 8 组件，确认涨跌语义色正确
+```
+
+### 6.6 时间估算
+
+| 组件 | 预估工时 |
+|------|---------|
+| KPICard + WinRateCard + ProfitFactorCard + DrawdownCard | 4h |
+| StrategyRankingCard | 2h |
+| TypePill + ExchangeTag + OrderStatusTag | 2h |
+| Go templ 版本（8 组件） | 3h |
+| Storybook 截图 + 文档 | 1h |
+| **合计** | **12h（1.5 人天）** |
+
+---
+
+## 七、竞品对标
 
 | 维度 | shadcn/ui | Ant Design | templUI | wailsjs | **Libra Design** |
 |------|-----------|------------|---------|---------|-----------------|
@@ -251,7 +398,7 @@ Phase 9 ░░░░░░░░░░░░░░░░░░░░  文档站 
 
 ---
 
-## 六、每次交付验证命令
+## 八、每次交付验证命令
 
 ```bash
 # 全量构建
