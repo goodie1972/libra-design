@@ -9,6 +9,7 @@ export interface CommandItem {
 export interface CommandProps {
   items: CommandItem[];
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export function Command({ items, className }: CommandProps) {

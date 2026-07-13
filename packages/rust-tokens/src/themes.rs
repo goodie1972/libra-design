@@ -1,10 +1,12 @@
-// 主题管理 — 从 ../../tokens/themes/*.json 加载主题。
+// 主题管理 — 从 build.rs 编译时生成的 EMBEDDED_THEMES 加载。
 //
-// 主题文件路径在编译期由 CARGO_MANIFEST_DIR 确定，
-// 运行时通过 filesystem 加载。
+// 主题 JSON 在编译期通过 build.rs 的 include_str! 嵌入二进制，
+// 运行时零外部文件依赖。与 Go tokens.ListThemes() 行为一致。
 
 use serde::Deserialize;
-use std::path::PathBuf;
+
+// build.rs 生成的编译时嵌入主题数据
+include!(concat!(env!("OUT_DIR"), "/themes_generated.rs"));
 
 // ---- 数据结构 ----
 
@@ -43,67 +45,24 @@ pub struct Theme {
     pub light: Colors,
 }
 
-// ---- 内部辅助 ----
-
-/// 获取 themes 目录的绝对路径。
-/// 编译时由 CARGO_MANIFEST_DIR 确定 crate 根目录，再相对寻址。
-fn themes_dir() -> PathBuf {
-    let manifest = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    let result = manifest.join("../../tokens/themes/");
-    result
-}
-
-/// 列出所有 .json 主题文件。
-fn theme_files() -> Vec<PathBuf> {
-    let dir = themes_dir();
-    let mut files: Vec<PathBuf> = match std::fs::read_dir(&dir) {
-        Ok(entries) => entries
-            .filter_map(|e| e.ok())
-            .map(|e| e.path())
-            .filter(|p| p.extension().map(|ext| ext == "json").unwrap_or(false))
-            .collect(),
-        Err(e) => {
-            eprintln!("themes: 无法读取主题目录 {:?}: {}", dir, e);
-            Vec::new()
-        }
-    };
-    files.sort();
-    files
-}
-
 // ---- 公开 API ----
 
-/// 返回所有可用主题 ID 列表。
+/// 返回所有可用主题 ID 列表（按字母序）。
 pub fn list_themes() -> Vec<String> {
-    theme_files()
-        .iter()
-        .filter_map(|p| {
-            p.file_stem()
-                .and_then(|s| s.to_str())
-                .map(|s| s.to_string())
-        })
-        .collect()
+    EMBEDDED_THEMES.iter().map(|(id, _)| id.to_string()).collect()
 }
 
 /// 按 ID 获取主题。找不到返回 None。
 pub fn get_theme(id: &str) -> Option<Theme> {
-    let dir = themes_dir();
-    let path = dir.join(format!("{}.json", id));
-    if !path.exists() {
-        return None;
-    }
-    let content = std::fs::read_to_string(&path).ok()?;
-    serde_json::from_str(&content).ok()
+    let (_, content) = EMBEDDED_THEMES.iter().find(|(key, _)| *key == id)?;
+    serde_json::from_str(content).ok()
 }
 
 /// 返回所有主题。
 pub fn all_themes() -> Vec<Theme> {
-    theme_files()
+    EMBEDDED_THEMES
         .iter()
-        .filter_map(|p| {
-            let content = std::fs::read_to_string(p).ok()?;
-            serde_json::from_str(&content).ok()
-        })
+        .filter_map(|(_, content)| serde_json::from_str(content).ok())
         .collect()
 }
 

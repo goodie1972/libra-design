@@ -1,17 +1,21 @@
 import { cn } from '../lib/utils';
 
+/** 盘口档位 — 价格 / 挂单量 / 累计量 */
 export interface BoardLevel {
   price: number;
   volume: number;
   total?: number;
 }
 
+/** 盘口五档组件属性 */
 export interface MarketBoardProps {
   bids: BoardLevel[];
   asks: BoardLevel[];
   className?: string;
+  style?: React.CSSProperties;
 }
 
+/** 盘口五档组件。展示买卖五档报价与挂单量。 */
 export function MarketBoard({ bids, asks, className }: MarketBoardProps) {
   const maxVol = Math.max(
     ...bids.map((b) => b.volume),

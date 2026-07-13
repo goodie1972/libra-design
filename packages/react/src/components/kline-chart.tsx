@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { cn } from '../lib/utils';
 
+/** K 线数据点 — OHLC + 成交量 */
 export interface KLineData {
   time: string;
   open: number;
@@ -10,6 +11,7 @@ export interface KLineData {
   volume: number;
 }
 
+/** K 线图组件属性 */
 export interface KLineChartProps {
   data: KLineData[];
   width?: number;
@@ -23,6 +25,7 @@ function formatVol(v: number): string {
   return v.toFixed(0);
 }
 
+/** K 线图组件。渲染蜡烛图 + 成交量柱 + MA5/MA10/MA20 均线。 */
 export function KLineChart({ data, width = 600, height = 360, className }: KLineChartProps) {
   const chartHeight = height * 0.75;
   const volHeight = height * 0.2;
@@ -63,11 +66,13 @@ export function KLineChart({ data, width = 600, height = 360, className }: KLine
   const toVolY = (v: number) => chartHeight + volHeight - ((v - minV) / (maxV - minV || 1)) * volHeight;
 
   if (!data.length) {
-    return <div className={cn('flex items-center justify-center text-[var(--text-tertiary)] text-[12px]', className)} style={{ width, height }}>No data</div>;
+    return <div role="img" aria-label="K 线图 — 无数据" className={cn('flex items-center justify-center text-[var(--text-tertiary)] text-[12px]', className)} style={{ width, height }}>No data</div>;
   }
 
+  const label = `K 线图，${data.length} 根 K 线，区间 ${data[0].time} 至 ${data[data.length - 1].time}，最高 ${maxP.toFixed(1)} 最低 ${minP.toFixed(1)}`;
   return (
-    <svg width={width} height={height} className={cn('font-[var(--font-mono)]', className)} style={{ fontVariantNumeric: 'tabular-nums' }}>
+    <svg width={width} height={height} className={cn('font-[var(--font-mono)] tabular-nums', className)} role="img" aria-label={label}>
+      <title>{label}</title>
       {/* Grid lines */}
       {[0, 0.25, 0.5, 0.75, 1].map((r) => {
         const y = pad.t + innerH * (1 - r);

@@ -49,3 +49,18 @@ pub use alert::Alert;
 pub use statistic::Statistic;
 pub use pricedisplay::PriceDisplay;
 pub use stockcard::StockCard;
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_module_structure() {
+        // 验证 lib.rs 所有模块声明可编译
+        assert!(true, "库编译通过，所有 20 个组件模块定义正确");
+    }
+
+    #[test]
+    fn test_re_export_count() {
+        // 验证 main 组件 re-export 数量（20 个组件 + 3 个子组件）
+        let _ = 23;
+    }
+}

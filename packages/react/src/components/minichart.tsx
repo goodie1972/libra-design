@@ -1,5 +1,6 @@
 import { cn } from '../lib/utils';
 
+/** 迷你走势图属性 */
 export interface MiniChartProps {
   data: number[];
   trend?: 'up' | 'down';
@@ -8,6 +9,7 @@ export interface MiniChartProps {
   className?: string;
 }
 
+/** 迷你走势图组件。渲染内联 SVG 小火花图，自动识别涨跌趋势色。 */
 export function MiniChart({
   data,
   trend,
@@ -18,6 +20,8 @@ export function MiniChart({
   if (data.length < 2) {
     return (
       <div
+        role="img"
+        aria-label="迷你走势图 — 无数据"
         className={cn('inline-flex items-center justify-center', className)}
         style={{ width, height }}
       >
@@ -48,6 +52,7 @@ export function MiniChart({
 
   const d = `M${points.join(' L')}`;
 
+  const label = `迷你走势图，${data.length} 个数据点，趋势 ${autoTrend === 'up' ? '上涨' : '下跌'}`;
   return (
     <svg
       className={cn('inline-block overflow-visible', className)}
@@ -55,7 +60,10 @@ export function MiniChart({
       height={height}
       viewBox={`0 0 ${width} ${height}`}
       xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-label={label}
     >
+      <title>{label}</title>
       {/* Gradient fill under the line */}
       <defs>
         <linearGradient id={`mini-grad-${autoTrend}-${data.length}`} x1="0" y1="0" x2="0" y2="1">

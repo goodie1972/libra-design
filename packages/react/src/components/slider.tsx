@@ -1,5 +1,6 @@
 import { cn } from '../lib/utils';
-import { useCallback, useRef } from 'react';
+import { useRef } from 'react';
+import { useControllableState } from '../lib/hooks/useControllableState';
 
 export interface SliderProps {
   value?: number;
@@ -22,22 +23,23 @@ export function Slider({
   disabled,
   className,
 }: SliderProps) {
-  const isControlled = controlledValue !== undefined;
+  const [value, setValue] = useControllableState({
+    value: controlledValue,
+    defaultValue,
+    onChange,
+  });
   const trackRef = useRef<HTMLDivElement>(null);
 
-  const pct = ((isControlled ? controlledValue : defaultValue) - min) / (max - min) * 100;
+  const pct = ((value - min) / (max - min)) * 100;
 
-  const handleChange = useCallback(
-    (clientX: number) => {
-      if (!trackRef.current || disabled) return;
-      const rect = trackRef.current.getBoundingClientRect();
-      const raw = (clientX - rect.left) / rect.width;
-      const clamped = Math.max(0, Math.min(1, raw));
-      const stepped = Math.round((min + clamped * (max - min)) / step) * step;
-      onChange?.(Math.max(min, Math.min(max, stepped)));
-    },
-    [min, max, step, onChange, disabled],
-  );
+  const handleChange = (clientX: number) => {
+    if (!trackRef.current || disabled) return;
+    const rect = trackRef.current.getBoundingClientRect();
+    const raw = (clientX - rect.left) / rect.width;
+    const clamped = Math.max(0, Math.min(1, raw));
+    const stepped = Math.round((min + clamped * (max - min)) / step) * step;
+    setValue(Math.max(min, Math.min(max, stepped)));
+  };
 
   return (
     <div
@@ -49,12 +51,11 @@ export function Slider({
       role="slider"
       aria-valuemin={min}
       aria-valuemax={max}
-      aria-valuenow={isControlled ? controlledValue : defaultValue}
+      aria-valuenow={value}
       tabIndex={disabled ? -1 : 0}
       onKeyDown={(e) => {
-        const val = isControlled ? controlledValue! : defaultValue;
         const dir = e.key === 'ArrowRight' || e.key === 'ArrowUp' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowDown' ? -1 : 0;
-        if (dir) onChange?.(Math.max(min, Math.min(max, val + dir * step)));
+        if (dir) setValue(Math.max(min, Math.min(max, value + dir * step)));
       }}
     >
       <div

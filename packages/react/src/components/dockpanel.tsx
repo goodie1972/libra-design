@@ -11,6 +11,7 @@ export interface DockPanelProps {
   panels: DockPanelItem[];
   defaultActive?: string;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export function DockPanel({

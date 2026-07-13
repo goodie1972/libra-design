@@ -1,5 +1,8 @@
 import { cn } from '../lib/utils';
-import { useEffect, useCallback } from 'react';
+import { useRef } from 'react';
+import { useEscapeKey } from '../lib/hooks/useEscapeKey';
+import { useFocusTrap } from '../lib/hooks/useFocusTrap';
+import { Portal } from './portal';
 
 export interface DrawerProps {
   open: boolean;
@@ -25,26 +28,13 @@ const closedStyles: Record<string, string> = {
 };
 
 export function Drawer({ open, onClose, title, placement = 'right', children, className }: DrawerProps) {
-  const handleEscape = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    },
-    [onClose],
-  );
+  const panelRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (open) {
-      document.addEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'hidden';
-    }
-    return () => {
-      document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = '';
-    };
-  }, [open, handleEscape]);
+  useEscapeKey(onClose, open);
+  useFocusTrap(panelRef, { enabled: open });
 
   return (
-    <>
+    <Portal>
       {/* Overlay */}
       <div
         className={cn(
@@ -55,8 +45,9 @@ export function Drawer({ open, onClose, title, placement = 'right', children, cl
       />
       {/* Panel */}
       <div
+        ref={panelRef}
         className={cn(
-          'fixed z-50 flex flex-col bg-[var(--bg-card)] border-[var(--border-main)] shadow-xl transition-transform duration-300',
+          'fixed z-50 flex flex-col bg-[var(--bg-card)] border-[var(--border-main)] shadow-xl transition-transform duration-300 outline-hidden',
           placement === 'left' || placement === 'right' ? 'border-l' : '',
           placement === 'top' || placement === 'bottom' ? 'border-b' : '',
           panelStyles[placement],
@@ -66,6 +57,7 @@ export function Drawer({ open, onClose, title, placement = 'right', children, cl
         role="dialog"
         aria-modal="true"
         aria-label={title}
+        tabIndex={-1}
       >
         {title && (
           <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border-sub)]">
@@ -81,6 +73,6 @@ export function Drawer({ open, onClose, title, placement = 'right', children, cl
         )}
         <div className="flex-1 overflow-y-auto p-5">{children}</div>
       </div>
-    </>
+    </Portal>
   );
 }

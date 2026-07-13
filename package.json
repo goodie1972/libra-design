@@ -15,9 +15,15 @@
     "publish:tokens": "npm publish -w packages/tokens",
     "publish:theme": "npm publish -w packages/theme",
     "version:patch": "npm version patch --workspaces",
-    "version:minor": "npm version minor --workspaces"
+    "version:minor": "npm version minor --workspaces",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "engines": {
     "node": ">=18"
+  },
+  "devDependencies": {
+    "vitepress": "^1.6.4"
   }
 }

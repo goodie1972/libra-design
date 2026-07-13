@@ -10,6 +10,7 @@ export interface NewsItem {
 export interface NewsFeedProps {
   items: NewsItem[];
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export function NewsFeed({ items, className }: NewsFeedProps) {

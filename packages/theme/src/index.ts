@@ -13,5 +13,8 @@
  * ```
  */
 
+// 字体加载（Inter / JetBrains Mono / LXGW WenKai / Noto Sans SC）
+import './fonts.css';
+
 export * from './mixer.js';
 export * from './themes.js';

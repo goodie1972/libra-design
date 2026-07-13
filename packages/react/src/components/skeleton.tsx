@@ -2,12 +2,11 @@ import { cn } from '../lib/utils';
 
 export interface SkeletonProps {
   className?: string;
-  /** 适合用作文字占位 */
   text?: boolean;
-  /** 圆形骨架（头像等） */
   circle?: boolean;
   width?: string | number;
   height?: string | number;
+  style?: React.CSSProperties;
 }
 
 export function Skeleton({ className, text, circle, width, height }: SkeletonProps) {
@@ -31,6 +30,7 @@ export function Skeleton({ className, text, circle, width, height }: SkeletonPro
 export interface SkeletonCardProps {
   lines?: number;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export function SkeletonCard({ lines = 3, className }: SkeletonCardProps) {

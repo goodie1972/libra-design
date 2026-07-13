@@ -5,27 +5,11 @@ export interface ExchangeTagProps {
   className?: string;
 }
 
-const exchangeConfig = {
-  binance: {
-    label: 'Binance',
-    bg: 'rgba(240, 185, 11, 0.1)',
-    text: '#f0b90b',
-  },
-  okx: {
-    label: 'OKX',
-    bg: 'rgba(131, 106, 238, 0.1)',
-    text: '#836aee',
-  },
-  bitget: {
-    label: 'Bitget',
-    bg: 'rgba(0, 212, 255, 0.1)',
-    text: '#00d4ff',
-  },
-  bybit: {
-    label: 'Bybit',
-    bg: 'rgba(255, 165, 0, 0.1)',
-    text: '#ffa500',
-  },
+const exchangeConfig: Record<string, { label: string; bg: string; text: string }> = {
+  binance: { label: 'Binance', bg: 'var(--exchange-binance-bg)', text: 'var(--exchange-binance)' },
+  okx:     { label: 'OKX',     bg: 'var(--exchange-okx-bg)',     text: 'var(--exchange-okx)' },
+  bitget:  { label: 'Bitget',  bg: 'var(--exchange-bitget-bg)',  text: 'var(--exchange-bitget)' },
+  bybit:   { label: 'Bybit',   bg: 'var(--exchange-bybit-bg)',   text: 'var(--exchange-bybit)' },
 };
 
 export function ExchangeTag({ exchange, className }: ExchangeTagProps) {

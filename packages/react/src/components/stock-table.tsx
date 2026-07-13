@@ -32,11 +32,11 @@ export function StockTable({ data, showExtra = false, className, onRowClick }: S
     { key: 'changePercent', label: '%', align: 'right', sortable: true, render: (r) => <ChangeBadge value={r.changePercent} size="sm" /> },
     ...(showExtra
       ? [
-          { key: 'open' as keyof StockTableRow, label: 'Open', align: 'right' as const, render: (r: StockTableRow) => <PriceDisplay value={r.open ?? 0} showArrow={false} precision={2} /> },
-          { key: 'high' as keyof StockTableRow, label: 'High', align: 'right' as const, render: (r: StockTableRow) => <PriceDisplay value={r.high ?? 0} showArrow={false} precision={2} /> },
-          { key: 'low' as keyof StockTableRow, label: 'Low', align: 'right' as const, render: (r: StockTableRow) => <PriceDisplay value={r.low ?? 0} showArrow={false} precision={2} /> },
-          { key: 'volume' as keyof StockTableRow, label: 'Volume', align: 'right' as const },
-          { key: 'turnover' as keyof StockTableRow, label: 'Turnover', align: 'right' as const },
+          { key: 'open' as string, label: 'Open', align: 'right' as const, render: (r: StockTableRow) => <PriceDisplay value={r.open ?? 0} showArrow={false} precision={2} /> },
+          { key: 'high' as string, label: 'High', align: 'right' as const, render: (r: StockTableRow) => <PriceDisplay value={r.high ?? 0} showArrow={false} precision={2} /> },
+          { key: 'low' as string, label: 'Low', align: 'right' as const, render: (r: StockTableRow) => <PriceDisplay value={r.low ?? 0} showArrow={false} precision={2} /> },
+          { key: 'volume' as string, label: 'Volume', align: 'right' as const },
+          { key: 'turnover' as string, label: 'Turnover', align: 'right' as const },
         ]
       : []),
   ];

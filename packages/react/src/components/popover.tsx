@@ -1,5 +1,7 @@
 import { cn } from '../lib/utils';
-import { useState, useRef, useEffect } from 'react';
+import { useRef } from 'react';
+import { useControllableState } from '../lib/hooks/useControllableState';
+import { useClickOutside } from '../lib/hooks/useClickOutside';
 
 export interface PopoverProps {
   trigger: React.ReactNode;
@@ -18,31 +20,18 @@ const placementStyles: Record<string, string> = {
 };
 
 export function Popover({ trigger, content, placement = 'bottom', open: controlledOpen, onOpenChange, className }: PopoverProps) {
-  const [internalOpen, setInternalOpen] = useState(false);
-  const isControlled = controlledOpen !== undefined;
-  const isOpen = isControlled ? controlledOpen : internalOpen;
+  const [isOpen, setIsOpen] = useControllableState({
+    value: controlledOpen,
+    defaultValue: false,
+    onChange: onOpenChange,
+  });
   const ref = useRef<HTMLDivElement>(null);
 
-  const setOpen = (val: boolean) => {
-    if (!isControlled) setInternalOpen(val);
-    onOpenChange?.(val);
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    };
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isOpen]);
+  useClickOutside(ref, () => setIsOpen(false), isOpen);
 
   return (
     <div ref={ref} className={cn('relative inline-flex', className)}>
-      <div onClick={() => setOpen(!isOpen)} className="cursor-pointer">
+      <div onClick={() => setIsOpen(!isOpen)} className="cursor-pointer">
         {trigger}
       </div>
       {isOpen && (

@@ -5,32 +5,12 @@ export interface OrderStatusTagProps {
   className?: string;
 }
 
-const statusConfig = {
-  pending: {
-    label: '待处理',
-    bg: 'rgba(251, 188, 4, 0.1)',
-    text: '#fbbc04',
-  },
-  processing: {
-    label: '处理中',
-    bg: 'rgba(74, 108, 247, 0.1)',
-    text: '#4a6cf7',
-  },
-  completed: {
-    label: '已完成',
-    bg: 'rgba(52, 168, 83, 0.1)',
-    text: '#34a853',
-  },
-  failed: {
-    label: '失败',
-    bg: 'rgba(234, 67, 53, 0.1)',
-    text: '#ea4335',
-  },
-  cancelled: {
-    label: '已取消',
-    bg: 'rgba(158, 158, 158, 0.1)',
-    text: '#9e9e9e',
-  },
+const statusConfig: Record<string, { label: string; bg: string; text: string }> = {
+  pending:    { label: '待处理', bg: 'var(--status-pending-bg)',    text: 'var(--warning)' },
+  processing: { label: '处理中', bg: 'var(--status-processing-bg)', text: 'var(--accent)' },
+  completed:  { label: '已完成', bg: 'var(--status-completed-bg)',  text: 'var(--success)' },
+  failed:     { label: '失败',   bg: 'var(--status-failed-bg)',     text: 'var(--error)' },
+  cancelled:  { label: '已取消', bg: 'var(--status-cancelled-bg)',  text: 'var(--flat)' },
 };
 
 export function OrderStatusTag({ status, className }: OrderStatusTagProps) {

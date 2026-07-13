@@ -1,4 +1,5 @@
 import { cn } from '../lib/utils';
+import { motion } from '../lib/motion';
 
 export interface ProgressProps {
   value: number;
@@ -38,7 +39,7 @@ export function Progress({
             strokeLinecap="round"
             strokeDasharray={circumference}
             strokeDashoffset={offset}
-            style={{ transition: 'stroke-dashoffset 0.4s ease' }}
+            style={{ transition: motion.transition('stroke-dashoffset', 'slow') }}
           />
         </svg>
         {showLabel && (

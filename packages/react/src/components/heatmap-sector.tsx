@@ -47,9 +47,8 @@ export function HeatmapSector({ sectors, width = 600, height = 400, className }:
       const absPct = Math.abs(sector.changePercent);
       const opacity = Math.min(absPct / 5, 1) * 0.8 + 0.2;
 
-      // 涨用红色 rgba，跌用绿色 rgba
-      const upColor = `rgba(239, 83, 80, ${opacity})`;
-      const downColor = `rgba(38, 166, 154, ${opacity})`;
+      const upColor = `rgba(var(--up-rgb), ${opacity})`;
+      const downColor = `rgba(var(--down-rgb), ${opacity})`;
 
       return {
         name: sector.name,

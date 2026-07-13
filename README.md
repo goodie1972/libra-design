@@ -95,6 +95,45 @@ let mid = lerp_color("#0c0c0e", "#ffffff", 0.5);
 
 ---
 
+## 图标系统 — 三叠层策略
+
+不重复造轮子，也不随大流。三层图标库通过统一 `<Icon>` 组件对 AI 和开发者隐藏底层差异：
+
+```tsx
+import { Icon } from '@libra-design/react';
+
+<Icon name="trend-up" />              // T1 Tabler IconTrendingUp
+<Icon name="search" source="lucide" /> // T3 Lucide Search
+<Icon name="warning" weight="bold" />  // T2 Phosphor WarningBold
+```
+
+| 层级 | 库 | 职责 |
+|------|-----|------|
+| T1 主力 | Tabler Icons | 标准 UI 图标，2px 描边（默认） |
+| T2 辅助 | Phosphor Icons | 6 种粗细，视觉层级区分 |
+| T3 兼容 | Lucide | 生态迁移适配 |
+
+60+ 语义别名预置：`trend-up`、`search`、`close`、`candle`、`wallet` 等直接可用。
+
+## 字体系统 — 西文精确 + 中文特色
+
+`@libra-design/theme` 包定义三个 CSS 变量，字体文件由消费方按需加载：
+
+```css
+:root {
+  --font-sans: 'Inter', 'Noto Sans SC', -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Cascadia Code', Consolas, monospace;
+  --font-kai: 'LXGW WenKai', 'KaiTi', 'STKaiti', serif;
+}
+```
+
+| 字体 | 用途 | 来源 |
+|------|------|------|
+| Inter | UI 正文/标题 | `@fontsource/inter` |
+| JetBrains Mono | 数字/代码 | `@fontsource/jetbrains-mono` |
+| Noto Sans SC | 中文正文 | `@fontsource/noto-sans-sc` |
+| LXGW WenKai | 中文品牌（可选） | `@fontsource/lxgw-wenkai` |
+
 ## 设计哲学
 
 | 原则 | 含义 |

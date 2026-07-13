@@ -8,6 +8,7 @@ export interface ScreenField {
 export interface ScreenerProps {
   fields: ScreenField[];
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export function Screener({ fields, className }: ScreenerProps) {

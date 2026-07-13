@@ -1,7 +1,29 @@
 // lib
 export { cn } from './lib/utils';
+export { motion } from './lib/motion';
+
+// hooks
+export { useControllableState } from './lib/hooks/useControllableState';
+export { useClickOutside } from './lib/hooks/useClickOutside';
+export { useEscapeKey } from './lib/hooks/useEscapeKey';
+export { useBreakpoint } from './lib/hooks/useBreakpoint';
+export type { Breakpoint } from './lib/hooks/useBreakpoint';
+export { useFocusTrap } from './lib/hooks/useFocusTrap';
+export { useKeyboardListNav } from './lib/hooks/useKeyboardListNav';
+export type { KeyboardListNavOptions } from './lib/hooks/useKeyboardListNav';
+export { useFormValidation } from './lib/hooks/useFormValidation';
+export type { ValidationRule } from './lib/hooks/useFormValidation';
+export { useAsync } from './lib/hooks/useAsync';
+export type { AsyncState, UseAsyncReturn } from './lib/hooks/useAsync';
+
+// portal
+export { Portal } from './components/portal';
+export type { PortalProps } from './components/portal';
 
 // components
+export { Icon } from './components/icon';
+export type { IconProps } from './components/icon';
+
 export { Button } from './components/button';
 export type { ButtonProps } from './components/button';
 
@@ -82,6 +104,26 @@ export type { DropdownMenuProps, DropdownItem } from './components/dropdown-menu
 
 export { Accordion } from './components/accordion';
 export type { AccordionProps, AccordionItem } from './components/accordion';
+
+// UX 补齐
+export { Spinner } from './components/spinner';
+export type { SpinnerProps } from './components/spinner';
+export { StatusDot } from './components/status-dot';
+export type { StatusDotProps } from './components/status-dot';
+export { CountUp } from './components/count-up';
+export type { CountUpProps } from './components/count-up';
+export { SelectGroup } from './components/select-group';
+export type { SelectGroupProps, SelectGroupOption } from './components/select-group';
+export { FormItem } from './components/form-item';
+export type { FormItemProps } from './components/form-item';
+export { AsyncBoundary } from './components/async-boundary';
+export type { AsyncBoundaryProps } from './components/async-boundary';
+export { ImageCheck } from './components/image-check';
+export type { ImageCheckProps, ImageCheckOption } from './components/image-check';
+export { ColorCheck } from './components/color-check';
+export type { ColorCheckProps, ColorCheckOption } from './components/color-check';
+export { InputMask } from './components/input-mask';
+export type { InputMaskProps } from './components/input-mask';
 
 // P1 — Layout
 export { Divider } from './components/divider';

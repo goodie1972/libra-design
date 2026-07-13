@@ -12,7 +12,7 @@ export interface MarketRow {
 }
 
 export interface MarketColumn<T extends MarketRow> {
-  key: keyof T & string;
+  key: string;
   label: string;
   sortable?: boolean;
   align?: 'left' | 'right';
@@ -32,10 +32,10 @@ export function MarketTable<T extends MarketRow>({
   className,
   onRowClick,
 }: MarketTableProps<T>) {
-  const [sortKey, setSortKey] = useState<keyof T | null>(null);
+  const [sortKey, setSortKey] = useState<string | null>(null);
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
 
-  const handleSort = (key: keyof T) => {
+  const handleSort = (key: string) => {
     if (sortKey === key) {
       setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
     } else {
@@ -98,7 +98,7 @@ export function MarketTable<T extends MarketRow>({
                   )}
                   style={col.align === 'right' ? { fontVariantNumeric: 'tabular-nums' } : undefined}
                 >
-                  {col.render ? col.render(row) : String(row[col.key] ?? '')}
+                  {col.render ? col.render(row) : String(row[col.key as keyof T] ?? '')}
                 </td>
               ))}
             </tr>

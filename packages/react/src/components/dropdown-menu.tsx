@@ -1,8 +1,11 @@
 import { cn } from '../lib/utils';
-import { useState, useRef, useEffect } from 'react';
+import { useRef } from 'react';
+import { useControllableState } from '../lib/hooks/useControllableState';
+import { useClickOutside } from '../lib/hooks/useClickOutside';
+import { useKeyboardListNav } from '../lib/hooks/useKeyboardListNav';
 
 export interface DropdownItem {
-  label: React.ReactNode;
+  label?: React.ReactNode;
   value?: string;
   disabled?: boolean;
   onClick?: () => void;
@@ -13,21 +16,27 @@ export interface DropdownMenuProps {
   trigger: React.ReactNode;
   items: DropdownItem[];
   align?: 'start' | 'end';
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
   className?: string;
 }
 
-export function DropdownMenu({ trigger, items, align = 'start', className }: DropdownMenuProps) {
-  const [open, setOpen] = useState(false);
+export function DropdownMenu({ trigger, items, align = 'start', open: controlledOpen, onOpenChange, className }: DropdownMenuProps) {
+  const [open, setOpen] = useControllableState({
+    value: controlledOpen,
+    defaultValue: false,
+    onChange: onOpenChange,
+  });
   const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, [open]);
+  useClickOutside(ref, () => setOpen(false), open);
+
+  const actionable = items.filter((i) => !i.separator && !i.disabled);
+  const { focusedIndex } = useKeyboardListNav({
+    itemCount: actionable.length,
+    onSelect: (i) => { actionable[i]?.onClick?.(); setOpen(false); },
+    enabled: open,
+  });
 
   return (
     <div ref={ref} className={cn('relative inline-block', className)}>
@@ -40,10 +49,12 @@ export function DropdownMenu({ trigger, items, align = 'start', className }: Dro
           )}
           role="menu"
         >
-          {items.map((item, i) =>
-            item.separator ? (
-              <div key={i} className="my-1 border-t border-[var(--border-sub)]" />
-            ) : (
+          {items.map((item, i) => {
+            if (item.separator) {
+              return <div key={i} className="my-1 border-t border-[var(--border-sub)]" />;
+            }
+            const actionIdx = actionable.indexOf(item);
+            return (
               <button
                 key={i}
                 role="menuitem"
@@ -52,12 +63,13 @@ export function DropdownMenu({ trigger, items, align = 'start', className }: Dro
                 className={cn(
                   'w-full px-3 py-1.5 text-left text-[12px] text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)] transition-colors',
                   item.disabled && 'opacity-40 cursor-not-allowed',
+                  focusedIndex === actionIdx && 'bg-[var(--bg-card-hover)]',
                 )}
               >
                 {item.label}
               </button>
-            ),
-          )}
+            );
+          })}
         </div>
       )}
     </div>

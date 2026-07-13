@@ -10,6 +10,7 @@ export interface DataCardProps {
   title: string;
   fields: DataField[];
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export function DataCard({ title, fields, className }: DataCardProps) {

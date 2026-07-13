@@ -5,22 +5,10 @@ export interface TypePillProps {
   className?: string;
 }
 
-const typeConfig = {
-  signal: {
-    label: 'signal',
-    bg: 'rgba(74, 108, 247, 0.08)',
-    text: '#4a6cf7',
-  },
-  script: {
-    label: 'script',
-    bg: 'rgba(124, 58, 237, 0.1)',
-    text: '#7c3aed',
-  },
-  bot: {
-    label: 'bot',
-    bg: 'rgba(6, 182, 212, 0.12)',
-    text: '#06b6d4',
-  },
+const typeConfig: Record<string, { label: string; bg: string; text: string }> = {
+  signal: { label: 'signal', bg: 'var(--type-signal-bg)', text: 'var(--type-signal)' },
+  script: { label: 'script', bg: 'var(--type-script-bg)', text: 'var(--type-script)' },
+  bot:    { label: 'bot',    bg: 'var(--type-bot-bg)',    text: 'var(--type-bot)' },
 };
 
 export function TypePill({ type, className }: TypePillProps) {

@@ -1,6 +1,7 @@
 import { cn } from '../lib/utils';
 import { PriceDisplay } from './price-display';
 
+/** 个股卡片属性 */
 export interface StockCardProps {
   code: string;
   name: string;
@@ -12,6 +13,7 @@ export interface StockCardProps {
   onClick?: () => void;
 }
 
+/** 个股卡片组件。展示股票代码/名称/价格/涨跌幅概览。 */
 export function StockCard({
   code,
   name,

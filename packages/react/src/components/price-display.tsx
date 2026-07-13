@@ -1,5 +1,6 @@
 import { cn } from '../lib/utils';
 
+/** 价格展示组件属性 */
 export interface PriceDisplayProps {
   value: number;
   change?: number;
@@ -30,6 +31,7 @@ const arrows: Record<string, string> = {
   flat: '\u25C6',
 };
 
+/** 价格展示组件。格式化显示价格 + 涨跌方向/颜色/箭头。 */
 export function PriceDisplay({
   value,
   change,

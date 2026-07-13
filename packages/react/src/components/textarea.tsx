@@ -1,25 +1,29 @@
 import { cn } from '../lib/utils';
-import { useState } from 'react';
+import { useControllableState } from '../lib/hooks/useControllableState';
 
 export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   hasError?: boolean;
   showCount?: boolean;
-  maxLength?: number;
 }
 
 export function Textarea({
   className,
   hasError,
   showCount,
-  maxLength,
-  onChange,
-  value: controlledValue,
+  value,
   defaultValue,
+  onChange,
+  maxLength,
   ...props
 }: TextareaProps) {
-  const [internalValue, setInternalValue] = useState(defaultValue?.toString() ?? '');
-  const isControlled = controlledValue !== undefined;
-  const currentValue = isControlled ? controlledValue.toString() : internalValue;
+  const [internalValue, setInternalValue] = useControllableState({
+    value: value as string | undefined,
+    defaultValue: (defaultValue?.toString() ?? '') as string,
+    onChange: (v) => onChange?.({
+      target: { value: v },
+      currentTarget: { value: v },
+    } as React.ChangeEvent<HTMLTextAreaElement>),
+  });
 
   return (
     <div className="relative">
@@ -31,18 +35,14 @@ export function Textarea({
             : 'border-[var(--border-input)] focus-visible:border-[var(--accent)]',
           className,
         )}
-        value={isControlled ? controlledValue : undefined}
-        defaultValue={!isControlled ? defaultValue : undefined}
-        onChange={(e) => {
-          if (!isControlled) setInternalValue(e.target.value);
-          onChange?.(e);
-        }}
+        value={internalValue}
+        onChange={(e) => setInternalValue(e.target.value)}
         maxLength={maxLength}
         {...props}
       />
       {showCount && maxLength && (
-        <div className="absolute bottom-2 right-3 text-[10px] text-[var(--text-tertiary)] font-[var(--font-mono)] pointer-events-none">
-          {currentValue.length}/{maxLength}
+        <div className="absolute bottom-2 right-3 text-[10px] text-[var(--text-tertiary)] pointer-events-none select-none">
+          {String(internalValue).length}/{maxLength}
         </div>
       )}
     </div>

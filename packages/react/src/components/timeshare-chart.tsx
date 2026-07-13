@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { cn } from '../lib/utils';
 
+/** 分时数据点 — 时间 / 价格 / 成交量 / 均价 */
 export interface TimeSharePoint {
   time: string;
   price: number;
@@ -8,6 +9,7 @@ export interface TimeSharePoint {
   avgPrice?: number;
 }
 
+/** 分时图组件属性 */
 export interface TimeShareChartProps {
   data: TimeSharePoint[];
   width?: number;
@@ -15,6 +17,7 @@ export interface TimeShareChartProps {
   className?: string;
 }
 
+/** 分时图组件。渲染日内价格走势线、成交量柱、均价线。 */
 export function TimeShareChart({ data, width = 600, height = 300, className }: TimeShareChartProps) {
   const chartH = height * 0.78;
   const volH = height * 0.17;
@@ -58,11 +61,13 @@ export function TimeShareChart({ data, width = 600, height = 300, className }: T
   }, [data, innerW, innerH, chartH, volH]);
 
   if (!data.length) {
-    return <div className={cn('flex items-center justify-center text-[var(--text-tertiary)] text-[12px]', className)} style={{ width, height }}>No data</div>;
+    return <div role="img" aria-label="分时图 — 无数据" className={cn('flex items-center justify-center text-[var(--text-tertiary)] text-[12px]', className)} style={{ width, height }}>No data</div>;
   }
 
+  const label = `分时图，${data.length} 个数据点，区间 ${data[0].time} 至 ${data[data.length - 1].time}，最高 ${maxP.toFixed(2)} 最低 ${minP.toFixed(2)}`;
   return (
-    <svg width={width} height={height} className={cn('font-[var(--font-mono)]', className)} style={{ fontVariantNumeric: 'tabular-nums' }}>
+    <svg width={width} height={height} className={cn('font-[var(--font-mono)]', className)} role="img" aria-label={label} style={{ fontVariantNumeric: 'tabular-nums' }}>
+      <title>{label}</title>
       {/* Reference line (mid) */}
       <line x1={pad.l} y1={pad.t + innerH / 2} x2={width - pad.r} y2={pad.t + innerH / 2} stroke="var(--grid-line)" strokeWidth={0.5} strokeDasharray="4,3" />
 

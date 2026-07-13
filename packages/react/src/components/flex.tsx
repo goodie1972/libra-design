@@ -4,13 +4,14 @@ export interface FlexProps {
   direction?: 'row' | 'column' | 'row-reverse' | 'column-reverse';
   align?: 'start' | 'center' | 'end' | 'stretch' | 'baseline';
   justify?: 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly';
-  gap?: 'sm' | 'md' | 'lg' | number;
+  gap?: 'sm' | 'md' | 'lg' | 'xl' | number;
   wrap?: boolean;
   className?: string;
+  style?: React.CSSProperties;
   children: React.ReactNode;
 }
 
-const gapMap = { sm: 6, md: 12, lg: 20 };
+const gapMap = { sm: 6, md: 12, lg: 20, xl: 32 };
 
 const alignMap: Record<string, string> = {
   start: 'items-start', center: 'items-center', end: 'items-end',

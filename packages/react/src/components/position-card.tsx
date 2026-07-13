@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { cn } from '../lib/utils';
 
+/** 持仓卡片属性 */
 export interface PositionCardProps {
   symbol: string;
   name: string;
@@ -10,6 +11,7 @@ export interface PositionCardProps {
   className?: string;
 }
 
+/** 持仓卡片组件。展示持仓盈亏、收益率和浮动损益。 */
 export function PositionCard({
   symbol,
   name,

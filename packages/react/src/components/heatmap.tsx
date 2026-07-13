@@ -1,5 +1,6 @@
 import { cn } from '../lib/utils';
 
+/** 热力图单元格 — 标签 / 数值 / 副标题 / 自定义色 */
 export interface HeatmapCell {
   label: string;
   value: number;
@@ -7,6 +8,7 @@ export interface HeatmapCell {
   color?: string;
 }
 
+/** 热力图组件属性 */
 export interface HeatmapProps {
   data: HeatmapCell[];
   columns?: number;
@@ -15,8 +17,8 @@ export interface HeatmapProps {
 }
 
 function getColor(v: number): string {
-  if (v > 0) return `rgba(239, 83, 80, ${Math.min(0.9, v / 10 + 0.2)})`;
-  if (v < 0) return `rgba(38, 166, 154, ${Math.min(0.9, Math.abs(v) / 10 + 0.2)})`;
+  if (v > 0) return `rgba(var(--up-rgb), ${Math.min(0.9, v / 10 + 0.2)})`;
+  if (v < 0) return `rgba(var(--down-rgb), ${Math.min(0.9, Math.abs(v) / 10 + 0.2)})`;
   return 'var(--bg-card-hover)';
 }
 
@@ -24,6 +26,7 @@ function getTextColor(v: number): string {
   return Math.abs(v) > 5 ? '#fff' : Math.abs(v) > 2 ? '#fff' : 'var(--text-primary)';
 }
 
+/** 热力图组件。以网格色块展示涨跌幅排行，支持正负色阶映射。 */
 export function Heatmap({ data, columns = 4, className }: HeatmapProps) {
   if (!data.length) return null;
 

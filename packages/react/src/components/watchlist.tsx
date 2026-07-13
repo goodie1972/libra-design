@@ -11,6 +11,7 @@ export interface WatchlistItem {
 export interface WatchlistProps {
   items: WatchlistItem[];
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export function Watchlist({ items, className }: WatchlistProps) {

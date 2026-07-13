@@ -1,5 +1,8 @@
 import { cn } from '../lib/utils';
-import type { ThemeId, ThemePreset } from '@libra-design/tokens';
+export type ThemeId =
+  | 'terminal' | 'ticker' | 'vault' | 'margin' | 'ledger'
+  | 'prospectus' | 'arbitrage' | 'circuit' | 'candlestick' | 'clearing';
+export type ThemePreset = 'dark' | 'soft' | 'light' | 'custom';
 
 /* ============================================================
    主题注册数据 — 与 @libra-design/theme 对齐

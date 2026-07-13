@@ -1,11 +1,13 @@
 import { useMemo } from 'react';
 import { cn } from '../lib/utils';
 
+/** 深度图档位 — 价格 / 挂单量 */
 export interface DepthLevel {
   price: number;
   volume: number;
 }
 
+/** 深度图组件属性 */
 export interface DepthChartProps {
   bids: DepthLevel[];
   asks: DepthLevel[];
@@ -14,6 +16,7 @@ export interface DepthChartProps {
   className?: string;
 }
 
+/** 深度图组件。渲染买卖盘累积深度曲线和填充区域。 */
 export function DepthChart({ bids, asks, width = 400, height = 260, className }: DepthChartProps) {
   const pad = { t: 16, r: 16, b: 24, l: 48 };
   const innerW = width - pad.l - pad.r;
@@ -63,14 +66,16 @@ export function DepthChart({ bids, asks, width = 400, height = 260, className }:
     }).join(' ');
 
   if (!bids.length && !asks.length) {
-    return <div className={cn('flex items-center justify-center text-[var(--text-tertiary)] text-[12px]', className)} style={{ width, height }}>No data</div>;
+    return <div role="img" aria-label="深度图 — 无数据" className={cn('flex items-center justify-center text-[var(--text-tertiary)] text-[12px]', className)} style={{ width, height }}>No data</div>;
   }
 
   // Price labels on x-axis
   const priceTicks = [minPrice, (minPrice + maxPrice) / 2, maxPrice];
 
+  const label = `深度图，${bids.length} 档买单，${asks.length} 档卖单，价格区间 ${minPrice.toFixed(2)} 至 ${maxPrice.toFixed(2)}`;
   return (
-    <svg width={width} height={height} className={cn('font-[var(--font-mono)]', className)} style={{ fontVariantNumeric: 'tabular-nums' }}>
+    <svg width={width} height={height} className={cn('font-[var(--font-mono)] tabular-nums', className)} role="img" aria-label={label}>
+      <title>{label}</title>
       {/* Grid */}
       {[0, 0.5, 1].map((r) => (
         <g key={r}>
