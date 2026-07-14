@@ -68,6 +68,16 @@ import { ThemeSwitcher } from '@libra-design/react';
 | `Switch` | 开关 |
 | `Select` | 下拉选择 |
 
+### 交易终端 (5)
+
+| 组件 | 说明 |
+|------|------|
+| `ConfigurableGrid` | 通用可配置表格 — 泛型 ColumnDef<T>、排序、列宽拖拽、sticky 列固定、CSS 变量主题。**Phase 2 扩展：** 虚拟滚动（1 万+行）、行展开（▸/▾ 箭头 + renderDetail 详情行，受控+非受控）、列分组（ColumnDef.children 递归 + colSpan/rowSpan 多级表头）、列状态 localStorage 自动持久化、columnPicker prop 一键齿轮按钮集成 |
+| `ColumnPicker` | 列编辑器弹层 — HTML5 DnD 拖拽排序、行内编辑（标签/宽度/对齐/固定/格式）、3 套预设方案、导出 JSON、自定义列添加 |
+| `ColumnFormats` / `FORMAT_PRESETS` | 7 种格式预设 — number/percent/price/changePercent/volume/text/date，含 format 和 render 函数 |
+| `COLUMN_PRESETS` | 3 组列预设（常用/完整/简洁）— 内置典型行情的列定义模板 |
+| `StockTable` | 行情表格组件，基于 ConfigurableGrid 封装。自动应用价格/涨跌幅/成交量等格式预设，支持列固定/排序/虚拟滚动/行展开。开箱即用：`<StockTable data={data} showExtra columnPicker />` |
+
 ### 金融展示 (12)
 
 | 组件 | 说明 |

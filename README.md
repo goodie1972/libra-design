@@ -35,7 +35,7 @@
 |---|------|------|------|
 | `@libra-design/tokens` | TS | CSS 变量 + 类型定义 | `npm i @libra-design/tokens` |
 | `@libra-design/theme` | TS | 双主题混合引擎 | `npm i @libra-design/theme` |
-| `@libra-design/react` | TS | 64 个 React 金融组件（含 K 线/深度图/订单簿） | `npm i @libra-design/react` |
+| `@libra-design/react` | TS | 64 个 React 金融组件（K线/深度图/订单簿/**ConfigurableGrid 列编排表格**） | `npm i @libra-design/react` |
 | `@libra-design/cli` | TS | `libra init/add` 命令 | `npx @libra-design/cli init` |
 | `@libra-design/mcp-server` | TS | MCP Server for AI | `npx @libra-design/mcp-server` |
 | `go-tokens` | **Go** | 色值常量 + LerpColor + CSS 生成 | `go get github.com/goodie1972/go-tokens` |

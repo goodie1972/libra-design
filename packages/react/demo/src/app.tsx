@@ -5,30 +5,18 @@ import {
   Badge, Input, ChangeBadge, PriceDisplay, StockCard,
   Select, Tabs, Tag, Modal, Tooltip, Switch,
   Table, TableHeader, TableHead, TableRow, TableCell,
-  MarketTable,
+  StockTable, ConfigurableGrid, ColumnPicker, COLUMN_PRESETS,
 } from '@libra-design/react';
-import type { Tab, MarketRow, MarketColumn } from '@libra-design/react';
+import type { Tab, StockTableRow, ColumnDef } from '@libra-design/react';
 
 // ============================================================
 // 示例数据
 // ============================================================
-const marketData: MarketRow[] = [
-  { code: 'sh600519', name: 'Kweichow Moutai', price: 1689.50, change: 35.20, changePercent: 2.13, volume: '17.23B' },
-  { code: 'sz000858', name: 'Wuliangye', price: 142.80, change: -1.94, changePercent: -1.34, volume: '4.10B' },
-  { code: 'sh601398', name: 'ICBC', price: 5.89, change: 0.03, changePercent: 0.51, volume: '7.33B' },
-  { code: 'sz300750', name: 'CATL', price: 196.35, change: -5.80, changePercent: -2.87, volume: '10.25B' },
-];
-
-const columns: MarketColumn<MarketRow>[] = [
-  { key: 'code', label: 'Code', sortable: true },
-  { key: 'name', label: 'Name', sortable: true },
-  { key: 'price', label: 'Price', align: 'right', sortable: true,
-    render: (r) => <span style={{ fontVariantNumeric: 'tabular-nums' }}>{r.price.toFixed(2)}</span> },
-  { key: 'change', label: 'Change', align: 'right', sortable: true,
-    render: (r) => <span style={{ color: r.change >= 0 ? 'var(--up)' : 'var(--down)', fontVariantNumeric: 'tabular-nums' }}>{r.change > 0 ? '+' : ''}{r.change.toFixed(2)}</span> },
-  { key: 'changePercent', label: '%', align: 'right', sortable: true,
-    render: (r) => <ChangeBadge value={r.changePercent} size="sm" /> },
-  { key: 'volume', label: 'Volume', align: 'right' },
+const marketData: StockTableRow[] = [
+  { code: 'sh600519', name: 'Kweichow Moutai', price: 1689.50, change: 35.20, changePercent: 2.13, volume: '17.23B', open: 1650.00, high: 1700.00, low: 1645.00, turnover: '289.5亿' },
+  { code: 'sz000858', name: 'Wuliangye', price: 142.80, change: -1.94, changePercent: -1.34, volume: '4.10B', open: 145.00, high: 146.50, low: 141.20, turnover: '58.6亿' },
+  { code: 'sh601398', name: 'ICBC', price: 5.89, change: 0.03, changePercent: 0.51, volume: '7.33B', open: 5.86, high: 5.92, low: 5.84, turnover: '42.1亿' },
+  { code: 'sz300750', name: 'CATL', price: 196.35, change: -5.80, changePercent: -2.87, volume: '10.25B', open: 202.00, high: 203.50, low: 195.00, turnover: '198.3亿' },
 ];
 
 // ============================================================
@@ -64,7 +52,7 @@ export function App() {
           @libra-design/react
         </h1>
         <p style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 40, lineHeight: 1.7, fontWeight: 300 }}>
-          Libra 设计系统 React 组件库 — 15 个组件，双主题兼容
+          Libra 设计系统 React 组件库 — ConfigurableGrid 列编排表格+行情组件，双主题兼容
         </p>
 
         {/* ============================== P0 ============================== */}
@@ -211,9 +199,65 @@ export function App() {
           </div>
         </Section>
 
-        {/* ============================== MarketTable ============================== */}
-        <Section title="MarketTable · 可排序行情表">
-          <MarketTable data={marketData} columns={columns} />
+        {/* ============================== StockTable ============================== */}
+        <Section title="StockTable · 可配置行情表（基于 ConfigurableGrid）">
+          <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 16, lineHeight: 1.6 }}>
+            点击标题栏齿轮按钮 ⚙ 打开 ColumnPicker 编辑列（排序/显隐/固定/格式）。修改会自动持久化到 localStorage。
+          </p>
+          <StockTable data={marketData} showExtra columnPicker />
+        </Section>
+
+        {/* ============================== ConfigurableGrid ============================== */}
+        <Section title="ConfigurableGrid · 通用可配置表格（底层组件）">
+          <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 16, lineHeight: 1.6 }}>
+            ColumnDef 泛型表格，支持排序 + 列固定 + 列宽拖拽 + ColumnPicker 列编辑器。
+            StockTable 即基于此组件封装。
+          </p>
+          <h2 style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 12, letterSpacing: '0.02em' }}>
+            COLUMN_PRESETS — 3 套预设方案
+          </h2>
+          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 24 }}>
+            {COLUMN_PRESETS.map((preset) => (
+              <Card key={preset.name} style={{ flex: 1, minWidth: 180 }}>
+                <CardHeader><CardTitle>{preset.label}</CardTitle></CardHeader>
+                <CardContent>
+                  <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.8 }}>
+                    {preset.columns.map((c) => (
+                      <div key={c.key as string} style={{ display: 'flex', gap: 8 }}>
+                        <span style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)', minWidth: 80 }}>{c.label}</span>
+                        <span>{c.fixed ? `[${c.fixed}] ` : ''}{c.format || 'text'}{c.sortable ? ' ↕' : ''}</span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <h2 style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 12, letterSpacing: '0.02em' }}>
+            虚拟滚动演示（50 行数据）
+          </h2>
+          <div style={{ maxHeight: 300, overflow: 'auto', border: '1px solid var(--border-main)', borderRadius: 'var(--card-radius)' }}>
+            <ConfigurableGrid
+              data={Array.from({ length: 50 }, (_, i) => ({
+                code: `stock_${i + 1}`,
+                name: `Stock #${i + 1}`,
+                price: 100 + Math.random() * 200,
+                change: (Math.random() - 0.5) * 20,
+                changePercent: (Math.random() - 0.5) * 10,
+              }))}
+              columns={[
+                { key: 'code', label: '代码', width: 100, sortable: true },
+                { key: 'name', label: '名称', width: 150, sortable: true },
+                { key: 'price', label: '价格', width: 100, format: 'price', sortable: true, align: 'right' },
+                { key: 'change', label: '涨跌额', width: 100, sortable: true, align: 'right',
+                  render: (r) => <span style={{ color: r.change >= 0 ? 'var(--up)' : 'var(--down)', fontFamily: 'var(--font-mono)' }}>{r.change > 0 ? '+' : ''}{r.change.toFixed(2)}</span> },
+                { key: 'changePercent', label: '涨跌幅', width: 100, format: 'changePercent', sortable: true, align: 'right' },
+              ]}
+              rowKey="code"
+              virtualized={{ rowHeight: 48 }}
+            />
+          </div>
         </Section>
       </div>
 

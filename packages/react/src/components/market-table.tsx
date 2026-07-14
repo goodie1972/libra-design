@@ -26,6 +26,10 @@ export interface MarketTableProps<T extends MarketRow> {
   onRowClick?: (row: T) => void;
 }
 
+/**
+ * @deprecated 请使用 StockTable（基于 ConfigurableGrid，支持列固定/列宽拖拽/虚拟滚动/列编辑器/列持久化等高级功能）。
+ * MarketTable 保留以保持向后兼容，新项目请用 StockTable。
+ */
 export function MarketTable<T extends MarketRow>({
   data,
   columns,

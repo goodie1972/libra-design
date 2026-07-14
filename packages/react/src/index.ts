@@ -251,3 +251,11 @@ export { ExchangeTag } from './components/quant/exchange-tag';
 export type { ExchangeTagProps } from './components/quant/exchange-tag';
 export { OrderStatusTag } from './components/quant/order-status-tag';
 export type { OrderStatusTagProps } from './components/quant/order-status-tag';
+
+// Phase 1 — Trading Terminal: ConfigurableGrid + ColumnPicker
+export { FORMAT_PRESETS, getFormatPreset } from './components/column-formats';
+export type { ColumnFormat, FormatPresetKey } from './components/column-formats';
+export { ConfigurableGrid } from './components/configurable-grid';
+export type { ColumnDef, ConfigurableGridProps } from './components/configurable-grid';
+export { ColumnPicker, COLUMN_PRESETS } from './components/column-picker';
+export type { ColumnPickerProps, ColumnPreset } from './components/column-picker';

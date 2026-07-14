@@ -20,16 +20,22 @@ Libra Design 的差异化：**不是另一个 React 组件库，是 Go/Rust 原�
 
 ---
 
-## 当前状态 (2026-06-21)
+## 新路线图
+
+组件开发路线已迁移至 [docs/trading-terminal-roadmap.md](docs/trading-terminal-roadmap.md) — 从写死列到可配置网格 + 列编辑器 + 指标面板 + 开放生态的 5 Phase 计划。
+
+## 当前状态 (2026-07-13)
 
 ```
-npm 包: 5 个已发布 (@libra-design/* v0.1.4)
+npm 包: 5 个已发布 (@libra-design/* v0.1.8)
 Go 包:  4 个 (go-tokens, go-templ, go-cli, go-mcp) + go-server 单二进制仪表盘
-React:  64 组件 + 133 tests
+React:  84 导出项（含 7 hooks + 77 组件）+ 101 tests
 Go:     40 templ 组件
 Rust:   libra-tokens + libra-leptos (20 组件) 已发布 crates.io
 MCP:    3 tools + 2 resources, e2e 验证通过
-主题:   10 套命名金融主题 (terminal/ticker/vault/margin/ledger/prospectus/arbitrage/circuit/candlestick/clearing)
+主题:   10 套命名金融主题 + 亮/柔/暗三预设 + 混合引擎
+图标:   Tabler/Phosphor/Lucide 三叠层统一 <Icon>
+字体:   Inter/JetBrains Mono/Noto Sans SC/霞鹜文楷 CSS 变量
 ```
 
 ---

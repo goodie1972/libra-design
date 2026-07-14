@@ -768,7 +768,7 @@ describe('StockTable', () => {
   });
   it('shows extra columns', () => {
     render(<StockTable data={data} showExtra />);
-    expect(screen.getByText('Open')).toBeInTheDocument();
+    expect(screen.getByText('开盘')).toBeInTheDocument();
   });
 });
 
