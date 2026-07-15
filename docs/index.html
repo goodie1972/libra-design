@@ -686,6 +686,7 @@ function renderTimeShare(){
   svg.style.width='100%';svg.style.height='100%';svg.style.display='block';svg.style.position='absolute';svg.style.top='0';svg.style.left='0';
   // viewBox: 0 to n, 0 to maxH — no extra padding, preserveAspectRatio stretches to fill
   svg.setAttribute('viewBox','0 0 '+n+' '+maxH);
+  svg.setAttribute('preserveAspectRatio','none');
   var plotH=maxH-4;
   // price line
   var ptsStr=pts.map(function(v,i){return i+','+(2+plotH-((v-min)/range)*plotH)}).join(' ');
