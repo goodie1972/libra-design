@@ -633,26 +633,24 @@ function renderKLine(){
   var maxH=160;
   var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
   svg.style.width='100%';svg.style.height=maxH+'px';svg.style.display='block';
-  // use a fixed viewBox width so candles scale proportionally
-  var vw=n*20; // each candle slot = 20 units, leaving gaps
-  svg.setAttribute('viewBox','0 '+vw*0.05+' '+vw+' '+maxH);
+  var vw=n;
+  svg.setAttribute('viewBox','0 0 '+vw+' '+maxH);
+  svg.setAttribute('preserveAspectRatio','none');
   var padT=8,padB=8;
   var plotH=maxH-padT-padB;
   var slotW=vw/n;
-  var candleW=slotW*0.7; // 30% gap on each side = realistic candle width
+  var candleW=slotW*0.7;
   data.forEach(function(d,i){
     var cx=i*slotW+slotW/2;
     var isUp=d.c>=d.o;
     var color=isUp?'var(--up)':'var(--down)';
-    // wick
     var wyTop=padT+((max-d.h)/range)*plotH;
     var wyBot=padT+((max-d.l)/range)*plotH;
     var wick=document.createElementNS('http://www.w3.org/2000/svg','line');
     wick.setAttribute('x1',cx);wick.setAttribute('y1',wyTop);
     wick.setAttribute('x2',cx);wick.setAttribute('y2',wyBot);
-    wick.setAttribute('stroke',color);wick.setAttribute('stroke-width',Math.max(1,candleW*0.08));
+    wick.setAttribute('stroke',color);wick.setAttribute('stroke-width',Math.max(0.5,candleW*0.06));
     svg.appendChild(wick);
-    // body
     var yTop=padT+((max-Math.max(d.o,d.c))/range)*plotH;
     var yBot=padT+((max-Math.min(d.o,d.c))/range)*plotH;
     var bodyH=Math.max(1,yBot-yTop);
