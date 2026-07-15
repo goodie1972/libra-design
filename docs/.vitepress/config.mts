@@ -2,7 +2,7 @@ import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   title: 'Libra Design',
-  description: '极致审美的设计语言，专为 Go/Rust 量身定制',
+  description: '多语言金融设计系统 — Go/Rust/TS 三语言覆盖，64+ React 金融组件 + Go templ + Rust Leptos，K 线图/分时图/行情表格/深度图/订单簿，开箱即用',
   lang: 'zh-CN',
   ignoreDeadLinks: true,
 
@@ -67,9 +67,9 @@ export default defineConfig({
       { icon: 'github', link: 'https://github.com/goodie1972/libra-design' },
     ],
 
-    footer: {
-      message: '极致审美的设计语言，专为 Go/Rust 量身定制',
-      copyright: 'MIT Licensed',
-    },
+      footer: {
+        message: '多语言金融设计系统 · Go/Rust/TS 三语言 · 红涨绿跌 · 暗色优先',
+        copyright: 'MIT Licensed',
+      },
   },
 })
