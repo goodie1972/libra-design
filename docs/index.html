@@ -100,10 +100,10 @@ h3{font-size:14px;font-weight:500;color:var(--text-secondary);margin-bottom:14px
 .chart-sample{width:100%;max-width:480px}
 .chart-row{display:flex;align-items:flex-end;gap:2px;height:120px;padding:8px 4px}
 .chart-bar{flex:1;border-radius:2px 2px 0 0;min-height:2px;transition:background .3s}
-.candle-group{display:flex;align-items:flex-end;gap:1px;height:120px;width:100%}
-.candle{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;position:relative}
-.candle-body{width:60%;border-radius:1px;min-height:2px;position:relative}
-.candle-wick{width:2px;min-height:2px;position:absolute}
+.candle-group{display:flex;gap:1px;height:120px;width:100%}
+.candle{flex:1;position:relative;height:120px}
+.candle-body{width:60%;border-radius:1px;min-height:2px;position:absolute}
+.candle-wick{width:2px;min-height:2px;position:absolute;left:50%;transform:translateX(-50%)}
 
 /* Stock table mini */
 .st-mini{width:100%;font-size:12px;border-collapse:collapse}
@@ -313,7 +313,7 @@ footer a{color:var(--text-secondary)}
         <div style="display:flex;justify-content:space-between;width:100%;font-size:9px;color:var(--text-tertiary);margin-bottom:4px">
           <span>9:30</span><span>10:30</span><span>11:30</span><span>13:30</span><span>14:30</span><span>15:00</span>
         </div>
-        <div style="display:flex;align-items:flex-end;gap:1px;width:100%;height:80px" id="tsDemo"></div>
+        <div style="display:flex;align-items:flex-end;gap:1px;width:100%;height:80px;position:relative" id="tsDemo"></div>
         <div style="display:flex;justify-content:space-between;width:100%;font-size:9px;color:var(--text-tertiary);margin-top:4px">
           <span style="color:var(--accent)">均价</span>
           <span style="color:var(--up)">价格</span>
@@ -623,45 +623,87 @@ function renderStockTable(){
 // ============= KLINE MINI DEMO =============
 function renderKLine(){
   var el=document.getElementById('klineDemo');if(!el)return;
+  el.innerHTML='';
   var n=30;var data=[];var c=1680;
   for(var i=0;i<n;i++){
     var candle=(Math.random()-0.45)*30;var o=c;c=o+candle;
     var h=Math.max(o,c)+Math.random()*8;var l=Math.min(o,c)-Math.random()*8;
     data.push({o:o,h:h,l:l,c:c});
   }
-  var min=Infinity,max=-Infinity;data.forEach(function(d){if(d.l<min)min=d.l;if(d.h>max)max=d.h});
-  var range=max-min;
+  var all=[];data.forEach(function(d){all.push(d.h);all.push(d.l)});
+  var min=Infinity,max=-Infinity;all.forEach(function(v){if(v<min)min=v;if(v>max)max=v});
+  var range=max-min||1;
+  var maxH=120;
   data.forEach(function(d){
-    var grp=document.createElement('div');grp.className='candle';grp.style.flex='1';
-    var bodyH=Math.max(2,(Math.abs(d.c-d.o)/range)*120);
+    var grp=document.createElement('div');
+    grp.style.flex='1';grp.style.position='relative';grp.style.height=maxH+'px';
+    var bodyH=Math.max(2,(Math.abs(d.c-d.o)/range)*maxH);
     var isUp=d.c>=d.o;
-    var wickTop=((d.h-d.o)/range)*120;var wickBot=((d.c-d.l)/range)*120;
-    var body=document.createElement('div');body.className='candle-body';
-    body.style.height=bodyH+'px';body.style.background=isUp?'var(--up)':'var(--down)';
-    body.style.marginTop=((Math.max(d.o,d.c)-d.h)/range)*120+'px';
-    var wick=document.createElement('div');wick.className='candle-wick';
-    wick.style.height=wickTop+wickBot+'px';
-    wick.style.background=isUp?'var(--up)':'var(--down)';
-    grp.appendChild(wick);grp.appendChild(body);
-    // MA lines not shown in mini
-    el.appendChild(grp);
+    var color=isUp?'var(--up)':'var(--down)';
+    // wick: from high to low
+    var wick=document.createElement('div');
+    wick.style.position='absolute';wick.style.left='50%';wick.style.transform='translateX(-50%)';
+    wick.style.width='2px';wick.style.background=color;
+    var wickTop=((d.h-min)/range)*maxH;
+    var wickBot=((max-d.l)/range)*maxH;
+    wick.style.top=wickTop+'px';wick.style.height=Math.max(1,maxH-wickTop-wickBot)+'px';
+    // body: between open and close
+    var body=document.createElement('div');
+    body.style.position='absolute';body.style.left='20%';body.style.right='20%';
+    body.style.height=bodyH+'px';body.style.background=color;body.style.borderRadius='1px';
+    var bodyTop=((d.h-Math.max(d.o,d.c))/range)*maxH+maxH/2-bodyH/2;
+    body.style.top=Math.max(0,Math.min(maxH-bodyH,bodyTop))+'px';
+    grp.appendChild(wick);grp.appendChild(body);el.appendChild(grp);
   });
 }
 
 // ============= TIMESHARE MINI DEMO =============
 function renderTimeShare(){
   var el=document.getElementById('tsDemo');if(!el)return;
-  var n=120;var pts=[];var p=1689.50;
-  for(var i=0;i<n;i++){p+=(Math.random()-0.48)*2.5;pts.push(p);}
-  var min=Infinity,max=-Infinity;pts.forEach(function(v){if(v<min)min=v;if(v>max)max=v});
-  var range=max-min;
-  pts.forEach(function(v,i){
-    var bar=document.createElement('div');bar.style.flex='1';
-    bar.style.height=((v-min)/range*78+2)+'px';
-    bar.style.background='var(--up)';bar.style.borderRadius='1px 1px 0 0';
-    bar.style.opacity='0.7';
-    el.appendChild(bar);
-  });
+  el.innerHTML='';
+  var n=120;var pts=[];var avgs=[];var vols=[];var p=1689.50;
+  for(var i=0;i<n;i++){
+    p+=(Math.random()-0.48)*2.5;
+    pts.push(p);
+    vols.push(500000+Math.random()*2000000);
+    if(i<5)avgs.push(p);
+    else{avgs.push((avgs[avgs.length-1]*(i)+p)/(i+1));}
+  }
+  // compute avgPrice as running average
+  var ap=[pts[0]];
+  for(var i=1;i<pts.length;i++){ap.push((ap[i-1]*(i)+pts[i])/(i+1));}
+  var min=Infinity,max=-Infinity;pts.concat(ap).forEach(function(v){if(v<min)min=v;if(v>max)max=v});
+  var range=max-min||1;
+  var maxH=78;
+  // price line as SVG path
+  var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.style.width='100%';svg.style.height='100%';svg.style.display='block';svg.style.position='absolute';svg.style.top='0';svg.style.left='0';
+  svg.setAttribute('viewBox','0 0 '+n+' '+maxH);
+  svg.setAttribute('preserveAspectRatio','none');
+  // price line
+  var ptsStr=pts.map(function(v,i){return i+','+(maxH-((v-min)/range)*maxH)}).join(' ');
+  var priceLine=document.createElementNS('http://www.w3.org/2000/svg','polyline');
+  priceLine.setAttribute('points',ptsStr);priceLine.setAttribute('fill','none');
+  priceLine.setAttribute('stroke','var(--up)');priceLine.setAttribute('stroke-width','1.5');
+  svg.appendChild(priceLine);
+  // avg price line
+  var apPtsStr=ap.map(function(v,i){return i+','+(maxH-((v-min)/range)*maxH)}).join(' ');
+  var avgLine=document.createElementNS('http://www.w3.org/2000/svg','polyline');
+  avgLine.setAttribute('points',apPtsStr);avgLine.setAttribute('fill','none');
+  avgLine.setAttribute('stroke','var(--text-tertiary)');avgLine.setAttribute('stroke-width','0.8');
+  avgLine.setAttribute('stroke-dasharray','3,2');avgLine.setAttribute('opacity','0.6');
+  svg.appendChild(avgLine);
+  // volume bars at bottom
+  var maxV=Math.max.apply(null,vols);
+  for(var i=0;i<n;i++){
+    var bar=document.createElementNS('http://www.w3.org/2000/svg','rect');
+    bar.setAttribute('x',i);bar.setAttribute('y',maxH-2);
+    bar.setAttribute('width','0.8');bar.setAttribute('height',(vols[i]/maxV)*12);
+    bar.setAttribute('fill',pts[i]>=ap[i]?'var(--up)':'var(--down)');
+    bar.setAttribute('opacity','0.4');
+    svg.appendChild(bar);
+  }
+  el.appendChild(svg);
 }
 
 // ============= INIT =============
