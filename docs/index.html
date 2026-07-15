@@ -100,10 +100,7 @@ h3{font-size:14px;font-weight:500;color:var(--text-secondary);margin-bottom:14px
 .chart-sample{width:100%;max-width:480px}
 .chart-row{display:flex;align-items:flex-end;gap:2px;height:120px;padding:8px 4px}
 .chart-bar{flex:1;border-radius:2px 2px 0 0;min-height:2px;transition:background .3s}
-.candle-group{display:flex;gap:1px;height:120px;width:100%}
-.candle{flex:1;position:relative;height:120px}
-.candle-body{width:60%;border-radius:1px;min-height:2px;position:absolute}
-.candle-wick{width:2px;min-height:2px;position:absolute;left:50%;transform:translateX(-50%)}
+.candle-group{display:flex;gap:1px;height:160px;width:100%}
 
 /* Stock table mini */
 .st-mini{width:100%;font-size:12px;border-collapse:collapse}
@@ -633,28 +630,38 @@ function renderKLine(){
   var all=[];data.forEach(function(d){all.push(d.h);all.push(d.l)});
   var min=Infinity,max=-Infinity;all.forEach(function(v){if(v<min)min=v;if(v>max)max=v});
   var range=max-min||1;
-  var maxH=120;
-  data.forEach(function(d){
-    var grp=document.createElement('div');
-    grp.style.flex='1';grp.style.position='relative';grp.style.height=maxH+'px';
-    var bodyH=Math.max(2,(Math.abs(d.c-d.o)/range)*maxH);
+  var maxH=160;
+  // SVG with viewBox matching container
+  var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.style.width='100%';svg.style.height=maxH+'px';svg.style.display='block';
+  svg.setAttribute('viewBox','0 0 '+n+' '+maxH);
+  svg.setAttribute('preserveAspectRatio','none');
+  var padT=8,padB=8;
+  var plotH=maxH-padT-padB;
+  // wicks
+  data.forEach(function(d,i){
+    var x=i;
     var isUp=d.c>=d.o;
     var color=isUp?'var(--up)':'var(--down)';
-    // wick: from high to low
-    var wick=document.createElement('div');
-    wick.style.position='absolute';wick.style.left='50%';wick.style.transform='translateX(-50%)';
-    wick.style.width='2px';wick.style.background=color;
-    var wickTop=((d.h-min)/range)*maxH;
-    var wickBot=((max-d.l)/range)*maxH;
-    wick.style.top=wickTop+'px';wick.style.height=Math.max(1,maxH-wickTop-wickBot)+'px';
-    // body: between open and close
-    var body=document.createElement('div');
-    body.style.position='absolute';body.style.left='20%';body.style.right='20%';
-    body.style.height=bodyH+'px';body.style.background=color;body.style.borderRadius='1px';
-    var bodyTop=((d.h-Math.max(d.o,d.c))/range)*maxH+maxH/2-bodyH/2;
-    body.style.top=Math.max(0,Math.min(maxH-bodyH,bodyTop))+'px';
-    grp.appendChild(wick);grp.appendChild(body);el.appendChild(grp);
+    // wick line: high to low
+    var wyTop=padT+((max-d.h)/range)*plotH;
+    var wyBot=padT+((max-d.l)/range)*plotH;
+    var wick=document.createElementNS('http://www.w3.org/2000/svg','line');
+    wick.setAttribute('x1',x);wick.setAttribute('y1',wyTop);
+    wick.setAttribute('x2',x);wick.setAttribute('y2',wyBot);
+    wick.setAttribute('stroke',color);wick.setAttribute('stroke-width','1');
+    svg.appendChild(wick);
+    // body: open to close
+    var yOpen=padT+((max-Math.max(d.o,d.c))/range)*plotH;
+    var yClose=padT+((max-Math.min(d.o,d.c))/range)*plotH;
+    var bodyH=Math.max(1,yClose-yOpen);
+    var body=document.createElementNS('http://www.w3.org/2000/svg','rect');
+    body.setAttribute('x',x-0.35);body.setAttribute('y',yOpen);
+    body.setAttribute('width',0.7);body.setAttribute('height',bodyH);
+    body.setAttribute('fill',color);body.setAttribute('rx','0.1');
+    svg.appendChild(body);
   });
+  el.appendChild(svg);
 }
 
 // ============= TIMESHARE MINI DEMO =============
