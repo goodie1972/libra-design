@@ -684,18 +684,17 @@ function renderTimeShare(){
   var maxH=78;
   var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
   svg.style.width='100%';svg.style.height='100%';svg.style.display='block';svg.style.position='absolute';svg.style.top='0';svg.style.left='0';
-  // viewBox with padding so stroke-width doesn't clip
-  var pad=2;
-  svg.setAttribute('viewBox','-'+pad+' 0 '+(n+pad*2)+' '+maxH);
+  // viewBox: 0 to n, 0 to maxH — no extra padding, preserveAspectRatio stretches to fill
+  svg.setAttribute('viewBox','0 0 '+n+' '+maxH);
   var plotH=maxH-4;
-  // price line — thin stroke relative to viewBox
-  var ptsStr=pts.map(function(v,i){return i+','+(pad+plotH-((v-min)/range)*plotH)}).join(' ');
+  // price line
+  var ptsStr=pts.map(function(v,i){return i+','+(2+plotH-((v-min)/range)*plotH)}).join(' ');
   var priceLine=document.createElementNS('http://www.w3.org/2000/svg','polyline');
   priceLine.setAttribute('points',ptsStr);priceLine.setAttribute('fill','none');
   priceLine.setAttribute('stroke','var(--up)');priceLine.setAttribute('stroke-width','1');
   svg.appendChild(priceLine);
   // avg price line
-  var apPtsStr=ap.map(function(v,i){return i+','+(pad+plotH-((v-min)/range)*plotH)}).join(' ');
+  var apPtsStr=ap.map(function(v,i){return i+','+(2+plotH-((v-min)/range)*plotH)}).join(' ');
   var avgLine=document.createElementNS('http://www.w3.org/2000/svg','polyline');
   avgLine.setAttribute('points',apPtsStr);avgLine.setAttribute('fill','none');
   avgLine.setAttribute('stroke','var(--text-tertiary)');avgLine.setAttribute('stroke-width','0.6');
@@ -703,7 +702,7 @@ function renderTimeShare(){
   svg.appendChild(avgLine);
   // volume bars
   var maxV=Math.max.apply(null,vols);
-  var barW=n/maxH*0.3; // ~0.3px in viewBox units
+  var barW=n/maxH*0.3;
   for(var i=0;i<n;i++){
     var bar=document.createElementNS('http://www.w3.org/2000/svg','rect');
     bar.setAttribute('x',i-barW/2);bar.setAttribute('y',maxH-2);
