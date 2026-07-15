@@ -33,6 +33,34 @@ function App() {
 }
 ```
 
+## 行点击弹出详情（分时/K 线）
+
+```tsx
+import { useState } from 'react';
+import { StockTable, Modal, Tabs, TimeShareChart, KLineChart } from '@libra-design/react';
+import type { StockTableRow } from '@libra-design/react';
+
+function App() {
+  const [stock, setStock] = useState<StockTableRow | null>(null);
+  return (
+    <>
+      <StockTable data={data} onRowClick={(row) => setStock(row)} />
+      <Modal open={!!stock} onClose={() => setStock(null)}
+        title={`${stock?.name} (${stock?.code})`}>
+        <Tabs
+          tabs={[
+            { value: 'timeshare', label: '分时',
+              content: <TimeShareChart data={...} width={580} height={300} /> },
+            { value: 'kline', label: 'K线',
+              content: <KLineChart data={...} width={580} height={360} /> },
+          ]}
+        />
+      </Modal>
+    </>
+  );
+}
+```
+
 ## 主题切换
 
 ```tsx
@@ -72,7 +100,7 @@ import { ThemeSwitcher } from '@libra-design/react';
 
 | 组件 | 说明 |
 |------|------|
-| `ConfigurableGrid` | 通用可配置表格 — 泛型 ColumnDef<T>、排序、列宽拖拽、sticky 列固定、CSS 变量主题。**Phase 2 扩展：** 虚拟滚动（1 万+行）、行展开（▸/▾ 箭头 + renderDetail 详情行，受控+非受控）、列分组（ColumnDef.children 递归 + colSpan/rowSpan 多级表头）、列状态 localStorage 自动持久化、columnPicker prop 一键齿轮按钮集成 |
+| `ConfigurableGrid` | 通用可配置表格 — 泛型 ColumnDef<T>、排序、列宽拖拽、sticky 列固定、CSS 变量主题。**Phase 2 扩展：** 虚拟滚动（1 万+行）、行展开（▸/▾ 箭头 + renderDetail 详情行，受控+非受控）、列分组（ColumnDef.children 递归 + colSpan/rowSpan 多级表头）、列状态 localStorage 自动持久化、columnPicker prop 一键齿轮按钮集成。**Phase 4 扩展：** 键盘导航（ArrowUp/Down/Home/End 焦点移动 + ScrollIntoView + Escape 取消焦点）、多选（Ctrl+Click/Shift+Click/Space 切换 + Ctrl+A 全选）、selectedKeys 受控 + showCheckbox 复选框列 + 表头全选、列组折叠（ColumnGroupable + collapsedGroups Set + ▶/▼ 切换）、表头筛选（filterable 标记 + filterValues state）、列拖拽排序（HTML5 DnD）、条件着色（ColumnConditionalColor 阈值匹配 + 自动 color/bg） |
 | `ColumnPicker` | 列编辑器弹层 — HTML5 DnD 拖拽排序、行内编辑（标签/宽度/对齐/固定/格式）、3 套预设方案、导出 JSON、自定义列添加 |
 | `ColumnFormats` / `FORMAT_PRESETS` | 7 种格式预设 — number/percent/price/changePercent/volume/text/date，含 format 和 render 函数 |
 | `COLUMN_PRESETS` | 3 组列预设（常用/完整/简洁）— 内置典型行情的列定义模板 |

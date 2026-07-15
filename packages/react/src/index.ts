@@ -256,6 +256,15 @@ export type { OrderStatusTagProps } from './components/quant/order-status-tag';
 export { FORMAT_PRESETS, getFormatPreset } from './components/column-formats';
 export type { ColumnFormat, FormatPresetKey } from './components/column-formats';
 export { ConfigurableGrid } from './components/configurable-grid';
-export type { ColumnDef, ConfigurableGridProps } from './components/configurable-grid';
+export type {
+  ColumnDef,
+  ConfigurableGridProps,
+  SelectableConfig,
+  VirtualizedConfig,
+  ExpandableConfig,
+  ColumnStorageConfig,
+  ColumnGroupable,
+  ColumnConditionalColor,
+} from './components/configurable-grid';
 export { ColumnPicker, COLUMN_PRESETS } from './components/column-picker';
 export type { ColumnPickerProps, ColumnPreset } from './components/column-picker';

@@ -4,6 +4,26 @@ import { getFormatPreset, type ColumnFormat } from './column-formats';
 import { Empty } from './empty';
 import { ColumnPicker } from './column-picker';
 
+export interface ColumnGroupable {
+  /** 折叠时仅显示这些子列的 key */
+  collapsedColumns: string[];
+  /** 默认是否折叠 */
+  defaultCollapsed?: boolean;
+}
+
+export interface ColumnConditionalColor {
+  /** 比较值 */
+  value: number | string;
+  /** 颜色，如 'var(--up)' / 'var(--down)' / '#ff0' */
+  color: string;
+  /** 背景色，可选 */
+  bg?: string;
+  /** 比较操作符，默认 '>' */
+  op?: '>' | '<' | '>=' | '<=' | '=' | 'between';
+  /** between 模式的上限 */
+  max?: number | string;
+}
+
 export interface ColumnDef<T> {
   key: string;
   label: string;
@@ -20,6 +40,12 @@ export interface ColumnDef<T> {
   renderHeader?: () => React.ReactNode;
   /** 子列定义——用于列分组（多级表头） */
   children?: ColumnDef<T>[];
+  /** Excel 风格列组折叠 */
+  groupable?: ColumnGroupable;
+  /** 条件着色规则 */
+  conditionalColor?: ColumnConditionalColor[];
+  /** 筛选器配置 */
+  filterable?: boolean;
 }
 
 export interface VirtualizedConfig {
@@ -43,6 +69,13 @@ export interface ColumnStorageConfig {
   storage?: Storage;
 }
 
+export interface SelectableConfig<T> {
+  selectedKeys?: Set<string>;
+  defaultSelectedKeys?: Set<string>;
+  onSelectionChange?: (keys: Set<string>) => void;
+  showCheckbox?: boolean;
+}
+
 export interface ConfigurableGridProps<T> {
   data: T[];
   columns: ColumnDef<T>[];
@@ -60,6 +93,10 @@ export interface ConfigurableGridProps<T> {
   columnStorage?: ColumnStorageConfig;
   /** 是否显示 ColumnPicker 按钮 */
   columnPicker?: boolean;
+  /** 启用键盘导航（ArrowUp/Down/Home/End） */
+  navigable?: boolean;
+  /** 多选配置 */
+  selectable?: SelectableConfig<T>;
 }
 
 type SortDir = 'asc' | 'desc' | null;
@@ -71,11 +108,14 @@ function getRowKey<T>(row: T, rowKey: string | ((row: T) => string)): string {
 
 // ─── 列分组辅助函数 ───────────────────────────────────
 
-/** 展开分组列，返回叶子列列表 */
-function flattenColumns<T>(cols: ColumnDef<T>[]): ColumnDef<T>[] {
+/** 展开分组列，返回叶子列列表（支持折叠状态） */
+function flattenColumns<T>(cols: ColumnDef<T>[], collapsedGroups?: Set<string>): ColumnDef<T>[] {
   return cols.flatMap((c) => {
     if (c.children && c.children.length > 0 && c.visible !== false) {
-      return flattenColumns(c.children);
+      if (collapsedGroups?.has(c.key)) {
+        return c.children.filter((ch) => ch.visible !== false && c.groupable?.collapsedColumns.includes(ch.key));
+      }
+      return flattenColumns(c.children, collapsedGroups);
     }
     return c.visible !== false ? [c] : [];
   });
@@ -104,20 +144,28 @@ function buildHeaderRows<T>(
   cols: ColumnDef<T>[],
   depth: number,
   maxDepth: number,
+  collapsedGroups?: Set<string>,
 ): HeaderCellInfo[][] {
   const rows: HeaderCellInfo[][] = Array.from({ length: maxDepth + 1 }, () => []);
   for (const col of cols) {
     if (col.visible === false) continue;
     if (col.children && col.children.length > 0) {
-      // 分组节点——占据 1 行，colSpan = 可见子列数
-      const leafCount = flattenColumns(col.children).length;
+      const isCollapsed = collapsedGroups?.has(col.key);
+      const visibleChildren = isCollapsed
+        ? col.children.filter((ch) => ch.visible !== false && col.groupable?.collapsedColumns.includes(ch.key))
+        : col.children.filter((ch) => ch.visible !== false);
+      if (visibleChildren.length === 0) continue;
+      const leafCount = isCollapsed
+        ? visibleChildren.length
+        : flattenColumns(visibleChildren, collapsedGroups).length;
       rows[depth].push({ column: col as ColumnDef<unknown>, colSpan: leafCount, rowSpan: 1, isGroup: true });
-      const childRows = buildHeaderRows(col.children, depth + 1, maxDepth);
-      for (let r = depth + 1; r <= maxDepth; r++) {
-        rows[r].push(...childRows[r]);
+      if (!isCollapsed) {
+        const childRows = buildHeaderRows(col.children, depth + 1, maxDepth, collapsedGroups);
+        for (let r = depth + 1; r <= maxDepth; r++) {
+          rows[r].push(...childRows[r]);
+        }
       }
     } else {
-      // 叶子节点——rowSpan = 剩余深度 + 1
       const rowSpan = maxDepth - depth + 1;
       rows[depth].push({ column: col as ColumnDef<unknown>, colSpan: 1, rowSpan, isGroup: false });
     }
@@ -190,12 +238,39 @@ function ConfigurableGridInner<T>({
   expandable,
   columnStorage,
   columnPicker,
+  navigable,
+  selectable,
 }: ConfigurableGridProps<T>) {
   const [sortKey, setSortKey] = useState<string | null>(null);
   const [sortDir, setSortDir] = useState<SortDir>(null);
   const [scrollTop, setScrollTop] = useState(0);
   const [containerHeight, setContainerHeight] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [focusedIndex, setFocusedIndex] = useState<number>(-1);
+  const lastClickIndexRef = useRef<number>(-1);
+
+  const isSelectControlled = !!selectable?.selectedKeys;
+  const defaultSelected = selectable?.defaultSelectedKeys ?? new Set<string>();
+  const [localSelectedKeys, setLocalSelectedKeys] = useState<Set<string>>(new Set(defaultSelected));
+  const selectedKeys = isSelectControlled
+    ? (selectable!.selectedKeys ?? new Set<string>())
+    : localSelectedKeys;
+
+  const toggleSelection = useCallback((key: string, ctrlKey?: boolean) => {
+    const next = new Set(selectedKeys);
+    if (ctrlKey) {
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+    } else {
+      if (next.has(key) && next.size === 1) next.clear();
+      else { next.clear(); next.add(key); }
+    }
+    if (isSelectControlled) {
+      selectable?.onSelectionChange?.(next);
+    } else {
+      setLocalSelectedKeys(next);
+    }
+  }, [selectedKeys, isSelectControlled, selectable]);
 
   const handleScroll = useCallback(() => {
     if (scrollRef.current) {
@@ -232,12 +307,74 @@ function ConfigurableGridInner<T>({
     [expandedKeys, getExpandKey, isExpandableControlled, expandable],
   );
 
+  // 列组折叠状态
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(() => {
+    const init = new Set<string>();
+    for (const col of rawColumns) {
+      if (col.groupable?.defaultCollapsed) init.add(col.key);
+    }
+    return init;
+  });
+  const toggleCollapseGroup = useCallback((key: string) => {
+    setCollapsedGroups((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }, []);
+
+  // 表头筛选状态
+  const [filterValues, setFilterValues] = useState<Record<string, string>>({});
+  const [openFilter, setOpenFilter] = useState<string | null>(null);
+  const filterRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!openFilter) return;
+    const cb = (e: MouseEvent) => {
+      if (filterRef.current && !filterRef.current.contains(e.target as Node)) setOpenFilter(null);
+    };
+    document.addEventListener('mousedown', cb);
+    return () => document.removeEventListener('mousedown', cb);
+  }, [openFilter]);
+
+  // 列拖拽排序状态
+  const dragColRef = useRef<{ key: string; startX: number; startIdx: number } | null>(null);
+
   const hasGroupedColumns = rawColumns.some((c) => c.children && c.children.length > 0);
   const columns = hasGroupedColumns
-    ? flattenColumns(rawColumns).filter((c) => c.visible !== false)
+    ? flattenColumns(rawColumns, collapsedGroups).filter((c) => c.visible !== false)
     : rawColumns.filter((c) => c.visible !== false);
   const hasResizable = columns.some((c) => c.resizable);
   const colSpanTotal = columns.length + (expandable ? 1 : 0);
+
+  // 条件着色辅助
+  function getConditionalStyle(col: ColumnDef<T>, value: unknown): React.CSSProperties {
+    const rules = col.conditionalColor;
+    if (!rules || rules.length === 0) return {};
+    const numVal = typeof value === 'number' ? value : Number(value);
+    for (const rule of rules) {
+      const op = rule.op || '>';
+      let match = false;
+      if (typeof numVal === 'number' && !isNaN(numVal)) {
+        const rv = typeof rule.value === 'number' ? rule.value : Number(rule.value);
+        switch (op) {
+          case '>': match = numVal > rv; break;
+          case '<': match = numVal < rv; break;
+          case '>=': match = numVal >= rv; break;
+          case '<=': match = numVal <= rv; break;
+          case '=': match = numVal === rv; break;
+          case 'between': match = numVal >= rv && numVal <= Number(rule.max ?? Infinity); break;
+        }
+      }
+      if (match) {
+        const s: React.CSSProperties = {};
+        if (rule.color) s.color = rule.color;
+        if (rule.bg) s.background = rule.bg;
+        return s;
+      }
+    }
+    return {};
+  }
 
   // 列状态持久化
   const storageRef = useRef(columnStorage?.storage ?? (typeof window !== 'undefined' ? window.localStorage : null));
@@ -332,10 +469,25 @@ function ConfigurableGridInner<T>({
     }
   }
 
+  // Filter data
+  const filtered = React.useMemo(() => {
+    const filterKeys = Object.keys(filterValues);
+    if (filterKeys.length === 0) return data;
+    return data.filter((row) => {
+      for (const key of filterKeys) {
+        const val = filterValues[key];
+        if (!val) continue;
+        const cellVal = String((row as Record<string, unknown>)[key] ?? '');
+        if (!cellVal.toLowerCase().includes(val.toLowerCase())) return false;
+      }
+      return true;
+    });
+  }, [data, filterValues]);
+
   // Sort data
   const sorted = React.useMemo(() => {
-    if (!sortKey || !sortDir) return data;
-    return [...data].sort((a, b) => {
+    if (!sortKey || !sortDir) return filtered;
+    return [...filtered].sort((a, b) => {
       const aVal = (a as Record<string, unknown>)[sortKey];
       const bVal = (b as Record<string, unknown>)[sortKey];
       if (typeof aVal === 'number' && typeof bVal === 'number') {
@@ -345,7 +497,32 @@ function ConfigurableGridInner<T>({
       const bStr = String(bVal ?? '');
       return sortDir === 'asc' ? aStr.localeCompare(bStr) : bStr.localeCompare(aStr);
     });
-  }, [data, sortKey, sortDir]);
+  }, [filtered, sortKey, sortDir]);
+
+  const handleRowSelect = useCallback((row: T, idx: number, e: React.MouseEvent) => {
+    if (!selectable) return;
+    const key = getRowKey(row, rowKey) || String(idx);
+    if (e.shiftKey && lastClickIndexRef.current >= 0) {
+      const from = lastClickIndexRef.current;
+      const next = new Set(selectedKeys);
+      const start = Math.min(from, idx);
+      const end = Math.max(from, idx);
+      for (let i = start; i <= end; i++) {
+        const r = sorted[i];
+        if (r) next.add(getRowKey(r, rowKey) || String(i));
+      }
+      if (isSelectControlled) {
+        selectable?.onSelectionChange?.(next);
+      } else {
+        setLocalSelectedKeys(next);
+      }
+    } else if (e.ctrlKey || e.metaKey) {
+      toggleSelection(key, true);
+    } else {
+      toggleSelection(key);
+    }
+    lastClickIndexRef.current = idx;
+  }, [selectable, rowKey, toggleSelection, isSelectControlled, sorted]);
 
   const isSortable = (col: ColumnDef<T>) => globalSortable ?? col.sortable ?? false;
   const hasFixedCol = columns.some((c) => c.fixed);
@@ -356,25 +533,95 @@ function ConfigurableGridInner<T>({
   const isVirtualized = !!virtualized;
 
   let visibleStart = 0;
-  let visibleEnd = data.length;
+  let visibleEnd = filtered.length;
   let topSpacerHeight = 0;
   let bottomSpacerHeight = 0;
 
   if (isVirtualized && containerHeight > 0) {
     visibleStart = Math.max(0, Math.floor(scrollTop / virtualRowHeight) - overscan);
-    visibleEnd = Math.min(data.length, Math.ceil((scrollTop + containerHeight) / virtualRowHeight) + overscan);
+    visibleEnd = Math.min(filtered.length, Math.ceil((scrollTop + containerHeight) / virtualRowHeight) + overscan);
     topSpacerHeight = visibleStart * virtualRowHeight;
-    bottomSpacerHeight = (data.length - visibleEnd) * virtualRowHeight;
+    bottomSpacerHeight = (filtered.length - visibleEnd) * virtualRowHeight;
   }
 
   const visibleData = isVirtualized && containerHeight > 0 ? sorted.slice(visibleStart, visibleEnd) : sorted;
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (!navigable && !selectable) return;
+    const maxIdx = sorted.length - 1;
+    if (maxIdx < 0) return;
+    let nextFocus = focusedIndex;
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        nextFocus = Math.min(focusedIndex + 1, maxIdx);
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        nextFocus = Math.max(focusedIndex - 1, 0);
+        break;
+      case 'Home':
+        e.preventDefault();
+        nextFocus = 0;
+        break;
+      case 'End':
+        e.preventDefault();
+        nextFocus = maxIdx;
+        break;
+      case 'Escape':
+        e.preventDefault();
+        setFocusedIndex(-1);
+        return;
+      case ' ':
+        if (selectable && focusedIndex >= 0) {
+          e.preventDefault();
+          const row = sorted[focusedIndex];
+          const key = getRowKey(row, rowKey) || String(focusedIndex);
+          toggleSelection(key, false);
+          lastClickIndexRef.current = focusedIndex;
+        }
+        return;
+      case 'a':
+        if (selectable && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault();
+          const all = new Set(sorted.map((r, i) => getRowKey(r, rowKey) || String(i)));
+          if (isSelectControlled) {
+            selectable?.onSelectionChange?.(all);
+          } else {
+            setLocalSelectedKeys(all);
+          }
+        }
+        return;
+      default:
+        return;
+    }
+
+    if (nextFocus !== focusedIndex) {
+      setFocusedIndex(nextFocus);
+      if (isVirtualized && scrollRef.current && nextFocus >= 0) {
+        const rowTop = nextFocus * virtualRowHeight;
+        const rowBottom = rowTop + virtualRowHeight;
+        const st = scrollRef.current.scrollTop;
+        const ch = scrollRef.current.clientHeight;
+        if (rowTop < st) scrollRef.current.scrollTop = rowTop;
+        else if (rowBottom > st + ch) scrollRef.current.scrollTop = rowBottom - ch;
+      }
+    }
+  }, [navigable, selectable, focusedIndex, sorted, rowKey, toggleSelection, isSelectControlled, isVirtualized, virtualRowHeight]);
+
+  const showCheckbox = selectable?.showCheckbox === true;
+  const totalColSpan = colSpanTotal + (showCheckbox ? 1 : 0);
 
   return (
     <div
       ref={scrollRef}
       onScroll={isVirtualized ? handleScroll : undefined}
+      tabIndex={navigable || selectable ? 0 : undefined}
+      onKeyDown={handleKeyDown}
       className={cn(
         'relative w-full overflow-auto rounded-[var(--card-radius)] border border-[var(--border-main)] bg-[var(--bg-card)]',
+        (navigable || selectable) && 'outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent)]',
         className,
       )}
     >
@@ -406,6 +653,30 @@ function ConfigurableGridInner<T>({
           {hasGroupedColumns && headerRows
             ? headerRows.map((row, rowIdx) => (
                 <tr key={`hdr-${rowIdx}`} className="border-b border-[var(--border-sub)]">
+                  {showCheckbox && rowIdx === 0 && (
+                    <th
+                      className="h-10 px-2 text-[11px] font-medium text-[var(--text-secondary)] select-none"
+                      style={{ width: 40, minWidth: 40, maxWidth: 40 }}
+                      rowSpan={headerRows.length}
+                    >
+                      <input
+                        ref={(el) => { if (el) el.indeterminate = selectedKeys.size > 0 && selectedKeys.size < sorted.length; }}
+                        type="checkbox"
+                        className="cursor-pointer accent-[var(--accent)]"
+                        checked={sorted.length > 0 && selectedKeys.size === sorted.length}
+                        onChange={() => {
+                          if (selectedKeys.size === sorted.length) {
+                            if (isSelectControlled) selectable?.onSelectionChange?.(new Set());
+                            else setLocalSelectedKeys(new Set());
+                          } else {
+                            const all = new Set(sorted.map((r, i) => getRowKey(r, rowKey) || String(i)));
+                            if (isSelectControlled) selectable?.onSelectionChange?.(all);
+                            else setLocalSelectedKeys(all);
+                          }
+                        }}
+                      />
+                    </th>
+                  )}
                   {expandable && rowIdx === 0 && (
                     <th
                       key="__expand"
@@ -417,6 +688,8 @@ function ConfigurableGridInner<T>({
                   {row.map((cell, ci) => {
                     const col = cell.column;
                     const headerAlign = col.align || 'left';
+                    const isCollapsed = cell.isGroup && collapsedGroups.has(col.key);
+                    const hasGroupToggle = cell.isGroup && !!(col as ColumnDef<T>).groupable;
                     return (
                       <th
                         key={col.key || `hdr-${rowIdx}-${ci}`}
@@ -444,6 +717,14 @@ function ConfigurableGridInner<T>({
                       >
                         {col.renderHeader ? col.renderHeader() : (
                           <span className="inline-flex items-center gap-1">
+                            {hasGroupToggle && (
+                              <span
+                                className="inline-flex items-center justify-center w-3.5 h-3.5 text-[10px] cursor-pointer hover:text-[var(--text-primary)] transition-colors select-none"
+                                onClick={(e) => { e.stopPropagation(); toggleCollapseGroup(col.key); }}
+                              >
+                                {isCollapsed ? '\u25B6' : '\u25BC'}
+                              </span>
+                            )}
                             {col.label}
                             {!cell.isGroup && isSortable(col as ColumnDef<T>) && sortKey === col.key && (
                               <span className="text-[10px]">{sortDir === 'asc' ? '\u25B2' : '\u25BC'}</span>
@@ -457,6 +738,29 @@ function ConfigurableGridInner<T>({
               ))
             : (
               <tr className="border-b border-[var(--border-sub)]">
+                {showCheckbox && (
+                  <th
+                    className="h-10 px-2 text-[11px] font-medium text-[var(--text-secondary)] select-none"
+                    style={{ width: 40, minWidth: 40, maxWidth: 40 }}
+                  >
+                    <input
+                      ref={(el) => { if (el) el.indeterminate = selectedKeys.size > 0 && selectedKeys.size < sorted.length; }}
+                      type="checkbox"
+                      className="cursor-pointer accent-[var(--accent)]"
+                      checked={sorted.length > 0 && selectedKeys.size === sorted.length}
+                      onChange={() => {
+                        if (selectedKeys.size === sorted.length) {
+                          if (isSelectControlled) selectable?.onSelectionChange?.(new Set());
+                          else setLocalSelectedKeys(new Set());
+                        } else {
+                          const all = new Set(sorted.map((r, i) => getRowKey(r, rowKey) || String(i)));
+                          if (isSelectControlled) selectable?.onSelectionChange?.(all);
+                          else setLocalSelectedKeys(all);
+                        }
+                      }}
+                    />
+                  </th>
+                )}
                 {expandable && (
                   <th
                     key="__expand"
@@ -469,10 +773,15 @@ function ConfigurableGridInner<T>({
                     ? getFormatPreset(col.format)
                     : undefined;
                   const headerAlign = col.align || formatPreset?.align || 'left';
+                  const hasFilter = col.filterable;
+                  const isFilterOpen = openFilter === col.key;
+                  const hasColGroup = !!(col as ColumnDef<T>).groupable;
+                  const isColGroupCollapsed = hasColGroup && collapsedGroups.has(col.key);
 
                   return (
                     <th
                       key={col.key}
+                      draggable={!col.fixed}
                       className={cn(
                         'h-10 px-5 text-[11px] font-medium text-[var(--text-secondary)] tracking-[0.03em] relative select-none',
                         headerAlign === 'right'
@@ -482,6 +791,7 @@ function ConfigurableGridInner<T>({
                             : 'text-left',
                         isSortable(col) &&
                           'cursor-pointer select-none hover:text-[var(--text-primary)] transition-colors',
+                        !col.fixed && 'cursor-grab active:cursor-grabbing',
                       )}
                       style={{
                         width: col.width || 120,
@@ -496,16 +806,82 @@ function ConfigurableGridInner<T>({
                         ...(col.fixed ? { background: 'var(--bg-card)' } : {}),
                       }}
                       onClick={() => isSortable(col) && handleSort(col.key)}
+                      onDragStart={(e) => {
+                        dragColRef.current = { key: col.key, startX: e.clientX, startIdx: i };
+                        e.dataTransfer.effectAllowed = 'move';
+                      }}
+                      onDragOver={(e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        const src = dragColRef.current;
+                        if (!src || src.key === col.key || !onColumnsChange) return;
+                        const updated = [...rawColumns];
+                        const srcIdx = updated.findIndex((c) => c.key === src.key);
+                        const dstIdx = updated.findIndex((c) => c.key === col.key);
+                        if (srcIdx < 0 || dstIdx < 0) return;
+                        const [moved] = updated.splice(srcIdx, 1);
+                        updated.splice(dstIdx, 0, moved);
+                        onColumnsChange(updated);
+                        dragColRef.current = null;
+                      }}
                     >
                       {col.renderHeader ? (
                         col.renderHeader()
                       ) : (
                         <span className="inline-flex items-center gap-1">
+                          {hasColGroup && (
+                            <span
+                              className="inline-flex items-center justify-center w-3.5 h-3.5 text-[10px] cursor-pointer hover:text-[var(--text-primary)] transition-colors"
+                              onClick={(e) => { e.stopPropagation(); toggleCollapseGroup(col.key); }}
+                            >
+                              {isColGroupCollapsed ? '\u25B6' : '\u25BC'}
+                            </span>
+                          )}
                           {col.label}
                           {isSortable(col) && sortKey === col.key && (
                             <span className="text-[10px]">{sortDir === 'asc' ? '\u25B2' : '\u25BC'}</span>
                           )}
+                          {hasFilter && (
+                            <span
+                              className={cn(
+                                'inline-flex items-center justify-center w-4 h-4 text-[11px] rounded cursor-pointer hover:bg-[var(--bg-card-hover)]',
+                                filterValues[col.key] ? 'text-[var(--accent)]' : 'text-[var(--text-tertiary)]',
+                              )}
+                              onClick={(e) => { e.stopPropagation(); setOpenFilter(isFilterOpen ? null : col.key); }}
+                            >
+                              \u25C6
+                            </span>
+                          )}
                         </span>
+                      )}
+                      {isFilterOpen && (
+                        <div
+                          ref={filterRef}
+                          className="absolute top-full left-0 mt-1 z-50 w-48 p-2 rounded bg-[var(--bg-card)] border border-[var(--border-main)] shadow-lg"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <input
+                            className="w-full h-7 px-2 text-[12px] rounded bg-[var(--bg-card-hover)] border border-[var(--border-sub)] text-[var(--text-primary)] outline-none focus:border-[var(--accent)]"
+                            placeholder="搜索..."
+                            autoFocus
+                            value={filterValues[col.key] || ''}
+                            onChange={(e) => {
+                              setFilterValues((prev) => ({ ...prev, [col.key]: e.target.value }));
+                            }}
+                          />
+                          {filterValues[col.key] && (
+                            <button
+                              className="mt-1 w-full h-6 text-[11px] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] rounded hover:bg-[var(--bg-card-hover)] transition-colors"
+                              onClick={() => {
+                                const next = { ...filterValues };
+                                delete next[col.key];
+                                setFilterValues(next);
+                              }}
+                            >
+                              清除筛选
+                            </button>
+                          )}
+                        </div>
                       )}
                       {col.resizable && hasResizable && (
                         <div
@@ -525,7 +901,7 @@ function ConfigurableGridInner<T>({
         <tbody>
           {sorted.length === 0 ? (
             <tr>
-              <td colSpan={colSpanTotal} className="p-8 text-center">
+              <td colSpan={totalColSpan} className="p-8 text-center">
                 <Empty description={emptyText} />
               </td>
             </tr>
@@ -533,7 +909,7 @@ function ConfigurableGridInner<T>({
             <>
               {isVirtualized && topSpacerHeight > 0 && (
                 <tr>
-                  <td colSpan={colSpanTotal} style={{ height: topSpacerHeight, border: 'none', padding: 0 }} />
+                  <td colSpan={totalColSpan} style={{ height: topSpacerHeight, border: 'none', padding: 0 }} />
                 </tr>
               )}
               {visibleData.map((row, displayIdx) => {
@@ -545,11 +921,32 @@ function ConfigurableGridInner<T>({
                   <React.Fragment key={rowKeyStr}>
                     <tr
                       className={cn(
-                        'border-b border-[var(--border-sub)] transition-colors hover:bg-[var(--bg-card-hover)]',
+                        'border-b border-[var(--border-sub)] transition-colors',
                         onRowClick && 'cursor-pointer',
+                        !selectedKeys.has(rowKeyStr) && 'hover:bg-[var(--bg-card-hover)]',
+                        selectedKeys.has(rowKeyStr) && 'bg-[var(--accent)]/10',
+                        navigable && focusedIndex === realIdx && 'outline outline-1 outline-[var(--accent)] outline-offset-[-1px]',
                       )}
-                      onClick={() => onRowClick?.(row)}
+                      onClick={(e) => {
+                        handleRowSelect(row, realIdx, e);
+                        onRowClick?.(row);
+                      }}
+                      onMouseEnter={() => { if (navigable) setFocusedIndex(realIdx); }}
                     >
+                      {showCheckbox && (
+                        <td
+                          className="p-2 px-3 text-center select-none"
+                          style={{ width: 40, minWidth: 40, maxWidth: 40 }}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <input
+                            type="checkbox"
+                            className="cursor-pointer accent-[var(--accent)]"
+                            checked={selectedKeys.has(rowKeyStr)}
+                            onChange={() => toggleSelection(rowKeyStr, true)}
+                          />
+                        </td>
+                      )}
                       {expandable && (
                         <td
                           className="p-2 px-3 text-center w-8 select-none"
@@ -567,6 +964,7 @@ function ConfigurableGridInner<T>({
                           : undefined;
                         const colAlign = col.align || formatPreset?.align || 'left';
                         const cellValue = (row as Record<string, unknown>)[col.key];
+                        const condStyle = getConditionalStyle(col, cellValue);
                         return (
                           <td
                             key={col.key}
@@ -580,6 +978,7 @@ function ConfigurableGridInner<T>({
                             )}
                             style={{
                               width: col.width || 120,
+                              ...condStyle,
                               ...(hasFixedCol && col.fixed === 'left'
                                 ? ({ position: 'sticky', left: fixedLeftWidths[ci], zIndex: col.fixed ? 2 : 1 } as React.CSSProperties)
                                 : {}),
@@ -603,7 +1002,7 @@ function ConfigurableGridInner<T>({
                     {isExpanded && expandable?.renderDetail && (
                       <tr key={`${rowKeyStr}_detail`} className="border-b border-[var(--border-sub)]">
                         <td
-                          colSpan={colSpanTotal}
+                          colSpan={totalColSpan}
                           className="p-4"
                           style={{ height: isVirtualized ? detailHeight : undefined }}
                         >
@@ -616,7 +1015,7 @@ function ConfigurableGridInner<T>({
               })}
               {isVirtualized && bottomSpacerHeight > 0 && (
                 <tr>
-                  <td colSpan={colSpanTotal} style={{ height: bottomSpacerHeight, border: 'none', padding: 0 }} />
+                  <td colSpan={totalColSpan} style={{ height: bottomSpacerHeight, border: 'none', padding: 0 }} />
                 </tr>
               )}
             </>

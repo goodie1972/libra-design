@@ -39,6 +39,10 @@ export interface StockTableProps {
   expandable?: ConfigurableGridProps<StockTableRow>['expandable'];
   /** 默认列定义（用于 ColumnPicker 「重置为默认」回退） */
   defaultColumns?: ColumnDef<StockTableRow>[];
+  /** 启用键盘导航 */
+  navigable?: boolean;
+  /** 多选配置 */
+  selectable?: ConfigurableGridProps<StockTableRow>['selectable'];
 }
 
 // ============================================================
@@ -129,6 +133,8 @@ export function StockTable({
   columnStorage,
   expandable,
   defaultColumns,
+  navigable,
+  selectable,
 }: StockTableProps) {
   const baseColumns = useMemo(
     () => (showExtra ? [...STOCK_TABLE_COLUMNS, ...STOCK_TABLE_EXTRA_COLUMNS] : STOCK_TABLE_COLUMNS),
@@ -156,6 +162,8 @@ export function StockTable({
       columnStorage={columnStorage ?? { key: 'stock-table-columns' }}
       virtualized={virtualized}
       expandable={expandable}
+      navigable={navigable}
+      selectable={selectable}
     />
   );
 }

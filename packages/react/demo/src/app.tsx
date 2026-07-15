@@ -6,8 +6,9 @@ import {
   Select, Tabs, Tag, Modal, Tooltip, Switch,
   Table, TableHeader, TableHead, TableRow, TableCell,
   StockTable, ConfigurableGrid, ColumnPicker, COLUMN_PRESETS,
+  TimeShareChart, KLineChart,
 } from '@libra-design/react';
-import type { Tab, StockTableRow, ColumnDef } from '@libra-design/react';
+import type { Tab, StockTableRow, ColumnDef, TimeSharePoint, KLineData } from '@libra-design/react';
 
 // ============================================================
 // 示例数据
@@ -20,6 +21,38 @@ const marketData: StockTableRow[] = [
 ];
 
 // ============================================================
+// 模拟数据
+// ============================================================
+function genTimeShareData(): TimeSharePoint[] {
+  const data: TimeSharePoint[] = [];
+  const basePrice = 1689.50;
+  let p = basePrice;
+  for (let i = 0; i < 242; i++) {
+    const t = `${String(9 + Math.floor((i * 5 + 330) / 60)).padStart(2, '0')}:${String((i * 5 + 330) % 60).padStart(2, '0')}`;
+    p += (Math.random() - 0.48) * 3;
+    data.push({ time: t, price: p, volume: Math.floor(Math.random() * 5000 + 500), avgPrice: basePrice + (p - basePrice) * 0.7 });
+  }
+  return data;
+}
+function genKLineData(): KLineData[] {
+  const data: KLineData[] = [];
+  let c = 1689.50;
+  const d = new Date('2026-04-01');
+  for (let i = 0; i < 60; i++) {
+    d.setDate(d.getDate() + 1);
+    if (d.getDay() === 0) d.setDate(d.getDate() + 1);
+    if (d.getDay() === 6) d.setDate(d.getDate() + 2);
+    const candle = (Math.random() - 0.45) * 40;
+    const o = c;
+    c = o + candle;
+    const high = Math.max(o, c) + Math.random() * 10;
+    const low = Math.min(o, c) - Math.random() * 10;
+    data.push({ time: `${d.getMonth() + 1}/${d.getDate()}`, open: o, high, low, close: c, volume: Math.floor(Math.random() * 80000 + 10000) });
+  }
+  return data;
+}
+
+// ============================================================
 // App
 // ============================================================
 export function App() {
@@ -28,6 +61,10 @@ export function App() {
   const [switchOn, setSwitchOn] = useState(false);
   const [tabValue, setTabValue] = useState('1m');
   const [selectValue, setSelectValue] = useState('');
+  const [selectedStock, setSelectedStock] = useState<StockTableRow | null>(null);
+  const [chartTab, setChartTab] = useState('timeshare');
+  const [tsData] = useState(genTimeShareData);
+  const [klData] = useState(genKLineData);
 
   return (
     <div style={{ background: 'var(--bg-root)', color: 'var(--text-primary)', minHeight: '100vh', fontFamily: 'var(--font-body)', transition: 'background 0.6s, color 0.6s' }}>
@@ -199,12 +236,101 @@ export function App() {
           </div>
         </Section>
 
+        {/* ============================== 键盘导航 + 多选 ============================== */}
+        <Section title="键盘导航 + 多选（ConfigurableGrid 原生）">
+          <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 16, lineHeight: 1.6 }}>
+            设置 <code>navigable</code> 启用键盘导航（↑↓⇱⇲）；<code>selectable</code> 启用多选（Ctrl/Shift+单击、Space 切换、Ctrl+A 全选、复选框模式）。
+            可受控或非受控使用。
+          </p>
+          <ConfigurableGrid
+            data={Array.from({ length: 20 }, (_, i) => ({
+              code: `sh600${String(i + 1).padStart(3, '0')}`,
+              name: `Sample Stock #${i + 1}`,
+              price: 50 + Math.random() * 300,
+              change: (Math.random() - 0.5) * 30,
+              changePercent: (Math.random() - 0.5) * 12,
+            }))}
+            columns={[
+              { key: 'code', label: '代码', width: 100, sortable: true },
+              { key: 'name', label: '名称', width: 150, sortable: true },
+              { key: 'price', label: '最新价', width: 100, format: 'price', sortable: true, align: 'right' },
+              { key: 'change', label: '涨跌额', width: 100, sortable: true, align: 'right',
+                render: (r) => <span style={{ color: r.change >= 0 ? 'var(--up)' : 'var(--down)', fontFamily: 'var(--font-mono)' }}>{r.change > 0 ? '+' : ''}{r.change.toFixed(2)}</span> },
+              { key: 'changePercent', label: '涨跌幅', width: 100, format: 'changePercent', sortable: true, align: 'right' },
+            ]}
+            rowKey="code"
+            navigable
+            selectable={{ showCheckbox: true }}
+          />
+        </Section>
+
+        {/* ============================== Excel 风格功能 ============================== */}
+        <Section title="Excel 风格功能（列组折叠 + 筛选 + 列拖拽 + 条件着色）">
+          <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 16, lineHeight: 1.6 }}>
+            <b>列组折叠</b>：点击分组表头的 ▶/▼ 按钮折叠/展开子列，折叠时只显示指定列。<br />
+            <b>表头筛选</b>：点击列名旁的 ◆ 打开筛选输入框。<br />
+            <b>列拖拽排序</b>：拖拽未固定的表头重新排列列顺序。<br />
+            <b>条件着色</b>：基于值自动标色，如涨跌幅 &gt;5% 红色、小于 -5% 绿色。
+          </p>
+          <div style={{ maxHeight: 400, overflow: 'auto', border: '1px solid var(--border-main)', borderRadius: 'var(--card-radius)' }}>
+            <ConfigurableGrid
+              data={Array.from({ length: 30 }, (_, i) => ({
+                code: `600${String(i + 1).padStart(3, '0')}`,
+                name: `标的 ${i + 1}`,
+                price: 50 + Math.random() * 250,
+                change: (Math.random() - 0.5) * 30,
+                changePercent: (Math.random() - 0.5) * 16,
+                volume: Math.floor(Math.random() * 1000000),
+                turnover: Math.floor(Math.random() * 50000000),
+                high: 0,
+                low: 0,
+              }))}
+              columns={[
+                { key: 'code', label: '代码', width: 90, sortable: true, fixed: 'left' },
+                { key: 'name', label: '名称', width: 100, sortable: true, fixed: 'left' },
+                {
+                  key: 'price_group', label: '价格体系', children: [
+                    { key: 'price', label: '最新价', width: 100, format: 'price', sortable: true, align: 'right',
+                      conditionalColor: [
+                        { value: 200, color: 'var(--up)', op: '>' },
+                        { value: 100, color: 'var(--text-primary)', op: 'between', max: 200 },
+                        { value: 100, color: 'var(--down)', op: '<' },
+                      ] },
+                    { key: 'change', label: '涨跌额', width: 100, sortable: true, align: 'right',
+                      render: (r) => <span style={{ color: r.change >= 0 ? 'var(--up)' : 'var(--down)', fontFamily: 'var(--font-mono)' }}>{r.change > 0 ? '+' : ''}{r.change.toFixed(2)}</span> },
+                    { key: 'changePercent', label: '涨跌幅', width: 100, format: 'changePercent', sortable: true, align: 'right',
+                      conditionalColor: [
+                        { value: 5, color: 'var(--up)', bg: 'rgba(255,80,80,0.08)', op: '>' },
+                        { value: -5, color: 'var(--down)', bg: 'rgba(0,200,100,0.08)', op: '<' },
+                      ] },
+                  ],
+                  groupable: { collapsedColumns: ['price', 'changePercent'], defaultCollapsed: true },
+                },
+                {
+                  key: 'volume_group', label: '成交量', children: [
+                    { key: 'volume', label: '成交量', width: 110, sortable: true, align: 'right', filterable: true },
+                    { key: 'turnover', label: '成交额', width: 120, format: 'number', sortable: true, align: 'right' },
+                  ],
+                  groupable: { collapsedColumns: ['volume'], defaultCollapsed: false },
+                },
+                { key: 'high', label: '最高', width: 80, format: 'price', align: 'right' },
+                { key: 'low', label: '最低', width: 80, format: 'price', align: 'right' },
+              ]}
+              rowKey="code"
+              navigable
+              sortable
+            />
+          </div>
+        </Section>
+
         {/* ============================== StockTable ============================== */}
         <Section title="StockTable · 可配置行情表（基于 ConfigurableGrid）">
           <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 16, lineHeight: 1.6 }}>
             点击标题栏齿轮按钮 ⚙ 打开 ColumnPicker 编辑列（排序/显隐/固定/格式）。修改会自动持久化到 localStorage。
+            支持键盘导航（↑↓⇱⇲）和多选（Ctrl/Shift+单击、Space 切换、Ctrl+A 全选）。
           </p>
-          <StockTable data={marketData} showExtra columnPicker />
+          <StockTable data={marketData} showExtra columnPicker navigable selectable={{ showCheckbox: true }}
+            onRowClick={(row) => setSelectedStock(row)} />
         </Section>
 
         {/* ============================== ConfigurableGrid ============================== */}
@@ -260,6 +386,29 @@ export function App() {
           </div>
         </Section>
       </div>
+
+      {/* Stock Detail Modal */}
+      <Modal open={!!selectedStock} onClose={() => setSelectedStock(null)}
+        title={`${selectedStock?.name} (${selectedStock?.code})`}>
+        <div style={{ display: 'flex', gap: 16, alignItems: 'baseline', marginBottom: 16 }}>
+          <PriceDisplay value={selectedStock?.price ?? 0}
+            change={selectedStock?.change ?? 0}
+            changePercent={selectedStock?.changePercent ?? 0} />
+        </div>
+        <Tabs
+          tabs={[
+            { value: 'timeshare', label: '分时' },
+            { value: 'kline', label: 'K线' },
+          ]}
+          value={chartTab}
+          onChange={setChartTab}
+        />
+        <div style={{ marginTop: 12 }}>
+          {chartTab === 'timeshare'
+            ? <TimeShareChart data={tsData} width={580} height={300} />
+            : <KLineChart data={klData} width={580} height={360} />}
+        </div>
+      </Modal>
 
       {/* Modal */}
       <Modal open={modalOpen} onClose={() => setModalOpen(false)} title="Trade Confirmation">
