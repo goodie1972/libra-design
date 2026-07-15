@@ -669,46 +669,47 @@ function renderKLine(){
 function renderTimeShare(){
   var el=document.getElementById('tsDemo');if(!el)return;
   el.innerHTML='';
-  var n=120;var pts=[];var avgs=[];var vols=[];var p=1689.50;
+  var n=120;var pts=[];var vols=[];var p=1689.50;
   for(var i=0;i<n;i++){
     p+=(Math.random()-0.48)*2.5;
     pts.push(p);
     vols.push(500000+Math.random()*2000000);
-    if(i<5)avgs.push(p);
-    else{avgs.push((avgs[avgs.length-1]*(i)+p)/(i+1));}
   }
-  // compute avgPrice as running average
+  // running avg price
   var ap=[pts[0]];
-  for(var i=1;i<pts.length;i++){ap.push((ap[i-1]*(i)+pts[i])/(i+1));}
-  var min=Infinity,max=-Infinity;pts.concat(ap).forEach(function(v){if(v<min)min=v;if(v>max)max=v});
+  for(var i=1;i<pts.length;i++){ap.push((ap[i-1]*i+pts[i])/(i+1));}
+  var all=pts.concat(ap);
+  var min=Infinity,max=-Infinity;all.forEach(function(v){if(v<min)min=v;if(v>max)max=v});
   var range=max-min||1;
   var maxH=78;
-  // price line as SVG path
   var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
   svg.style.width='100%';svg.style.height='100%';svg.style.display='block';svg.style.position='absolute';svg.style.top='0';svg.style.left='0';
-  svg.setAttribute('viewBox','0 0 '+n+' '+maxH);
-  svg.setAttribute('preserveAspectRatio','none');
-  // price line
-  var ptsStr=pts.map(function(v,i){return i+','+(maxH-((v-min)/range)*maxH)}).join(' ');
+  // viewBox with padding so stroke-width doesn't clip
+  var pad=2;
+  svg.setAttribute('viewBox','-'+pad+' 0 '+(n+pad*2)+' '+maxH);
+  var plotH=maxH-4;
+  // price line — thin stroke relative to viewBox
+  var ptsStr=pts.map(function(v,i){return i+','+(pad+plotH-((v-min)/range)*plotH)}).join(' ');
   var priceLine=document.createElementNS('http://www.w3.org/2000/svg','polyline');
   priceLine.setAttribute('points',ptsStr);priceLine.setAttribute('fill','none');
-  priceLine.setAttribute('stroke','var(--up)');priceLine.setAttribute('stroke-width','1.5');
+  priceLine.setAttribute('stroke','var(--up)');priceLine.setAttribute('stroke-width','1');
   svg.appendChild(priceLine);
   // avg price line
-  var apPtsStr=ap.map(function(v,i){return i+','+(maxH-((v-min)/range)*maxH)}).join(' ');
+  var apPtsStr=ap.map(function(v,i){return i+','+(pad+plotH-((v-min)/range)*plotH)}).join(' ');
   var avgLine=document.createElementNS('http://www.w3.org/2000/svg','polyline');
   avgLine.setAttribute('points',apPtsStr);avgLine.setAttribute('fill','none');
-  avgLine.setAttribute('stroke','var(--text-tertiary)');avgLine.setAttribute('stroke-width','0.8');
-  avgLine.setAttribute('stroke-dasharray','3,2');avgLine.setAttribute('opacity','0.6');
+  avgLine.setAttribute('stroke','var(--text-tertiary)');avgLine.setAttribute('stroke-width','0.6');
+  avgLine.setAttribute('stroke-dasharray','2,1.5');avgLine.setAttribute('opacity','0.5');
   svg.appendChild(avgLine);
-  // volume bars at bottom
+  // volume bars
   var maxV=Math.max.apply(null,vols);
+  var barW=n/maxH*0.3; // ~0.3px in viewBox units
   for(var i=0;i<n;i++){
     var bar=document.createElementNS('http://www.w3.org/2000/svg','rect');
-    bar.setAttribute('x',i);bar.setAttribute('y',maxH-2);
-    bar.setAttribute('width','0.8');bar.setAttribute('height',(vols[i]/maxV)*12);
+    bar.setAttribute('x',i-barW/2);bar.setAttribute('y',maxH-2);
+    bar.setAttribute('width',barW);bar.setAttribute('height',Math.max(0.5,(vols[i]/maxV)*14));
     bar.setAttribute('fill',pts[i]>=ap[i]?'var(--up)':'var(--down)');
-    bar.setAttribute('opacity','0.4');
+    bar.setAttribute('opacity','0.35');
     svg.appendChild(bar);
   }
   el.appendChild(svg);
