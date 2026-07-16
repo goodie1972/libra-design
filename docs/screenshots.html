@@ -56,20 +56,15 @@ svg{display:block;margin:0 auto}
       <button data-period="monthly">月K</button>
     </div>
   </div>
-  <div class="sb"><svg id="klineChart" width="720" height="380" xmlns="http://www.w3.org/2000/svg"></svg></div>
+  <div class="sb"><svg id="klineChart" width="900" height="420" xmlns="http://www.w3.org/2000/svg"></svg></div>
 </div>
 
 <!-- ======== 分时图 ======== -->
 <div class="section" id="timeshare-section">
   <div class="sh"><h2>TimeShareChart · 分时图</h2><span class="sub">紫金矿业 · 2026-07-16 日内走势 + 均价线 + 成交量</span></div>
-  <div class="sb"><svg id="tsChart" width="720" height="320" xmlns="http://www.w3.org/2000/svg"></svg></div>
+  <div class="sb"><svg id="tsChart" width="900" height="380" xmlns="http://www.w3.org/2000/svg"></svg></div>
 </div>
 
-<!-- ======== 深度图 ======== -->
-<div class="section" id="depth-section">
-  <div class="sh"><h2>DepthChart · 深度图</h2><span class="sub">买卖盘累积深度曲线</span></div>
-  <div class="sb"><svg id="depthChart" width="520" height="300" xmlns="http://www.w3.org/2000/svg"></svg></div>
-</div>
 
 <!-- ======== 行情表格 ======== -->
 <div class="section" id="stocktable-section">
@@ -114,6 +109,10 @@ for (var ti = 0; ti + 3 < tsTokens.length; ti += 4) {
   if (hour >= 15 && min > 0 && min < 30) continue;
   var label = hour + ':' + (min < 10 ? '0' : '') + min;
   INTRADAY.push({ t: label, p: price, v: vol, a: amt });
+}
+// 将成交量从累积值转为每分钟值
+for (var vi = INTRADAY.length - 1; vi > 0; vi--) {
+  INTRADAY[vi].v -= INTRADAY[vi-1].v;
 }
 // 计算均价 = 累积成交额 / 累积成交量
 var cumAmt = 0, cumVol = 0;
@@ -191,7 +190,7 @@ function renderKLine(period) {
   var allData = getPeriodData(period);
   var maxBars = 55;
   var data = allData.slice(-maxBars);
-  var el = document.getElementById('klineChart'), W = 720, H = 380;
+  var el = document.getElementById('klineChart'), W = 900, H = 420;
   var cH = H * 0.72, vH = H * 0.22, pt = 16, pr = 20, pb = 4, pl = 52;
   var iw = W - pl - pr, ih = cH - pt - pb;
 
@@ -234,10 +233,24 @@ function renderKLine(period) {
     s += '<rect x="' + (x - cw / 2) + '" y="' + toVolY(d.v) + '" width="' + cw + '" height="' + Math.max(1, toVolY(0) - toVolY(d.v)) + '" fill="' + volC + '"/>';
   });
 
-  [[ma5, MA5, ''], [ma10, MA10, '3,2'], [ma20, MA20, '4,3']].forEach(function(ln) {
+  var maLabels = [['MA5', MA5], ['MA10', MA10], ['MA20', MA20]];
+  [[ma5, MA5, ''], [ma10, MA10, '3,2'], [ma20, MA20, '4,3']].forEach(function(ln, li) {
     var pts = [];
     ln[0].forEach(function(v, i) { if (!isNaN(v)) pts.push(toX(i) + ',' + toY(v)); });
     if (pts.length) s += '<polyline points="' + pts.join(' ') + '" fill="none" stroke="' + ln[1] + '" stroke-width="1" stroke-dasharray="' + ln[2] + '"/>';
+    var lastV = ln[0][ln[0].length - 1];
+    if (!isNaN(lastV) && pts.length > 0) {
+      s += '<text x="' + (toX(ln[0].length - 1) + 4) + '" y="' + (toY(lastV) + 3) + '" font-size="9" fill="' + ln[1] + '">' + maLabels[li][0] + '</text>';
+    }
+  });
+  // K 线时间轴
+  var labelStep = Math.max(1, Math.floor(data.length / 6));
+  data.forEach(function(d, i) {
+    if (i % labelStep === 0 || i === data.length - 1) {
+      if (d.day) {
+        s += '<text x="' + toX(i) + '" y="' + (cH + vH + 14) + '" text-anchor="middle" font-size="9" fill="' + TX3 + '">' + d.day.substring(5) + '</text>';
+      }
+    }
   });
 
   el.innerHTML = s;
@@ -248,7 +261,7 @@ function renderKLine(period) {
 // ============================================================
 function renderTimeShare() {
   var data = INTRADAY;
-  var el = document.getElementById('tsChart'), W = 720, H = 320;
+  var el = document.getElementById('tsChart'), W = 900, H = 380;
   var cH = H * 0.76, vH = H * 0.18, pt = 16, pr = 20, pb = 28, pl = 52;
   var iw = W - pl - pr, ih = cH - pt - pb;
 
@@ -313,74 +326,6 @@ function renderTimeShare() {
       s += '<text x="' + x + '" y="' + (H - 8) + '" text-anchor="middle" font-size="9" fill="' + TX3 + '">' + t + '</text>';
     }
   });
-
-  el.innerHTML = s;
-}
-
-// ============================================================
-//  渲染深度图
-// ============================================================
-function renderDepth() {
-  var last = KLINE_DATA[KLINE_DATA.length - 1];
-  var mid = last.close;
-  var tick = 0.01;
-  var levels = 15;
-  var baseVol = 500 + Math.random() * 1000;
-  function genLevels(dir, offset) {
-    var r = [];
-    for (var i = 0; i < levels; i++) {
-      var p = mid + dir * (offset + i) * tick;
-      var decay = 1 - (i / levels) * 0.7;
-      var noise = 0.5 + Math.random();
-      r.push({ p: p, v: Math.round(baseVol * decay * noise) });
-    }
-    return r;
-  }
-  var bidLevels = genLevels(-1, 1).reverse();
-  var askLevels = genLevels(1, 1);
-  var el = document.getElementById('depthChart'), W = 520, H = 300, pt = 16, pr = 20, pb = 28, pl = 52;
-  var iw = W - pl - pr, ih = H - pt - pb;
-
-  var bidCum = 0, bidPts = [];
-  [].concat(bidLevels).sort(function(a,b){return b.p - a.p}).forEach(function(d){ bidCum += d.v; bidPts.push({p:d.p, v:bidCum}); });
-
-  var askCum = 0, askPts = [];
-  [].concat(askLevels).sort(function(a,b){return a.p - b.p}).forEach(function(d){ askCum += d.v; askPts.push({p:d.p, v:askCum}); });
-
-  var all = bidLevels.concat(askLevels);
-  var minP = all.reduce(function(a,b){return Math.min(a,b.p)}, Infinity);
-  var maxP = all.reduce(function(a,b){return Math.max(a,b.p)}, -Infinity);
-  var padP = (maxP - minP) * 0.02; minP -= padP; maxP += padP;
-  var maxV = Math.max(bidCum, askCum) * 1.1;
-
-  var sx = function(p) { return pl + ((p - minP) / (maxP - minP || 1)) * iw; };
-  var sy = function(v) { return pt + ih - (v / maxV) * ih; };
-
-  var s = '';
-  [0, 0.5, 1].forEach(function(r) {
-    var y = pt + ih * (1 - r);
-    s += '<line x1="' + pl + '" y1="' + y + '" x2="' + (W - pr) + '" y2="' + y + '" stroke="' + GRID + '" stroke-width="0.5"/>';
-    s += '<text x="' + (pl - 8) + '" y="' + (y + 3) + '" text-anchor="end" font-size="9" fill="' + TX3 + '">' + (maxV * r).toFixed(0) + '</text>';
-  });
-
-  // 买盘（绿/蓝色系）
-  var bidStr = sx(bidPts[0].p) + ',' + sy(0) + ' ' + bidPts.map(function(d){ return sx(d.p) + ',' + sy(d.v); }).join(' ') + ' ' + sx(bidPts[bidPts.length-1].p) + ',' + sy(0);
-  s += '<polygon points="' + bidStr + '" fill="rgba(38,166,154,0.25)"/>';
-  s += '<polyline points="' + bidStr + '" fill="none" stroke="' + DN + '" stroke-width="1.5"/>';
-
-  // 卖盘（红）
-  var askStr = sx(askPts[0].p) + ',' + sy(0) + ' ' + askPts.map(function(d){ return sx(d.p) + ',' + sy(d.v); }).join(' ') + ' ' + sx(askPts[askPts.length-1].p) + ',' + sy(0);
-  s += '<polygon points="' + askStr + '" fill="rgba(239,83,80,0.25)"/>';
-  s += '<polyline points="' + askStr + '" fill="none" stroke="' + UP + '" stroke-width="1.5"/>';
-
-  // 价格标签
-  [minP, (minP+maxP)/2, maxP].forEach(function(p, i) {
-    s += '<text x="' + sx(p) + '" y="' + (H - 8) + '" text-anchor="middle" font-size="9" fill="' + TX3 + '">' + p.toFixed(2) + '</text>';
-  });
-
-  var mid = (bidPts[0].p + askPts[0].p) / 2;
-  s += '<line x1="' + sx(mid) + '" y1="' + pt + '" x2="' + sx(mid) + '" y2="' + (pt + ih) + '" stroke="' + ACC + '" stroke-width="1" stroke-dasharray="3,3"/>';
-  s += '<text x="' + sx(mid) + '" y="' + (pt - 6) + '" text-anchor="middle" font-size="9" fill="' + ACC + '">' + mid.toFixed(2) + '</text>';
 
   el.innerHTML = s;
 }
@@ -507,7 +452,6 @@ function renderTopInfo() {
 renderTopInfo();
 renderKLine('daily');
 renderTimeShare();
-renderDepth();
 renderStockTable();
 renderBadges();
 initPeriodSwitch();
