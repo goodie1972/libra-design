@@ -1,7 +1,10 @@
-import type { StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { OrderForm, PositionCard, LiveTicker, HeatmapSector } from '@libra-design/react';
 import type { SectorData } from '@libra-design/react';
 import { useState } from 'react';
+
+const meta: Meta = { title: 'Financial Depth' };
+export default meta;
 
 // ============================================================
 // Financial Depth — Phase 3 + Phase 7

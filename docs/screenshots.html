@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Libra Design — 组件渲染页</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--up:#ef5350;--down:#26a69a;--up-bg:rgba(239,83,80,.08);--down-bg:rgba(38,166,154,.08);--ma5:#f8b500;--ma10:#4a6cf7;--ma20:#9c27b0;--vol-up:rgba(239,83,80,.4);--vol-down:rgba(38,166,154,.4);--bg-root:#0c0c0e;--bg-main:#0c0c0e;--bg-card:#151518;--bg-card-hover:#1c1c20;--bg-input:#1c1c20;--bg-chart:#0c0c0e;--border-main:#252528;--border-sub:#1c1c20;--text-primary:#e8e8ed;--text-secondary:#c8c8d0;--text-tertiary:#a0a0a8;--accent:#f59e0b;--grid-line:#1a1a1e}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg-root);color:var(--text-primary);font-family:'Inter',sans-serif;padding:24px}
+.s{background:var(--bg-card);border:1px solid var(--border-main);border-radius:10px;margin-bottom:32px;overflow:hidden}
+.s-h{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border-sub)}
+.s-h h2{font-size:15px;font-weight:600}
+.s-h span{font-size:11px;color:var(--text-tertiary);font-family:'JetBrains Mono',monospace}
+.s-b{padding:20px}
+</style>
+</head>
+<body>
+
+<!-- ============= KLINE CHART ============= -->
+<div class="s" id="kline-section">
+  <div class="s-h"><h2>KLineChart · K 线图</h2><span>OHLCV + MA5/MA10/MA20</span></div>
+  <div class="s-b" style="text-align:center"><svg id="klineChart" width="700" height="380"></svg></div>
+</div>
+
+<!-- ============= TIMESHARE CHART ============= -->
+<div class="s" id="timeshare-section">
+  <div class="s-h"><h2>TimeShareChart · 分时图</h2><span>价格线 + 均价线 + 成交量柱</span></div>
+  <div class="s-b" style="text-align:center"><svg id="tsChart" width="700" height="320"></svg></div>
+</div>
+
+<!-- ============= DEPTH CHART ============= -->
+<div class="s" id="depth-section">
+  <div class="s-h"><h2>DepthChart · 深度图</h2><span>买卖盘累积深度曲线</span></div>
+  <div class="s-b" style="text-align:center"><svg id="depthChart" width="500" height="300"></svg></div>
+</div>
+
+<!-- ============= STOCK TABLE ============= -->
+<div class="s" id="stocktable-section">
+  <div class="s-h"><h2>StockTable · 行情表格</h2><span>可排序 · 列固定 · 列宽拖拽 · 虚拟滚动</span></div>
+  <div class="s-b" style="overflow-x:auto"><table id="stockTable" style="width:100%;border-collapse:collapse;font-size:13px"></table></div>
+</div>
+
+<!-- ============= BADGE / PRICEDISPLAY / STOCKCARD ============= -->
+<div class="s" id="badge-section">
+  <div class="s-h"><h2>Badge · PriceDisplay · StockCard</h2><span>金融级涨跌展示</span></div>
+  <div class="s-b" style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
+    <span id="badge1"></span>
+    <span id="badge2"></span>
+    <span id="badge3"></span>
+    <div id="pricedisplay1"></div>
+    <div id="stockcard1"></div>
+    <div id="stockcard2"></div>
+  </div>
+</div>
+
+<script>
+// Terminal theme colors
+var UP='#ef5350',DN='#26a69a',MA5='#f8b500',MA10='#4a6cf7',MA20='#9c27b0',GRID='#1a1a1e',TX3='#a0a0a8',ACC='#f59e0b';
+
+// ============= KLINE DATA (15 real OHLCV candles) =============
+var kdata=[
+  {t:'09:30',o:1680,h:1695,l:1675,c:1690,v:120000},{t:'09:45',o:1690,h:1710,l:1685,c:1705,v:185000},
+  {t:'10:00',o:1705,h:1715,l:1698,c:1700,v:155000},{t:'10:15',o:1700,h:1708,l:1680,c:1685,v:210000},
+  {t:'10:30',o:1685,h:1695,l:1670,c:1688,v:175000},{t:'10:45',o:1688,h:1700,l:1682,c:1695,v:145000},
+  {t:'11:00',o:1695,h:1710,l:1690,c:1708,v:200000},{t:'11:15',o:1708,h:1720,l:1700,c:1715,v:250000},
+  {t:'13:00',o:1715,h:1725,l:1710,c:1718,v:130000},{t:'13:15',o:1718,h:1722,l:1705,c:1710,v:165000},
+  {t:'13:30',o:1710,h:1718,l:1695,c:1698,v:195000},{t:'13:45',o:1698,h:1705,l:1685,c:1700,v:160000},
+  {t:'14:00',o:1700,h:1715,l:1698,c:1712,v:220000},{t:'14:15',o:1712,h:1720,l:1708,c:1710,v:140000},
+  {t:'14:30',o:1710,h:1725,l:1705,c:1720,v:180000}
+];
+
+function renderKLine(){
+  var el=document.getElementById('klineChart'),W=700,H=380;
+  var cH=H*0.75,vH=H*0.2,pt=16,pr=16,pb=4,pl=48;
+  var iw=W-pl-pr,ih=cH-pt-pb;
+  // compute ranges
+  var minP=Infinity,maxP=-Infinity,minV=Infinity,maxV=-Infinity;
+  kdata.forEach(function(d){if(d.l<minP)minP=d.l;if(d.h>maxP)maxP=d.h;if(d.v<minV)minV=d.v;if(d.v>maxV)maxV=d.v});
+  var padP=(maxP-minP)*0.08||1;minP-=padP;maxP+=padP;
+  // MA
+  function ma(arr,win){var r=[];for(var i=0;i<arr.length;i++){var s=arr.slice(Math.max(0,i-win+1),i+1);r.push(s.reduce(function(a,b){return a+b},0)/s.length)}return r}
+  var closes=kdata.map(function(d){return d.c});
+  var ma5=ma(closes,5),ma10=ma(closes,10),ma20=ma(closes,20);
+  var cw=Math.max(2,iw/kdata.length-1);
+  var toX=function(i){return pl+i*(cw+1)+cw/2};
+  var toY=function(v){return pt+ih-((v-minP)/(maxP-minP))*ih};
+  var toVolY=function(v){return cH+vH-((v-minV)/(maxV-minV||1))*vH};
+  var s='<title>KLineChart</title>';
+  // grid
+  [0,0.25,0.5,0.75,1].forEach(function(r){
+    var y=pt+ih*(1-r);s+='<line x1="'+pl+'" y1="'+y+'" x2="'+(W-pr)+'" y2="'+y+'" stroke="'+GRID+'" stroke-width="0.5"/>';
+    s+='<text x="'+(pl-6)+'" y="'+(y+3)+'" text-anchor="end" font-size="9" fill="'+TX3+'">'+(minP+(maxP-minP)*r).toFixed(1)+'</text>'});
+  // candles
+  kdata.forEach(function(d,i){
+    var x=toX(i),isUp=d.c>=d.o,c=isUp?UP:DN;
+    s+='<line x1="'+x+'" y1="'+toY(d.h)+'" x2="'+x+'" y2="'+toY(d.l)+'" stroke="'+c+'" stroke-width="1"/>';
+    s+='<rect x="'+(x-cw/2)+'" y="'+toY(Math.max(d.o,d.c))+'" width="'+cw+'" height="'+Math.max(1,Math.abs(toY(d.o)-toY(d.c)))+'" fill="'+c+'"/>';
+    s+='<rect x="'+(x-cw/2)+'" y="'+toVolY(d.v)+'" width="'+cw+'" height="'+Math.max(1,toVolY(0)-toVolY(d.v))+'" fill="'+(isUp?'rgba(239,83,80,0.4)':'rgba(38,166,154,0.4)')+'"/>'});
+  // MA lines
+  [[ma5,MA5,''],[ma10,MA10,'3,2'],[ma20,MA20,'4,3']].forEach(function(ln){
+    var pts=[];ln[0].forEach(function(v,i){if(!isNaN(v))pts.push(toX(i)+','+toY(v))});
+    if(pts.length)s+='<polyline points="'+pts.join(' ')+'" fill="none" stroke="'+ln[1]+'" stroke-width="1" stroke-dasharray="'+ln[2]+'"/>'});
+  el.innerHTML=s;
+}
+
+// ============= TIMESHARE DATA =============
+var tsdata=[
+  {t:'09:30',p:1680,v:120000,avg:1680},{t:'09:35',p:1685,v:95000,avg:1682},{t:'09:40',p:1690,v:140000,avg:1685},
+  {t:'09:45',p:1695,v:110000,avg:1688},{t:'09:50',p:1688,v:130000,avg:1688},{t:'09:55',p:1685,v:100000,avg:1687},
+  {t:'10:00',p:1692,v:150000,avg:1689},{t:'10:05',p:1698,v:125000,avg:1691},{t:'10:10',p:1705,v:180000,avg:1694},
+  {t:'10:15',p:1700,v:105000,avg:1695},{t:'10:20',p:1710,v:200000,avg:1697},{t:'10:25',p:1715,v:160000,avg:1700},
+  {t:'10:30',p:1708,v:135000,avg:1700},{t:'10:35',p:1712,v:170000,avg:1702},{t:'10:40',p:1720,v:190000,avg:1704}
+];
+
+function renderTimeShare(){
+  var el=document.getElementById('tsChart'),W=700,H=320;
+  var cH=H*0.78,vH=H*0.17,pt=16,pr=16,pb=24,pl=48;
+  var iw=W-pl-pr,ih=cH-pt-pb;
+  var minP=Infinity,maxP=-Infinity,maxV=-Infinity;
+  tsdata.forEach(function(d){if(d.p<minP)minP=d.p;if(d.p>maxP)maxP=d.p;if(d.v>maxV)maxV=d.v});
+  var padP=(maxP-minP)*0.1||1;minP-=padP;maxP+=padP;
+  var midP=(minP+maxP)/2;
+  var s='<title>TimeShareChart</title>';
+  // mid line
+  s+='<line x1="'+pl+'" y1="'+(pt+ih/2)+'" x2="'+(W-pr)+'" y2="'+(pt+ih/2)+'" stroke="'+GRID+'" stroke-width="0.5" stroke-dasharray="4,3"/>';
+  // grid
+  [0,0.5,1].forEach(function(r){
+    var y=pt+ih*(1-r);s+='<line x1="'+pl+'" y1="'+y+'" x2="'+(W-pr)+'" y2="'+y+'" stroke="'+GRID+'" stroke-width="0.5"/>';
+    s+='<text x="'+(pl-6)+'" y="'+(y+3)+'" text-anchor="end" font-size="9" fill="'+TX3+'">'+(minP+(maxP-minP)*r).toFixed(2)+'</text>'});
+  // vol bars
+  var curMax=0,curCumP=0,avgPts=0;
+  tsdata.forEach(function(d,i){
+    var x=pl+(i/(tsdata.length-1))*iw,bw=Math.max(1,iw/tsdata.length-1),bh=(d.v/maxV)*vH;
+    s+='<rect x="'+(x-bw/2)+'" y="'+(cH+vH-bh)+'" width="'+bw+'" height="'+bh+'" fill="rgba(239,83,80,0.4)"/>'});
+  // price line
+  var pts=tsdata.map(function(d,i){var x=pl+(i/(tsdata.length-1))*iw,y=pt+ih-((d.p-minP)/(maxP-minP))*ih;return x+','+y}).join(' ');
+  s+='<polyline points="'+pts+'" fill="none" stroke="'+ACC+'" stroke-width="1.5"/>';
+  // avg line
+  var avg=tsdata.filter(function(d){return d.avg});
+  var apts=avg.map(function(d,i){var idx=tsdata.indexOf(d),x=pl+(idx/(tsdata.length-1))*iw,y=pt+ih-((d.avg-minP)/(maxP-minP))*ih;return x+','+y}).join(' ');
+  if(apts)s+='<polyline points="'+apts+'" fill="none" stroke="'+TX3+'" stroke-width="1" stroke-dasharray="3,2" opacity="0.6"/>';
+  el.innerHTML=s;
+}
+
+// ============= DEPTH DATA =============
+var dbids=[{p:1695,v:500},{p:1694.5,v:800},{p:1694,v:1200},{p:1693.5,v:600},{p:1693,v:1500},{p:1692.5,v:900},{p:1692,v:1100}];
+var dasks=[{p:1695.5,v:700},{p:1696,v:1000},{p:1696.5,v:450},{p:1697,v:1300},{p:1697.5,v:850},{p:1698,v:600},{p:1698.5,v:1100}];
+
+function renderDepth(){
+  var el=document.getElementById('depthChart'),W=500,H=300;
+  var pt=16,pr=16,pb=24,pl=48,iw=W-pl-pr,ih=H-pt-pb;
+  var all=[].concat(dbids,dasks);
+  var cumBid=0,bidPts=[];
+  [].concat(dbids).sort(function(a,b){return b.p-a.p}).forEach(function(d){cumBid+=d.v;bidPts.push({p:d.p,v:cumBid})});
+  var cumAsk=0,askPts=[];
+  [].concat(dasks).sort(function(a,b){return a.p-b.p}).forEach(function(d){cumAsk+=d.v;askPts.push({p:d.p,v:cumAsk})});
+  var minP=all.reduce(function(a,b){return Math.min(a,b.p)},Infinity)*0.999;
+  var maxP=all.reduce(function(a,b){return Math.max(a,b.p)},-Infinity)*1.001;
+  var maxV=Math.max(cumBid,cumAsk)*1.1;
+  var sx=function(p){return pl+((p-minP)/(maxP-minP||1))*iw};
+  var sy=function(v){return pt+ih-(v/maxV)*ih};
+  var bidStr='0,'+sy(0)+' '+bidPts.map(function(d){return sx(d.p)+','+sy(d.v)}).join(' ')+' '+sx(bidPts[bidPts.length-1].p)+','+sy(0);
+  var askStr=sx(askPts[0].p)+','+sy(0)+' '+askPts.map(function(d){return sx(d.p)+','+sy(d.v)}).join(' ')+' '+sx(askPts[askPts.length-1].p)+','+sy(0);
+  var s='<title>DepthChart</title>';
+  [0,0.5,1].forEach(function(r){var y=pt+ih*(1-r);s+='<line x1="'+pl+'" y1="'+y+'" x2="'+(W-pr)+'" y2="'+y+'" stroke="'+GRID+'" stroke-width="0.5"/><text x="'+(pl-6)+'" y="'+(y+3)+'" text-anchor="end" font-size="9" fill="'+TX3+'">'+(maxV*r).toFixed(0)+'</text>'});
+  s+='<polygon points="'+bidStr+'" fill="rgba(239,83,80,0.3)"/><polyline points="'+bidStr+'" fill="none" stroke="'+UP+'" stroke-width="1.5"/>';
+  s+='<polygon points="'+askStr+'" fill="rgba(38,166,154,0.3)"/><polyline points="'+askStr+'" fill="none" stroke="'+DN+'" stroke-width="1.5"/>';
+  [minP,(minP+maxP)/2,maxP].forEach(function(p,i){s+='<text x="'+sx(p)+'" y="'+(H-6)+'" text-anchor="middle" font-size="9" fill="'+TX3+'">'+p.toFixed(2)+'</text>'});
+  el.innerHTML=s;
+}
+
+// ============= STOCK TABLE =============
+function renderStockTable(){
+  var el=document.getElementById('stockTable');
+  var cols=[
+    {k:'code',l:'代码',w:100},{k:'name',l:'名称',w:120},{k:'price',l:'最新价',w:110,a:'r'},{k:'change',l:'涨跌额',w:100,a:'r'},
+    {k:'changePercent',l:'涨跌幅',w:100,a:'r'},{k:'volume',l:'成交量',w:110,a:'r'},{k:'turnover',l:'成交额',w:110,a:'r'}
+  ];
+  var rows=[
+    {code:'sh600519',name:'贵州茅台',price:1689.50,change:35.20,cp:2.13,volume:'17.23亿',turnover:'28.91亿'},
+    {code:'sz000858',name:'五粮液',price:142.80,change:-1.94,cp:-1.34,volume:'4.10亿',turnover:'5.85亿'},
+    {code:'sh601398',name:'工商银行',price:5.89,change:0.03,cp:0.51,volume:'7.33亿',turnover:'4.32亿'},
+    {code:'sz300750',name:'宁德时代',price:196.35,change:-5.80,cp:-2.87,volume:'10.25亿',turnover:'20.13亿'},
+    {code:'sz002594',name:'比亚迪',price:287.60,change:1.82,cp:1.82,volume:'8.91亿',turnover:'25.62亿'},
+    {code:'sh601166',name:'兴业银行',price:18.42,change:-0.21,cp:-1.13,volume:'2.15亿',turnover:'3.97亿'},
+    {code:'sz000001',name:'平安银行',price:11.88,change:0.08,cp:0.68,volume:'1.84亿',turnover:'2.19亿'},
+  ];
+  var h='<thead><tr>';
+  cols.forEach(function(c){
+    h+='<th style="padding:8px 12px;font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.05em;text-align:'+(c.a||'l')+';border-bottom:1px solid var(--border-sub);font-weight:500;white-space:nowrap">'+c.l+'</th>'});
+  h+='</tr></thead><tbody>';
+  rows.forEach(function(r){
+    h+='<tr style="border-bottom:1px solid var(--border-sub)">';
+    cols.forEach(function(c){
+      var val=r[c.k];
+      if(c.k==='price'||c.k==='change')val=val.toFixed(2);
+      if(c.k==='cp'){val=(val>0?'+':'')+val.toFixed(2)+'%';var cl=val>=0?UP:DN;}
+      if(c.k==='change'){var cl=val>=0?UP:DN;val=(val>0?'+':'')+val.toFixed(2);}
+      h+='<td style="padding:8px 12px;font-size:12px;text-align:'+(c.a||'l')+';'+(c.k==='code'?'font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--text-tertiary)':'')+(cl?'color:'+cl+';font-family:\'JetBrains Mono\',monospace;font-variant-numeric:tabular-nums':'')+'">'+val+'</td>'});
+    h+='</tr>'});
+  h+='</tbody>';
+  el.innerHTML=h;
+  // Add column headers that look like real StockTable (with sort icons etc)
+}
+
+// ============= BADGES / CARDS =============
+function renderBadges(){
+  document.getElementById('badge1').outerHTML='<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 11px;border-radius:5px;font-size:11px;font-weight:600;background:'+UP+'1e;color:'+UP+'">↑ +2.13%</span>';
+  document.getElementById('badge2').outerHTML='<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 11px;border-radius:5px;font-size:11px;font-weight:600;background:'+DN+'1e;color:'+DN+'">↓ -1.34%</span>';
+  document.getElementById('badge3').outerHTML='<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 11px;border-radius:5px;font-size:11px;font-weight:600;background:#9e9e9e1e;color:#9e9e9e">— 0.00%</span>';
+  document.getElementById('pricedisplay1').outerHTML=
+    '<div style="display:flex;flex-direction:column;gap:2px;padding:12px 16px;border-radius:8px;border:1px solid var(--border-sub);background:var(--bg-input);min-width:160px">'+
+      '<span style="font-size:10px;color:var(--text-secondary);letter-spacing:.05em;text-transform:uppercase">茅台</span>'+
+      '<span style="font-size:22px;font-weight:700;font-family:\'JetBrains Mono\',monospace;color:'+UP+'">1,689.50</span>'+
+      '<span style="font-size:12px;font-family:\'JetBrains Mono\',monospace;color:'+UP+'">+35.20 (+2.13%)</span>'+
+      '<span style="font-size:10px;color:var(--text-tertiary)">开 1,680.00 / 高 1,695.00 / 低 1,675.00</span>'+
+    '</div>';
+  document.getElementById('stockcard1').outerHTML=
+    '<div style="display:flex;flex-direction:column;gap:3px;padding:14px 18px;border-radius:10px;border:1px solid var(--border-sub);background:var(--bg-input);min-width:180px">'+
+      '<div style="display:flex;align-items:center;gap:10px;justify-content:space-between">'+
+        '<span style="font-weight:600;font-size:14px">贵州茅台</span>'+
+        '<span style="font-size:10px;color:var(--text-tertiary);font-family:\'JetBrains Mono\',monospace">sh600519</span></div>'+
+      '<div style="display:flex;align-items:baseline;gap:8px">'+
+        '<span style="font-size:22px;font-weight:700;font-family:\'JetBrains Mono\',monospace;color:'+UP+'">1,689.50</span>'+
+        '<span style="font-size:12px;font-family:\'JetBrains Mono\',monospace;color:'+UP+'">+2.13%</span></div>'+
+      '<div style="display:flex;gap:16px;font-size:10px;color:var(--text-tertiary)">'+
+        '<span>成交 17.23亿</span><span>换手 0.42%</span><span>市值 2.12万亿</span></div>'+
+    '</div>';
+  document.getElementById('stockcard2').outerHTML=
+    '<div style="display:flex;flex-direction:column;gap:3px;padding:14px 18px;border-radius:10px;border:1px solid var(--border-sub);background:var(--bg-input);min-width:180px">'+
+      '<div style="display:flex;align-items:center;gap:10px;justify-content:space-between">'+
+        '<span style="font-weight:600;font-size:14px">宁德时代</span>'+
+        '<span style="font-size:10px;color:var(--text-tertiary);font-family:\'JetBrains Mono\',monospace">sz300750</span></div>'+
+      '<div style="display:flex;align-items:baseline;gap:8px">'+
+        '<span style="font-size:22px;font-weight:700;font-family:\'JetBrains Mono\',monospace;color:'+DN+'">196.35</span>'+
+        '<span style="font-size:12px;font-family:\'JetBrains Mono\',monospace;color:'+DN+'">-2.87%</span></div>'+
+      '<div style="display:flex;gap:16px;font-size:10px;color:var(--text-tertiary)">'+
+        '<span>成交 10.25亿</span><span>换手 0.87%</span><span>市值 4,287亿</span></div>'+
+    '</div>';
+}
+
+renderKLine();renderTimeShare();renderDepth();renderStockTable();renderBadges();
+</script>
+</body>
+</html>

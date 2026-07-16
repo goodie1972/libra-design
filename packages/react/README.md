@@ -1,8 +1,43 @@
 # @libra-design/react
 
-> 64 个 React 金融组件 — 涵盖 K 线图/深度图/订单簿/自选股/热力图等 22 个金融专有组件
+> 金融交易终端组件库 — 在 React 中构建专业级行情/交易界面，开箱即用
 
-Libra Design 的 React 组件库，面向金融数据展示和交易界面设计。A 股惯例红涨绿跌，暗色优先，数据密度优先。
+跳过图表引擎搭建和交易 UI 样板代码。64 个组件覆盖 K 线、深度图、订单簿、行情表格、筛选器、分时图、热力图等全场景 — 从数据展示到交易交互，一行代码接入。
+
+```bash
+npm install @libra-design/react
+```
+
+[📖 组件清单](#组件清单64-个) · [🚀 Demo](https://your-demo-url) · [📚 Storybook](https://your-storybook-url) · [⭐ GitHub](https://github.com/your-repo)
+
+---
+
+## 为什么用 Libra？
+
+| 场景 | 传统方式 | Libra |
+|------|----------|-------|
+| **K 线图** | 集成 echarts/highcharts，配数据转换 + 均线计算 + 成交量柱 + tooltip | `<KLineChart data={ohlcv} />` |
+| **行情表格** | antd Table + 自定义排序/列固定/虚拟滚动/格式/多选/筛选/拖拽 | `<StockTable data={stocks} />` |
+| **分时图** | d3/svg 手绘坐标轴、网格线、成交量、均价线 | `<TimeShareChart data={ticks} />` |
+| **深度图** | canvas 手动计算买卖盘口聚合 | `<DepthChart data={levels} />` |
+| **主题** | 自行设计 token 系统 + CSS 变量 + 暗色/亮色切换 | 内置 10 套金融主题 + mix 滑块 |
+| **行点击弹窗** | 手动 useState + Modal + Tabs 拼装 | `<StockTable onRowClick={...} />` → Modal |
+
+## 适合谁用？
+
+- **量化/交易团队** — 快速搭建投研看板、监控面板、回测结果页
+- **金融 SaaS 产品** — 嵌入行情展示、订单管理、账户概览
+- **个人投资者/极客** — 自建交易工具、数据聚合仪表盘
+
+## 特性一览
+
+- 🎯 **64 个组件** — 22 个金融专有组件（K线/分时/深度/订单簿/热力图/行情表/筛选器等）
+- 🎨 **红涨绿跌** — A 股惯例，暗色优先，数据密度优化
+- 🔄 **10 套主题** — terminal / ticker / vault / margin / ledger 等命名主题 + 亮暗 mix 滑块
+- 📊 **ConfigurableGrid** — 排序/固定/宽拖拽/虚拟滚动/行展开/列分组/键盘导航/多选/筛选/拖拽/条件着色
+- 🧩 **TypeScript** — 完整类型导出，泛型 ColumnDef\<T\>
+- 🌙 **暗色优先** — 全组件 dark mode 开箱即用
+- ⚡ **零依赖侵入** — 纯 CSS 变量主题，不与 antd/arco 等设计体系冲突
 
 ## 安装
 

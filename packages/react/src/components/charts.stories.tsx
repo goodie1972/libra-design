@@ -1,9 +1,12 @@
-import type { StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import {
   KLineChart, DepthChart, TimeShareChart, StockTable,
   MarketBoard, OrderBook, Heatmap,
 } from '@libra-design/react';
 import type { KLineData, DepthLevel, TimeSharePoint, StockTableRow, BoardLevel, OrderLevel, HeatmapCell } from '@libra-design/react';
+
+const meta: Meta = { title: 'Charts' };
+export default meta;
 
 // ============================================================
 // Financial Charts — Phase 3

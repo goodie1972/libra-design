@@ -1,7 +1,10 @@
-import type { StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { Label, Form, Layout, LayoutHeader, LayoutSider, LayoutContent, LayoutFooter, Watermark } from '@libra-design/react';
 import { Input, Button, Select } from '@libra-design/react';
 import { useState } from 'react';
+
+const meta: Meta = { title: 'Form & Layout' };
+export default meta;
 
 // ============================================================
 // Form & Layout — Phase 5

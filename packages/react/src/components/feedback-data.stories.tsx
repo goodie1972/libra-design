@@ -1,6 +1,9 @@
-import type { StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { Steps, Timeline } from '@libra-design/react';
 import { useState } from 'react';
+
+const meta: Meta = { title: 'Feedback & Data Display' };
+export default meta;
 
 // ============================================================
 // Feedback & Data Display — Phase 6

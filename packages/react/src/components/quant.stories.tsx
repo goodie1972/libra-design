@@ -1,4 +1,4 @@
-import type { StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import {
   KPICard,
   WinRateCard,
@@ -9,6 +9,9 @@ import {
   ExchangeTag,
   OrderStatusTag,
 } from '@libra-design/react';
+
+const meta: Meta = { title: 'Quant' };
+export default meta;
 
 export const KPICardStory: StoryObj = {
   name: 'KPICard',

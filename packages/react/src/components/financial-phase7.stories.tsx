@@ -1,10 +1,13 @@
-import type { StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import {
   Calendar, DockPanel, Command, Watchlist,
   MiniChart, NewsFeed, DataCard, Screener,
 } from '@libra-design/react';
 import type { CalendarEvent, WatchlistItem, NewsItem, DataField, ScreenField } from '@libra-design/react';
 import { useState } from 'react';
+
+const meta: Meta = { title: 'Financial Phase 7' };
+export default meta;
 
 // ============================================================
 // Financial Phase 7 — Bloomberg Depth
