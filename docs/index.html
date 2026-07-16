@@ -760,7 +760,7 @@ var ALL_THEMES=[
 
 function lerpColor(h1,h2,t){var c1=parseInt(h1.slice(1),16),c2=parseInt(h2.slice(1),16);var r1=(c1>>16)&0xff,g1=(c1>>8)&0xff,b1=c1&0xff;var r2=(c2>>16)&0xff,g2=(c2>>8)&0xff,b2=c2&0xff;return'#'+((1<<24)+(Math.round(Math.sqrt((1-t)*r1*r1+t*r2*r2))<<16)+(Math.round(Math.sqrt((1-t)*g1*g1+t*g2*g2))<<8)+Math.round(Math.sqrt((1-t)*b1*b1+t*b2*b2))).toString(16).slice(1)}
 function lerpLinear(h1,h2,t){var c1=parseInt(h1.slice(1),16),c2=parseInt(h2.slice(1),16);var r1=(c1>>16)&0xff,g1=(c1>>8)&0xff,b1=c1&0xff;var r2=(c2>>16)&0xff,g2=(c2>>8)&0xff,b2=c2&0xff;return'#'+((1<<24)+(Math.round(r1+(r2-r1)*t)<<16)+(Math.round(g1+(g2-g1)*t)<<8)+Math.round(b1+(b2-b1)*t)).toString(16).slice(1)}
-function textCurve(t){return t*t}
+function textCurve(t){return 1-Math.pow(1-t,4)}
 function borderCurve(t){return 1-Math.pow(1-t,2)}
 var DARK={},LIGHT={},CUR=null;
 
