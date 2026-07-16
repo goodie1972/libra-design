@@ -189,7 +189,7 @@ function getPeriodData(period) {
 // ============================================================
 function renderKLine(period) {
   var allData = getPeriodData(period);
-  var maxBars = 72;
+  var maxBars = 55;
   var data = allData.slice(-maxBars);
   var el = document.getElementById('klineChart'), W = 720, H = 380;
   var cH = H * 0.72, vH = H * 0.22, pt = 16, pr = 20, pb = 4, pl = 52;
@@ -217,6 +217,7 @@ function renderKLine(period) {
 
   var periodLabel = { daily: '日K', weekly: '周K', monthly: '月K' }[period] || 'K';
   document.getElementById('klineSub').textContent = '紫金矿业 sh601899 · ' + periodLabel + ' · MA5/10/20 · ' + data.length + ' 条';
+  renderTopInfo();
 
   var s = '';
   [0, 0.25, 0.5, 0.75, 1].forEach(function(r) {
@@ -262,7 +263,7 @@ function renderTimeShare() {
   var s = '';
 
   // 中间线（昨收参考线）
-  var prevClose = 28.83;
+  var prevClose = KLINE_DATA[KLINE_DATA.length - 2].close;
   var midY = pt + ih - ((prevClose - minP) / (maxP - minP)) * ih;
   s += '<line x1="' + pl + '" y1="' + midY + '" x2="' + (W - pr) + '" y2="' + midY + '" stroke="' + GRID + '" stroke-width="0.5" stroke-dasharray="4,3"/>';
 
@@ -297,15 +298,19 @@ function renderTimeShare() {
   }).join(' ');
   s += '<polyline points="' + avgPts + '" fill="none" stroke="#fdd835" stroke-width="1" stroke-dasharray="3,2"/>';
 
-  // 时间轴标签
+  // 时间轴标签（最近邻匹配，容忍 3 分钟偏差）
   var timeLabels = ['09:30','10:00','10:30','11:00','11:30','13:30','14:00','14:30','15:00'];
   timeLabels.forEach(function(t) {
+    var targetMin = +t.split(':')[0]*60 + +t.split(':')[1];
+    var bestIdx = 0, bestDist = Infinity;
     for (var i = 0; i < data.length; i++) {
-      if (data[i].t === t || (i === 0 && t === '09:30') || (i === data.length - 1 && t === '15:00')) {
-        var x = pl + (i / (data.length - 1)) * iw;
-        s += '<text x="' + x + '" y="' + (H - 8) + '" text-anchor="middle" font-size="9" fill="' + TX3 + '">' + t + '</text>';
-        break;
-      }
+      var curMin = +data[i].t.split(':')[0]*60 + +data[i].t.split(':')[1];
+      var dist = Math.abs(curMin - targetMin);
+      if (dist < bestDist) { bestDist = dist; bestIdx = i; }
+    }
+    if (bestDist <= 3) {
+      var x = pl + (bestIdx / (data.length - 1)) * iw;
+      s += '<text x="' + x + '" y="' + (H - 8) + '" text-anchor="middle" font-size="9" fill="' + TX3 + '">' + t + '</text>';
     }
   });
 
@@ -316,17 +321,23 @@ function renderTimeShare() {
 //  渲染深度图
 // ============================================================
 function renderDepth() {
-  var bidLevels = [
-    {p:28.90,v:500},{p:28.92,v:800},{p:28.94,v:1200},{p:28.96,v:600},{p:28.98,v:1500},
-    {p:29.00,v:900},{p:29.02,v:1100},{p:29.04,v:700},{p:29.06,v:1300},{p:29.08,v:850},
-    {p:29.10,v:600},{p:29.12,v:1100},{p:29.14,v:400},{p:29.16,v:900},{p:29.18,v:1200}
-  ];
-  var askLevels = [
-    {p:29.28,v:452},{p:29.27,v:213},{p:29.26,v:944},{p:29.25,v:2841},{p:29.24,v:1062},
-    {p:29.23,v:908},{p:29.22,v:780},{p:29.21,v:1665},{p:29.20,v:1625},
-    {p:29.30,v:700},{p:29.32,v:500},{p:29.34,v:800},{p:29.36,v:600},{p:29.38,v:1000},
-    {p:29.40,v:1200}
-  ];
+  var last = KLINE_DATA[KLINE_DATA.length - 1];
+  var mid = last.close;
+  var tick = 0.01;
+  var levels = 15;
+  var baseVol = 500 + Math.random() * 1000;
+  function genLevels(dir, offset) {
+    var r = [];
+    for (var i = 0; i < levels; i++) {
+      var p = mid + dir * (offset + i) * tick;
+      var decay = 1 - (i / levels) * 0.7;
+      var noise = 0.5 + Math.random();
+      r.push({ p: p, v: Math.round(baseVol * decay * noise) });
+    }
+    return r;
+  }
+  var bidLevels = genLevels(-1, 1).reverse();
+  var askLevels = genLevels(1, 1);
   var el = document.getElementById('depthChart'), W = 520, H = 300, pt = 16, pr = 20, pb = 28, pl = 52;
   var iw = W - pl - pr, ih = H - pt - pb;
 
