@@ -6,29 +6,29 @@
 <title>Libra Design — 组件渲染页</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--up:#ef5350;--down:#26a69a;--up-bg:rgba(239,83,80,.08);--down-bg:rgba(38,166,154,.08);--ma5:#f8b500;--ma10:#4a6cf7;--ma20:#9c27b0;--vol-up:rgba(239,83,80,.4);--vol-down:rgba(38,166,154,.4);--bg-root:#0c0c0e;--bg-main:#0c0c0e;--bg-card:#151518;--bg-card-hover:#1c1c20;--bg-input:#1c1c20;--bg-chart:#0c0c0e;--border-main:#252528;--border-sub:#1c1c20;--text-primary:#e8e8ed;--text-secondary:#c8c8d0;--text-tertiary:#a0a0a8;--accent:#f59e0b;--grid-line:#1a1a1e}
+:root{--up:#ef5350;--down:#26a69a;--up-bg:rgba(239,83,80,.08);--down-bg:rgba(38,166,154,.08);--ma5:#f8b500;--ma10:#4a6cf7;--ma20:#9c27b0;--vol-up:rgba(239,83,80,.4);--vol-down:rgba(38,166,154,.4);--bg-root:#0c0c0e;--bg-main:#0c0c0e;--bg-card:#151518;--bg-card-hover:#1c1c20;--bg-input:#1c1c20;--bg-chart:#0c0c0e;--border-main:#252528;--border-sub:#1c1c20;--text-primary:#e8e8ed;--text-secondary:#c8c8d0;--text-tertiary:#a0a0a8;--accent:#f59e0b;--accent-hover:#fbbf24;--grid-line:#1a1a1e}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0c0c0e;color:#e8e8ed;font-family:'Inter',sans-serif;padding:16px}
-.section{background:#151518;border:1px solid #252528;border-radius:10px;margin-bottom:24px;overflow:hidden}
-.sh{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid #1c1c20;flex-wrap:wrap;gap:8px}
+body{background:var(--bg-root);color:var(--text-primary);font-family:'Inter',sans-serif;padding:16px}
+.section{background:var(--bg-card);border:1px solid var(--border-main);border-radius:10px;margin-bottom:24px;overflow:hidden}
+.sh{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid var(--border-sub);flex-wrap:wrap;gap:8px}
 .sh h2{font-size:14px;font-weight:600}
-.sh .sub{font-size:10px;color:#a0a0a8;font-family:'JetBrains Mono',monospace}
+.sh .sub{font-size:10px;color:var(--text-tertiary);font-family:'JetBrains Mono',monospace}
 .sh .sw{display:flex;gap:4px}
-.sh .sw button{padding:3px 10px;border-radius:4px;border:1px solid #1c1c20;background:transparent;color:#a0a0a8;cursor:pointer;font-size:11px;font-family:'Inter',sans-serif;transition:all .15s}
-.sh .sw button:hover{border-color:#f59e0b;color:#e8e8ed}
-.sh .sw button.on{border-color:#f59e0b;background:rgba(245,158,11,.12);color:#f59e0b;font-weight:600}
+.sh .sw button{padding:3px 10px;border-radius:4px;border:1px solid var(--border-sub);background:transparent;color:var(--text-tertiary);cursor:pointer;font-size:11px;font-family:'Inter',sans-serif;transition:all .15s}
+.sh .sw button:hover{border-color:var(--accent);color:var(--text-primary)}
+.sh .sw button.on{border-color:var(--accent);color:var(--accent);font-weight:600}
 .sb{padding:16px}
 svg{display:block;margin:0 auto}
-.st-info{display:flex;gap:20px;padding:8px 18px;border-bottom:1px solid #1c1c20;font-size:12px;align-items:center;flex-wrap:wrap}
+.st-info{display:flex;gap:20px;padding:8px 18px;border-bottom:1px solid var(--border-sub);font-size:12px;align-items:center;flex-wrap:wrap}
 .st-info .name{font-weight:600;font-size:14px}
-.st-info .code{color:#a0a0a8;font-family:'JetBrains Mono',monospace;font-size:11px}
+.st-info .code{color:var(--text-tertiary);font-family:'JetBrains Mono',monospace;font-size:11px}
 .st-info .price{font-size:20px;font-weight:700;font-family:'JetBrains Mono',monospace}
-.st-info .price.up{color:#ef5350}
-.st-info .price.dn{color:#26a69a}
+.st-info .price.up{color:var(--up)}
+.st-info .price.dn{color:var(--down)}
 .st-info .chg{font-size:13px;font-family:'JetBrains Mono',monospace}
-.st-info .chg.up{color:#ef5350}
-.st-info .chg.dn{color:#26a69a}
-.st-info .meta{font-size:11px;color:#a0a0a8}
+.st-info .chg.up{color:var(--up)}
+.st-info .chg.dn{color:var(--down)}
+.st-info .meta{font-size:11px;color:var(--text-tertiary)}
 </style>
 </head>
 <body>
@@ -124,8 +124,9 @@ INTRADAY.forEach(function(d, i) {
 // ============================================================
 //  渲染工具
 // ============================================================
-var UP='#ef5350', DN='#26a69a', MA5='#f8b500', MA10='#4a6cf7', MA20='#9c27b0';
-var GRID='#1a1a1e', TX3='#a0a0a8', ACC='#f59e0b';
+function cssVar(k){return getComputedStyle(document.documentElement).getPropertyValue(k).trim()}
+var UP=cssVar('--up'), DN=cssVar('--down'), MA5=cssVar('--ma5'), MA10=cssVar('--ma10'), MA20=cssVar('--ma20');
+var GRID=cssVar('--grid-line'), TX3=cssVar('--text-tertiary'), ACC=cssVar('--accent');
 
 function calcMA(arr, win) {
   var r = [];
