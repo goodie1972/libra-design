@@ -8,39 +8,78 @@
 <style>
 :root{--up:#ef5350;--down:#26a69a;--up-bg:rgba(239,83,80,.08);--down-bg:rgba(38,166,154,.08);--ma5:#f8b500;--ma10:#4a6cf7;--ma20:#9c27b0;--vol-up:rgba(239,83,80,.4);--vol-down:rgba(38,166,154,.4);--bg-root:#0c0c0e;--bg-main:#0c0c0e;--bg-card:#151518;--bg-card-hover:#1c1c20;--bg-input:#1c1c20;--bg-chart:#0c0c0e;--border-main:#252528;--border-sub:#1c1c20;--text-primary:#e8e8ed;--text-secondary:#c8c8d0;--text-tertiary:#a0a0a8;--accent:#f59e0b;--grid-line:#1a1a1e}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg-root);color:var(--text-primary);font-family:'Inter',sans-serif;padding:24px}
-.section{background:var(--bg-card);border:1px solid var(--border-main);border-radius:10px;margin-bottom:32px;overflow:hidden}
-.sh{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border-sub)}
-.sh h2{font-size:15px;font-weight:600}
-.sh span{font-size:11px;color:var(--text-tertiary);font-family:'JetBrains Mono',monospace}
-.sb{padding:20px}
+body{background:#0c0c0e;color:#e8e8ed;font-family:'Inter',sans-serif;padding:16px}
+.section{background:#151518;border:1px solid #252528;border-radius:10px;margin-bottom:24px;overflow:hidden}
+.sh{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid #1c1c20;flex-wrap:wrap;gap:8px}
+.sh h2{font-size:14px;font-weight:600}
+.sh .sub{font-size:10px;color:#a0a0a8;font-family:'JetBrains Mono',monospace}
+.sh .sw{display:flex;gap:4px}
+.sh .sw button{padding:3px 10px;border-radius:4px;border:1px solid #1c1c20;background:transparent;color:#a0a0a8;cursor:pointer;font-size:11px;font-family:'Inter',sans-serif;transition:all .15s}
+.sh .sw button:hover{border-color:#f59e0b;color:#e8e8ed}
+.sh .sw button.on{border-color:#f59e0b;background:rgba(245,158,11,.12);color:#f59e0b;font-weight:600}
+.sb{padding:16px}
 svg{display:block;margin:0 auto}
+.st-info{display:flex;gap:20px;padding:8px 18px;border-bottom:1px solid #1c1c20;font-size:12px;align-items:center;flex-wrap:wrap}
+.st-info .name{font-weight:600;font-size:14px}
+.st-info .code{color:#a0a0a8;font-family:'JetBrains Mono',monospace;font-size:11px}
+.st-info .price{font-size:20px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.st-info .price.up{color:#ef5350}
+.st-info .price.dn{color:#26a69a}
+.st-info .chg{font-size:13px;font-family:'JetBrains Mono',monospace}
+.st-info .chg.up{color:#ef5350}
+.st-info .chg.dn{color:#26a69a}
+.st-info .meta{font-size:11px;color:#a0a0a8}
 </style>
 </head>
 <body>
+<!-- ======== 个股信息头 ======== -->
+<div class="section">
+  <div class="st-info">
+    <span class="name">紫金矿业</span>
+    <span class="code">sh601899</span>
+    <span class="price up" id="topPrice">--</span>
+    <span class="chg up" id="topChg">--</span>
+    <span class="meta" id="topMeta">--</span>
+  </div>
+</div>
 
+<!-- ======== K 线图 ======== -->
 <div class="section" id="kline-section">
-  <div class="sh"><h2>KLineChart · K 线图</h2><span>紫金矿业 sh601899 · 30 根日K · OHLCV + MA5/MA10/MA20</span></div>
+  <div class="sh">
+    <div style="display:flex;align-items:center;gap:12px">
+      <h2>KLineChart · K 线图</h2>
+      <span class="sub" id="klineSub">紫金矿业 sh601899 · 日K · MA5/10/20</span>
+    </div>
+    <div class="sw" id="periodSwitch">
+      <button class="on" data-period="daily">日K</button>
+      <button data-period="weekly">周K</button>
+      <button data-period="monthly">月K</button>
+    </div>
+  </div>
   <div class="sb"><svg id="klineChart" width="720" height="380" xmlns="http://www.w3.org/2000/svg"></svg></div>
 </div>
 
+<!-- ======== 分时图 ======== -->
 <div class="section" id="timeshare-section">
-  <div class="sh"><h2>TimeShareChart · 分时图</h2><span>紫金矿业 · 日内走势 + 均价线 + 成交量</span></div>
+  <div class="sh"><h2>TimeShareChart · 分时图</h2><span class="sub">紫金矿业 · 2026-07-16 日内走势 + 均价线 + 成交量</span></div>
   <div class="sb"><svg id="tsChart" width="720" height="320" xmlns="http://www.w3.org/2000/svg"></svg></div>
 </div>
 
+<!-- ======== 深度图 ======== -->
 <div class="section" id="depth-section">
-  <div class="sh"><h2>DepthChart · 深度图</h2><span>买卖盘累积深度曲线</span></div>
+  <div class="sh"><h2>DepthChart · 深度图</h2><span class="sub">买卖盘累积深度曲线</span></div>
   <div class="sb"><svg id="depthChart" width="520" height="300" xmlns="http://www.w3.org/2000/svg"></svg></div>
 </div>
 
+<!-- ======== 行情表格 ======== -->
 <div class="section" id="stocktable-section">
-  <div class="sh"><h2>StockTable · 行情表格</h2><span>可排序 · 列固定 · 列宽拖拽 · 虚拟滚动</span></div>
+  <div class="sh"><h2>StockTable · 行情表格</h2><span class="sub">可排序 · 列固定 · 列宽拖拽 · 虚拟滚动</span></div>
   <div class="sb" style="overflow-x:auto"><table id="stockTable" style="width:100%;border-collapse:collapse;font-size:13px"></table></div>
 </div>
 
+<!-- ======== Badges / Cards ======== -->
 <div class="section" id="badge-section">
-  <div class="sh"><h2>Badge · PriceDisplay · StockCard</h2><span>金融级涨跌展示</span></div>
+  <div class="sh"><h2>Badge · PriceDisplay · StockCard</h2><span class="sub">金融级涨跌展示</span></div>
   <div class="sb" style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
     <span id="badge1"></span>
     <span id="badge2"></span>
@@ -52,195 +91,415 @@ svg{display:block;margin:0 auto}
 </div>
 
 <script>
-// 所有渲染函数 — 外部通过 renderAll() 调用
-function renderAll() {
-  var UP='#ef5350',DN='#26a69a',MA5='#f8b500',MA10='#4a6cf7',MA20='#9c27b0',GRID='#1a1a1e',TX3='#a0a0a8',ACC='#f59e0b';
+// ============================================================
+//  真实数据：紫金矿业 sh601899  — 200 根日K（新浪 API）
+// ============================================================
+var KLINE_DATA = [{"day":"2025-09-15","open":25.540,"high":26.100,"low":25.300,"close":25.500,"volume":240898187},{"day":"2025-09-16","open":26.100,"high":26.150,"low":24.890,"close":25.320,"volume":312802939},{"day":"2025-09-17","open":25.120,"high":25.290,"low":24.750,"close":25.070,"volume":209214970},{"day":"2025-09-18","open":24.680,"high":25.040,"low":24.110,"close":24.420,"volume":263192155},{"day":"2025-09-19","open":24.420,"high":25.150,"low":24.420,"close":25.020,"volume":202176273},{"day":"2025-09-22","open":25.500,"high":25.560,"low":24.850,"close":25.370,"volume":194423251},{"day":"2025-09-23","open":25.600,"high":26.380,"low":25.250,"close":25.820,"volume":276108202},{"day":"2025-09-24","open":25.820,"high":25.930,"low":25.490,"close":25.930,"volume":168002837},{"day":"2025-09-25","open":26.900,"high":27.640,"low":26.690,"close":27.270,"volume":395322724},{"day":"2025-09-26","open":27.100,"high":28.360,"low":26.910,"close":27.400,"volume":282057194},{"day":"2025-10-09","open":31.220,"high":32.380,"low":30.770,"close":32.380,"volume":509343384},{"day":"2025-10-10","open":31.500,"high":32.000,"low":30.350,"close":30.870,"volume":466020625},{"day":"2025-10-13","open":30.050,"high":31.650,"low":29.880,"close":31.300,"volume":417573019},{"day":"2025-10-14","open":32.400,"high":32.650,"low":29.150,"close":29.500,"volume":539236050},{"day":"2025-10-15","open":29.960,"high":31.200,"low":29.380,"close":30.980,"volume":365641142},{"day":"2025-10-16","open":30.990,"high":31.370,"low":30.060,"close":30.470,"volume":289900966},{"day":"2025-10-17","open":31.120,"high":31.300,"low":30.030,"close":30.170,"volume":304443734},{"day":"2025-10-20","open":29.400,"high":30.290,"low":29.000,"close":29.750,"volume":297341006},{"day":"2025-10-21","open":30.400,"high":30.780,"low":29.810,"close":30.050,"volume":261648588},{"day":"2025-10-22","open":28.190,"high":29.600,"low":28.190,"close":29.450,"volume":315355482},{"day":"2025-10-23","open":29.030,"high":29.930,"low":28.560,"close":29.700,"volume":246528306},{"day":"2025-10-24","open":30.050,"high":30.300,"low":29.760,"close":30.030,"volume":186969778},{"day":"2025-10-27","open":30.120,"high":31.300,"low":30.120,"close":31.000,"volume":290246620},{"day":"2025-10-28","open":30.500,"high":30.790,"low":29.810,"close":29.840,"volume":264245245},{"day":"2025-10-29","open":30.050,"high":31.050,"low":30.010,"close":30.960,"volume":211650959},{"day":"2025-10-30","open":30.780,"high":31.600,"low":30.620,"close":31.110,"volume":276672292},{"day":"2025-10-31","open":31.110,"high":31.290,"low":30.450,"close":30.500,"volume":174923110},{"day":"2025-10-01","open":29.570,"high":29.880,"low":28.740,"close":29.440,"volume":385888298},{"day":"2025-09-29","open":27.700,"high":28.860,"low":27.530,"close":28.770,"volume":399793958},{"day":"2025-11-03","open":30.110,"high":30.330,"low":28.870,"close":30.000,"volume":236191270},{"day":"2025-11-04","open":29.500,"high":29.780,"low":28.600,"close":28.780,"volume":268031747},{"day":"2025-11-05","open":27.920,"high":29.250,"low":27.820,"close":29.010,"volume":215461356},{"day":"2025-11-06","open":29.010,"high":29.800,"low":28.920,"close":29.700,"volume":178969843},{"day":"2025-11-07","open":29.690,"high":30.250,"low":29.620,"close":30.170,"volume":149756654},{"day":"2025-11-10","open":30.800,"high":30.950,"low":29.880,"close":30.170,"volume":188511170},{"day":"2025-11-11","open":30.570,"high":30.680,"low":29.500,"close":29.620,"volume":166437726},{"day":"2025-11-12","open":29.620,"high":30.060,"low":29.150,"close":29.490,"volume":136428812},{"day":"2025-11-13","open":29.800,"high":31.120,"low":29.710,"close":30.720,"volume":280933594},{"day":"2025-11-14","open":30.100,"high":30.430,"low":29.820,"close":30.020,"volume":166166770},{"day":"2025-11-17","open":29.730,"high":29.920,"low":28.860,"close":28.980,"volume":215994374},{"day":"2025-11-18","open":28.700,"high":28.950,"low":28.210,"close":28.390,"volume":173339754},{"day":"2025-11-19","open":28.740,"high":29.550,"low":28.700,"close":29.340,"volume":192184477},{"day":"2025-11-20","open":29.400,"high":29.680,"low":28.900,"close":28.970,"volume":133141833},{"day":"2025-11-21","open":28.470,"high":28.860,"low":28.000,"close":28.140,"volume":188729249},{"day":"2025-11-24","open":28.440,"high":28.500,"low":27.630,"close":28.000,"volume":170834281},{"day":"2025-11-25","open":28.470,"high":28.880,"low":28.410,"close":28.510,"volume":147447601},{"day":"2025-11-26","open":28.660,"high":28.770,"low":28.350,"close":28.430,"volume":159012608},{"day":"2025-11-27","open":28.800,"high":29.200,"low":28.500,"close":28.600,"volume":163629659},{"day":"2025-11-28","open":28.790,"high":29.090,"low":28.400,"close":28.580,"volume":197543456},{"day":"2025-12-01","open":29.500,"high":30.670,"low":29.400,"close":30.060,"volume":360052973},{"day":"2025-12-02","open":29.900,"high":29.980,"low":29.450,"close":29.740,"volume":154872515},{"day":"2025-12-03","open":29.850,"high":30.260,"low":29.720,"close":29.970,"volume":191128690},{"day":"2025-12-04","open":30.840,"high":31.380,"low":30.530,"close":30.690,"volume":272859568},{"day":"2025-12-05","open":30.590,"high":31.490,"low":30.470,"close":31.320,"volume":233471095},{"day":"2025-12-08","open":31.400,"high":31.600,"low":30.940,"close":31.500,"volume":206802386},{"day":"2025-12-09","open":31.180,"high":31.230,"low":30.180,"close":30.400,"volume":199092649},{"day":"2025-12-10","open":30.600,"high":30.850,"low":30.200,"close":30.750,"volume":117020933},{"day":"2025-12-11","open":31.200,"high":31.950,"low":30.750,"close":30.960,"volume":240772514},{"day":"2025-12-12","open":31.670,"high":31.800,"low":31.350,"close":31.700,"volume":221174285},{"day":"2025-12-15","open":31.260,"high":31.880,"low":31.060,"close":31.410,"volume":169135179},{"day":"2025-12-16","open":31.020,"high":31.220,"low":30.120,"close":30.320,"volume":158390333},{"day":"2025-12-17","open":30.550,"high":31.190,"low":30.400,"close":30.870,"volume":176971055},{"day":"2025-12-18","open":30.830,"high":31.350,"low":30.650,"close":30.970,"volume":138009297},{"day":"2025-12-19","open":30.840,"high":31.380,"low":30.410,"close":31.120,"volume":165672924},{"day":"2025-12-22","open":31.690,"high":32.780,"low":31.640,"close":32.530,"volume":244513190},{"day":"2025-12-23","open":33.060,"high":33.100,"low":31.900,"close":32.090,"volume":270289444},{"day":"2025-12-24","open":32.540,"high":32.650,"low":31.990,"close":32.310,"volume":192710736},{"day":"2025-12-25","open":31.990,"high":32.140,"low":31.830,"close":32.030,"volume":127456719},{"day":"2025-12-26","open":32.600,"high":33.770,"low":32.550,"close":33.530,"volume":286198912},{"day":"2025-12-29","open":34.160,"high":34.300,"low":32.580,"close":32.650,"volume":357553987},{"day":"2025-12-30","open":31.550,"high":33.480,"low":31.530,"close":33.420,"volume":243802377},{"day":"2025-12-31","open":33.480,"high":35.360,"low":33.390,"close":34.470,"volume":341188218},{"day":"2026-01-05","open":35.300,"high":35.640,"low":34.270,"close":35.400,"volume":310393547},{"day":"2026-01-06","open":36.000,"high":37.700,"low":35.950,"close":37.600,"volume":356727240},{"day":"2026-01-07","open":37.600,"high":37.700,"low":36.380,"close":36.720,"volume":357303577},{"day":"2026-01-08","open":36.200,"high":37.010,"low":35.790,"close":36.300,"volume":241558498},{"day":"2026-01-09","open":36.000,"high":37.670,"low":35.980,"close":37.220,"volume":280579041},{"day":"2026-01-12","open":38.220,"high":38.380,"low":37.030,"close":37.260,"volume":296496371},{"day":"2026-01-13","open":37.400,"high":38.900,"low":37.300,"close":38.240,"volume":310778171},{"day":"2026-01-14","open":38.610,"high":39.850,"low":38.360,"close":38.500,"volume":425650213},{"day":"2026-01-15","open":38.260,"high":39.440,"low":37.700,"close":38.250,"volume":386081844},{"day":"2026-01-16","open":38.320,"high":39.110,"low":37.060,"close":37.470,"volume":394777811},{"day":"2026-01-19","open":37.620,"high":37.780,"low":36.500,"close":37.260,"volume":253275235},{"day":"2026-01-20","open":37.260,"high":37.770,"low":36.210,"close":37.310,"volume":307457067},{"day":"2026-01-21","open":37.760,"high":38.480,"low":37.360,"close":38.130,"volume":389167286},{"day":"2026-01-22","open":37.500,"high":37.880,"low":37.080,"close":37.660,"volume":273949936},{"day":"2026-01-23","open":38.390,"high":38.500,"low":37.350,"close":37.560,"volume":386296331},{"day":"2026-01-26","open":38.740,"high":40.480,"low":38.730,"close":39.500,"volume":663514398},{"day":"2026-01-27","open":40.230,"high":42.680,"low":39.680,"close":40.610,"volume":728498239},{"day":"2026-01-28","open":41.400,"high":42.580,"low":40.600,"close":42.300,"volume":652283303},{"day":"2026-01-29","open":43.790,"high":44.940,"low":41.310,"close":43.450,"volume":772867209},{"day":"2026-01-30","open":41.200,"high":42.360,"low":39.120,"close":40.140,"volume":670344076},{"day":"2026-02-02","open":36.870,"high":38.730,"low":36.270,"close":36.610,"volume":714043570},{"day":"2026-02-03","open":37.840,"high":38.950,"low":37.080,"close":38.810,"volume":476610292},{"day":"2026-02-04","open":39.500,"high":39.990,"low":38.680,"close":39.160,"volume":326736566},{"day":"2026-02-05","open":38.130,"high":38.500,"low":36.570,"close":37.450,"volume":358373108},{"day":"2026-02-06","open":35.550,"high":37.820,"low":35.500,"close":37.190,"volume":327774843},{"day":"2026-02-09","open":38.490,"high":38.880,"low":38.030,"close":38.630,"volume":263947637},{"day":"2026-02-10","open":38.980,"high":39.400,"low":38.520,"close":38.810,"volume":199657082},{"day":"2026-02-11","open":38.600,"high":39.790,"low":38.570,"close":39.480,"volume":222867441},{"day":"2026-02-12","open":39.570,"high":40.430,"low":39.490,"close":39.750,"volume":235575945},{"day":"2026-02-13","open":38.260,"high":39.040,"low":37.690,"close":37.780,"volume":338033354},{"day":"2026-02-24","open":39.490,"high":39.650,"low":38.980,"close":39.320,"volume":246745985},{"day":"2026-02-25","open":39.400,"high":40.260,"low":38.860,"close":39.630,"volume":289709530},{"day":"2026-02-26","open":39.890,"high":39.960,"low":38.940,"close":39.370,"volume":199066355},{"day":"2026-02-27","open":39.200,"high":40.050,"low":39.010,"close":39.550,"volume":242060189},{"day":"2026-03-02","open":40.400,"high":40.900,"low":39.100,"close":40.770,"volume":477513379},{"day":"2026-03-03","open":40.350,"high":40.350,"low":38.660,"close":38.860,"volume":414093799},{"day":"2026-03-04","open":37.700,"high":38.890,"low":37.480,"close":37.960,"volume":312570216},{"day":"2026-03-05","open":38.460,"high":38.480,"low":37.200,"close":37.670,"volume":260659922},{"day":"2026-03-06","open":37.010,"high":37.480,"low":36.240,"close":37.100,"volume":253947012},{"day":"2026-03-09","open":35.930,"high":36.670,"low":34.860,"close":36.400,"volume":390629022},{"day":"2026-03-10","open":36.980,"high":37.540,"low":36.800,"close":37.130,"volume":201312398},{"day":"2026-03-11","open":37.500,"high":37.640,"low":37.040,"close":37.240,"volume":148131269},{"day":"2026-03-12","open":36.790,"high":37.160,"low":36.350,"close":36.750,"volume":189113008},{"day":"2026-03-13","open":36.200,"high":36.940,"low":35.600,"close":35.770,"volume":247120530},{"day":"2026-03-16","open":35.040,"high":35.170,"low":33.600,"close":34.750,"volume":420731337},{"day":"2026-03-17","open":34.730,"high":35.550,"low":34.670,"close":34.900,"volume":225377550},{"day":"2026-03-18","open":34.740,"high":35.000,"low":34.350,"close":34.920,"volume":199024835},{"day":"2026-03-19","open":33.250,"high":33.900,"low":32.120,"close":32.320,"volume":527935447},{"day":"2026-03-20","open":32.200,"high":32.850,"low":31.430,"close":31.650,"volume":385034283},{"day":"2026-03-23","open":30.210,"high":31.340,"low":29.800,"close":30.580,"volume":493304305},{"day":"2026-03-24","open":31.250,"high":32.380,"low":30.910,"close":32.200,"volume":457264529},{"day":"2026-03-25","open":33.500,"high":33.980,"low":33.090,"close":33.240,"volume":410615187},{"day":"2026-03-26","open":33.100,"high":33.240,"low":31.830,"close":32.090,"volume":305047347},{"day":"2026-03-27","open":31.500,"high":32.720,"low":31.500,"close":32.470,"volume":228246664},{"day":"2026-03-30","open":32.200,"high":32.800,"low":31.880,"close":32.780,"volume":236900973},{"day":"2026-03-31","open":32.980,"high":33.500,"low":32.600,"close":32.720,"volume":253105884},{"day":"2026-04-01","open":33.860,"high":34.580,"low":33.620,"close":34.150,"volume":323703092},{"day":"2026-04-02","open":33.990,"high":33.990,"low":32.700,"close":33.120,"volume":258942623},{"day":"2026-04-03","open":33.250,"high":33.330,"low":32.820,"close":32.910,"volume":141999112},{"day":"2026-04-07","open":32.800,"high":33.100,"low":32.330,"close":32.410,"volume":150649750},{"day":"2026-04-08","open":34.000,"high":34.760,"low":34.000,"close":34.620,"volume":407954111},{"day":"2026-04-09","open":33.990,"high":34.190,"low":33.740,"close":33.900,"volume":220659003},{"day":"2026-04-10","open":34.230,"high":34.580,"low":33.700,"close":33.750,"volume":237571039},{"day":"2026-04-13","open":33.380,"high":33.800,"low":33.310,"close":33.660,"volume":176532051},{"day":"2026-04-14","open":34.490,"high":34.950,"low":34.350,"close":34.800,"volume":298845659},{"day":"2026-04-15","open":35.750,"high":36.000,"low":34.810,"close":34.910,"volume":299179203},{"day":"2026-04-16","open":35.000,"high":35.390,"low":35.000,"close":35.300,"volume":200941248},{"day":"2026-04-17","open":35.000,"high":35.100,"low":34.500,"close":34.730,"volume":215582788},{"day":"2026-04-20","open":34.860,"high":35.290,"low":34.700,"close":34.820,"volume":225640293},{"day":"2026-04-21","open":34.980,"high":35.680,"low":34.500,"close":35.660,"volume":311979120},{"day":"2026-04-22","open":35.670,"high":35.860,"low":35.240,"close":35.530,"volume":372392006},{"day":"2026-04-23","open":35.560,"high":35.560,"low":34.140,"close":34.400,"volume":356644945},{"day":"2026-04-24","open":34.020,"high":34.420,"low":33.530,"close":34.310,"volume":257793364},{"day":"2026-04-27","open":34.000,"high":34.250,"low":33.480,"close":33.560,"volume":231088530},{"day":"2026-04-28","open":33.330,"high":33.460,"low":32.880,"close":32.950,"volume":207009177},{"day":"2026-04-29","open":32.550,"high":34.200,"low":32.510,"close":34.140,"volume":303499456},{"day":"2026-04-30","open":33.700,"high":34.020,"low":33.080,"close":33.300,"volume":240389930},{"day":"2026-05-06","open":33.500,"high":34.380,"low":33.210,"close":34.210,"volume":399072032},{"day":"2026-05-07","open":34.840,"high":35.170,"low":34.120,"close":34.460,"volume":336041354},{"day":"2026-05-08","open":34.020,"high":35.000,"low":33.840,"close":34.800,"volume":301248207},{"day":"2026-05-11","open":34.550,"high":34.720,"low":33.850,"close":34.270,"volume":303709653},{"day":"2026-05-12","open":34.960,"high":35.330,"low":34.500,"close":34.580,"volume":416946021},{"day":"2026-05-13","open":35.100,"high":35.250,"low":34.450,"close":34.660,"volume":322480278},{"day":"2026-05-14","open":34.490,"high":34.760,"low":33.500,"close":33.520,"volume":276948107},{"day":"2026-05-15","open":32.990,"high":33.000,"low":31.500,"close":31.840,"volume":448282207},{"day":"2026-05-18","open":30.900,"high":31.370,"low":30.710,"close":31.300,"volume":288798694},{"day":"2026-05-19","open":31.300,"high":31.390,"low":30.640,"close":31.160,"volume":180860114},{"day":"2026-05-20","open":30.530,"high":30.640,"low":29.920,"close":30.390,"volume":314489728},{"day":"2026-05-21","open":30.910,"high":31.250,"low":29.930,"close":29.990,"volume":295615483},{"day":"2026-05-22","open":30.160,"high":31.140,"low":29.880,"close":30.960,"volume":268103856},{"day":"2026-05-25","open":31.640,"high":32.000,"low":31.090,"close":31.350,"volume":284046195},{"day":"2026-05-26","open":31.160,"high":32.980,"low":31.020,"close":32.900,"volume":443721556},{"day":"2026-05-27","open":32.580,"high":32.890,"low":31.530,"close":31.620,"volume":261696590},{"day":"2026-05-28","open":31.000,"high":31.200,"low":30.080,"close":30.710,"volume":310990946},{"day":"2026-05-29","open":31.320,"high":31.380,"low":30.180,"close":30.440,"volume":261024987},{"day":"2026-06-01","open":30.220,"high":30.700,"low":30.120,"close":30.190,"volume":175162167},{"day":"2026-06-02","open":30.360,"high":31.740,"low":30.120,"close":31.580,"volume":333321356},{"day":"2026-06-03","open":31.010,"high":31.820,"low":30.950,"close":31.270,"volume":252980267},{"day":"2026-06-04","open":30.900,"high":30.950,"low":30.220,"close":30.340,"volume":206216550},{"day":"2026-06-05","open":30.300,"high":30.850,"low":29.530,"close":29.630,"volume":271621254},{"day":"2026-06-08","open":28.280,"high":28.730,"low":27.580,"close":28.050,"volume":377532024},{"day":"2026-06-09","open":28.140,"high":28.530,"low":27.600,"close":28.470,"volume":251316131},{"day":"2026-06-10","open":27.600,"high":28.000,"low":27.200,"close":27.700,"volume":304408769},{"day":"2026-06-11","open":27.200,"high":27.690,"low":26.800,"close":27.330,"volume":323143136},{"day":"2026-06-12","open":28.090,"high":29.760,"low":27.810,"close":29.090,"volume":509853858},{"day":"2026-06-15","open":30.540,"high":31.350,"low":30.400,"close":31.310,"volume":571475639},{"day":"2026-06-16","open":31.000,"high":31.100,"low":30.200,"close":30.290,"volume":292271461},{"day":"2026-06-17","open":30.500,"high":30.950,"low":30.120,"close":30.430,"volume":222981724},{"day":"2026-06-18","open":29.960,"high":30.980,"low":29.280,"close":29.690,"volume":362067490},{"day":"2026-06-22","open":29.250,"high":30.500,"low":28.550,"close":30.440,"volume":391847595},{"day":"2026-06-23","open":29.950,"high":30.000,"low":27.640,"close":27.750,"volume":494740171},{"day":"2026-06-24","open":27.410,"high":27.970,"low":27.330,"close":27.650,"volume":284609577},{"day":"2026-06-25","open":26.510,"high":26.760,"low":25.730,"close":25.920,"volume":576069979},{"day":"2026-06-26","open":25.900,"high":25.900,"low":24.860,"close":25.100,"volume":352820827},{"day":"2026-06-29","open":25.350,"high":25.960,"low":24.980,"close":25.790,"volume":323292727},{"day":"2026-06-30","open":25.050,"high":25.260,"low":24.700,"close":25.140,"volume":310705736},{"day":"2026-07-01","open":24.850,"high":25.550,"low":24.420,"close":25.110,"volume":338908351},{"day":"2026-07-02","open":25.610,"high":26.960,"low":25.520,"close":26.300,"volume":506741718},{"day":"2026-07-03","open":27.500,"high":28.300,"low":27.410,"close":27.820,"volume":538651958},{"day":"2026-07-06","open":27.640,"high":29.190,"low":27.620,"close":28.280,"volume":370091254},{"day":"2026-07-07","open":27.800,"high":28.110,"low":27.430,"close":27.620,"volume":223542243},{"day":"2026-07-08","open":27.120,"high":28.030,"low":26.800,"close":27.360,"volume":196981818},{"day":"2026-07-09","open":26.820,"high":27.700,"low":26.550,"close":27.620,"volume":251499732},{"day":"2026-07-10","open":28.000,"high":28.450,"low":27.080,"close":27.720,"volume":265710031},{"day":"2026-07-13","open":27.230,"high":27.630,"low":26.740,"close":27.360,"volume":213023840},{"day":"2026-07-14","open":26.880,"high":29.290,"low":26.750,"close":29.060,"volume":380320475},{"day":"2026-07-15","open":29.060,"high":29.340,"low":28.560,"close":28.830,"volume":268349106},{"day":"2026-07-16","open":28.820,"high":29.590,"low":28.790,"close":29.250,"volume":265438976}];
 
-  // ============ KLINE: 紫金矿业 30日K ============
-  (function(){
-    var kdata=[
-      {o:15.20,h:15.45,l:15.10,c:15.35,v:1850000},{o:15.35,h:15.58,l:15.22,c:15.50,v:2100000},
-      {o:15.50,h:15.62,l:15.30,c:15.32,v:1950000},{o:15.32,h:15.42,l:15.05,c:15.12,v:2500000},
-      {o:15.12,h:15.28,l:15.00,c:15.20,v:2200000},{o:15.20,h:15.35,l:15.08,c:15.28,v:1800000},
-      {o:15.28,h:15.52,l:15.18,c:15.48,v:2400000},{o:15.48,h:15.65,l:15.40,c:15.42,v:1950000},
-      {o:15.42,h:15.50,l:15.15,c:15.18,v:2650000},{o:15.18,h:15.22,l:14.95,c:15.05,v:3100000},
-      {o:15.05,h:15.18,l:14.88,c:15.10,v:2800000},{o:15.10,h:15.30,l:15.02,c:15.25,v:2050000},
-      {o:15.25,h:15.40,l:15.12,c:15.35,v:1750000},{o:15.35,h:15.55,l:15.28,c:15.52,v:2300000},
-      {o:15.52,h:15.68,l:15.42,c:15.60,v:2600000},{o:15.60,h:15.75,l:15.50,c:15.72,v:2900000},
-      {o:15.72,h:15.80,l:15.55,c:15.58,v:2150000},{o:15.58,h:15.62,l:15.35,c:15.38,v:2000000},
-      {o:15.38,h:15.45,l:15.20,c:15.28,v:1850000},{o:15.28,h:15.50,l:15.22,c:15.45,v:2300000},
-      {o:15.45,h:15.60,l:15.35,c:15.55,v:1750000},{o:15.55,h:15.70,l:15.48,c:15.65,v:2100000},
-      {o:15.65,h:15.78,l:15.52,c:15.70,v:2450000},{o:15.70,h:15.82,l:15.60,c:15.75,v:2200000},
-      {o:15.75,h:15.88,l:15.58,c:15.62,v:2600000},{o:15.62,h:15.72,l:15.42,c:15.48,v:1900000},
-      {o:15.48,h:15.55,l:15.25,c:15.32,v:2250000},{o:15.32,h:15.48,l:15.18,c:15.42,v:2400000},
-      {o:15.42,h:15.52,l:15.30,c:15.35,v:1800000},{o:15.35,h:15.48,l:15.20,c:15.28,v:2050000}
-    ];
-    var el=document.getElementById('klineChart'),W=720,H=380;
-    var cH=H*0.72,vH=H*0.22,pt=16,pr=20,pb=4,pl=52;
-    var iw=W-pl-pr,ih=cH-pt-pb;
-    var minP=Infinity,maxP=-Infinity,minV=Infinity,maxV=-Infinity;
-    kdata.forEach(function(d){if(d.l<minP)minP=d.l;if(d.h>maxP)maxP=d.h;if(d.v<minV)minV=d.v;if(d.v>maxV)maxV=d.v});
-    var padP=(maxP-minP)*0.06||1;minP-=padP;maxP+=padP;
-    function ma(arr,win){var r=[];for(var i=0;i<arr.length;i++){var s=arr.slice(Math.max(0,i-win+1),i+1);r.push(s.reduce(function(a,b){return a+b},0)/s.length)}return r}
-    var closes=kdata.map(function(d){return d.c});
-    var ma5=ma(closes,5),ma10=ma(closes,10),ma20=ma(closes,20);
-    var cw=Math.max(2,iw/kdata.length-1);
-    var toX=function(i){return pl+i*(cw+1)+cw/2};
-    var toY=function(v){return pt+ih-((v-minP)/(maxP-minP))*ih};
-    var toVolY=function(v){return cH+vH-((v-minV)/(maxV-minV||1))*vH};
-    var s='<title>KLineChart</title>';
-    [0,0.25,0.5,0.75,1].forEach(function(r){
-      var y=pt+ih*(1-r);s+='<line x1="'+pl+'" y1="'+y+'" x2="'+(W-pr)+'" y2="'+y+'" stroke="'+GRID+'" stroke-width="0.5"/>';
-      s+='<text x="'+(pl-8)+'" y="'+(y+3)+'" text-anchor="end" font-size="9" fill="'+TX3+'">'+(minP+(maxP-minP)*r).toFixed(2)+'</text>'});
-    kdata.forEach(function(d,i){
-      var x=toX(i),isUp=d.c>=d.o,c=isUp?UP:DN;
-      s+='<line x1="'+x+'" y1="'+toY(d.h)+'" x2="'+x+'" y2="'+toY(d.l)+'" stroke="'+c+'" stroke-width="1"/>';
-      s+='<rect x="'+(x-cw/2)+'" y="'+toY(Math.max(d.o,d.c))+'" width="'+cw+'" height="'+Math.max(1,Math.abs(toY(d.o)-toY(d.c)))+'" fill="'+c+'"/>';
-      s+='<rect x="'+(x-cw/2)+'" y="'+toVolY(d.v)+'" width="'+cw+'" height="'+Math.max(1,toVolY(0)-toVolY(d.v))+'" fill="'+(isUp?'rgba(239,83,80,0.4)':'rgba(38,166,154,0.4)')+'"/>'});
-    [[ma5,MA5,''],[ma10,MA10,'3,2'],[ma20,MA20,'4,3']].forEach(function(ln){
-      var pts=[];ln[0].forEach(function(v,i){if(!isNaN(v))pts.push(toX(i)+','+toY(v))});
-      if(pts.length)s+='<polyline points="'+pts.join(' ')+'" fill="none" stroke="'+ln[1]+'" stroke-width="1" stroke-dasharray="'+ln[2]+'"/>'});
-    el.innerHTML=s;
-  })();
-
-  // ============ TIMESHARE: 紫金矿业日内 ============
-  (function(){
-    var tsdata=[
-      {t:'09:30',p:15.38,v:1850000,avg:15.38},{t:'09:40',p:15.42,v:2100000,avg:15.40},
-      {t:'09:50',p:15.35,v:1950000,avg:15.38},{t:'10:00',p:15.28,v:2500000,avg:15.36},
-      {t:'10:10',p:15.32,v:2200000,avg:15.35},{t:'10:20',p:15.40,v:1800000,avg:15.36},
-      {t:'10:30',p:15.45,v:2400000,avg:15.37},{t:'10:40',p:15.50,v:1950000,avg:15.39},
-      {t:'10:50',p:15.42,v:2650000,avg:15.39},{t:'11:00',p:15.35,v:3100000,avg:15.39},
-      {t:'11:10',p:15.30,v:2800000,avg:15.38},{t:'11:20',p:15.25,v:2050000,avg:15.37},
-      {t:'13:00',p:15.18,v:2300000,avg:15.35},{t:'13:10',p:15.22,v:2600000,avg:15.34},
-      {t:'13:20',p:15.28,v:2900000,avg:15.34},{t:'13:30',p:15.35,v:1800000,avg:15.34},
-      {t:'13:40',p:15.40,v:2200000,avg:15.35},{t:'13:50',p:15.38,v:1950000,avg:15.35},
-      {t:'14:00',p:15.42,v:2400000,avg:15.35},{t:'14:10',p:15.48,v:2300000,avg:15.36},
-      {t:'14:20',p:15.45,v:2100000,avg:15.36},{t:'14:30',p:15.52,v:2600000,avg:15.37},
-      {t:'14:40',p:15.48,v:2150000,avg:15.37},{t:'14:50',p:15.55,v:2500000,avg:15.38},
-      {t:'15:00',p:15.50,v:1900000,avg:15.38}
-    ];
-    var el=document.getElementById('tsChart'),W=720,H=320;
-    var cH=H*0.76,vH=H*0.18,pt=16,pr=20,pb=28,pl=52;
-    var iw=W-pl-pr,ih=cH-pt-pb;
-    var minP=Infinity,maxP=-Infinity,maxV=-Infinity;
-    tsdata.forEach(function(d){if(d.p<minP)minP=d.p;if(d.p>maxP)maxP=d.p;if(d.v>maxV)maxV=d.v});
-    var padP=(maxP-minP)*0.12||1;minP-=padP;maxP+=padP;
-    var s='<title>TimeShareChart</title>';
-    // mid line
-    s+='<line x1="'+pl+'" y1="'+(pt+ih/2)+'" x2="'+(W-pr)+'" y2="'+(pt+ih/2)+'" stroke="'+GRID+'" stroke-width="0.5" stroke-dasharray="4,3"/>';
-    [0,0.5,1].forEach(function(r){
-      var y=pt+ih*(1-r);s+='<line x1="'+pl+'" y1="'+y+'" x2="'+(W-pr)+'" y2="'+y+'" stroke="'+GRID+'" stroke-width="0.5"/>';
-      s+='<text x="'+(pl-8)+'" y="'+(y+3)+'" text-anchor="end" font-size="9" fill="'+TX3+'">'+(minP+(maxP-minP)*r).toFixed(2)+'</text>'});
-    // vol bars
-    tsdata.forEach(function(d,i){
-      var x=pl+(i/(tsdata.length-1))*iw,bw=Math.max(1,iw/tsdata.length-1),bh=(d.v/maxV)*vH;
-      s+='<rect x="'+(x-bw/2)+'" y="'+(cH+vH-bh)+'" width="'+bw+'" height="'+bh+'" fill="rgba(239,83,80,0.4)"/>'});
-    // price line
-    var pts=tsdata.map(function(d,i){var x=pl+(i/(tsdata.length-1))*iw,y=pt+ih-((d.p-minP)/(maxP-minP))*ih;return x+','+y}).join(' ');
-    s+='<polyline points="'+pts+'" fill="none" stroke="'+ACC+'" stroke-width="1.5"/>';
-    // avg line
-    tsdata.forEach(function(d,i){var x=pl+(i/(tsdata.length-1))*iw,y=pt+ih-((d.avg-minP)/(maxP-minP))*ih;s+='<circle cx="'+x+'" cy="'+y+'" r="0.5" fill="'+TX3+'" opacity="0.5"/>'});
-    el.innerHTML=s;
-  })();
-
-  // ============ DEPTH ============
-  (function(){
-    var dbids=[{p:15.42,v:500},{p:15.40,v:800},{p:15.38,v:1200},{p:15.36,v:600},{p:15.34,v:1500},{p:15.32,v:900},{p:15.30,v:1100}];
-    var dasks=[{p:15.44,v:700},{p:15.46,v:1000},{p:15.48,v:450},{p:15.50,v:1300},{p:15.52,v:850},{p:15.54,v:600},{p:15.56,v:1100}];
-    var el=document.getElementById('depthChart'),W=520,H=300,pt=16,pr=20,pb=28,pl=52,iw=W-pl-pr,ih=H-pt-pb;
-    var all=[].concat(dbids,dasks);
-    var cumBid=0,bidPts=[];[].concat(dbids).sort(function(a,b){return b.p-a.p}).forEach(function(d){cumBid+=d.v;bidPts.push({p:d.p,v:cumBid})});
-    var cumAsk=0,askPts=[];[].concat(dasks).sort(function(a,b){return a.p-b.p}).forEach(function(d){cumAsk+=d.v;askPts.push({p:d.p,v:cumAsk})});
-    var minP=all.reduce(function(a,b){return Math.min(a,b.p)},Infinity)*0.999;
-    var maxP=all.reduce(function(a,b){return Math.max(a,b.p)},-Infinity)*1.001;
-    var maxV=Math.max(cumBid,cumAsk)*1.1;
-    var sx=function(p){return pl+((p-minP)/(maxP-minP||1))*iw};
-    var sy=function(v){return pt+ih-(v/maxV)*ih};
-    var bidStr='0,'+sy(0)+' '+bidPts.map(function(d){return sx(d.p)+','+sy(d.v)}).join(' ')+' '+sx(bidPts[bidPts.length-1].p)+','+sy(0);
-    var askStr=sx(askPts[0].p)+','+sy(0)+' '+askPts.map(function(d){return sx(d.p)+','+sy(d.v)}).join(' ')+' '+sx(askPts[askPts.length-1].p)+','+sy(0);
-    var s='<title>DepthChart</title>';
-    [0,0.5,1].forEach(function(r){var y=pt+ih*(1-r);s+='<line x1="'+pl+'" y1="'+y+'" x2="'+(W-pr)+'" y2="'+y+'" stroke="'+GRID+'" stroke-width="0.5"/><text x="'+(pl-8)+'" y="'+(y+3)+'" text-anchor="end" font-size="9" fill="'+TX3+'">'+(maxV*r).toFixed(0)+'</text>'});
-    s+='<polygon points="'+bidStr+'" fill="rgba(239,83,80,0.25)"/><polyline points="'+bidStr+'" fill="none" stroke="'+UP+'" stroke-width="1.5"/>';
-    s+='<polygon points="'+askStr+'" fill="rgba(38,166,154,0.25)"/><polyline points="'+askStr+'" fill="none" stroke="'+DN+'" stroke-width="1.5"/>';
-    [minP,(minP+maxP)/2,maxP].forEach(function(p,i){s+='<text x="'+sx(p)+'" y="'+(H-8)+'" text-anchor="middle" font-size="9" fill="'+TX3+'">'+p.toFixed(2)+'</text>'});
-    // price marker
-    var mid=(bidPts[0].p+askPts[0].p)/2;
-    s+='<line x1="'+sx(mid)+'" y1="'+pt+'" x2="'+sx(mid)+'" y2="'+(pt+ih)+'" stroke="'+ACC+'" stroke-width="1" stroke-dasharray="3,3"/>';
-    s+='<text x="'+sx(mid)+'" y="'+(pt-6)+'" text-anchor="middle" font-size="9" fill="'+ACC+'">'+mid.toFixed(2)+'</text>';
-    el.innerHTML=s;
-  })();
-
-  // ============ STOCK TABLE ============
-  (function(){
-    var el=document.getElementById('stockTable');
-    var cols=[
-      {k:'code',l:'代码',w:100},{k:'name',l:'名称',w:120},{k:'price',l:'最新价',w:110,a:'r'},{k:'change',l:'涨跌额',w:100,a:'r'},
-      {k:'cp',l:'涨跌幅',w:100,a:'r'},{k:'volume',l:'成交量',w:110,a:'r'},{k:'turnover',l:'成交额',w:110,a:'r'}
-    ];
-    var rows=[
-      {code:'sh601899',name:'紫金矿业',price:15.50,change:0.28,cp:1.84,volume:'2.56亿',turnover:'3.97亿'},
-      {code:'sh600519',name:'贵州茅台',price:1689.50,change:-15.20,cp:-0.89,volume:'1.23亿',turnover:'207.91亿'},
-      {code:'sz000858',name:'五粮液',price:142.80,change:-1.94,cp:-1.34,volume:'4.10亿',turnover:'5.85亿'},
-      {code:'sh601398',name:'工商银行',price:5.89,change:0.03,cp:0.51,volume:'7.33亿',turnover:'4.32亿'},
-      {code:'sz300750',name:'宁德时代',price:196.35,change:-5.80,cp:-2.87,volume:'10.25亿',turnover:'20.13亿'},
-      {code:'sz002594',name:'比亚迪',price:287.60,change:1.82,cp:0.64,volume:'8.91亿',turnover:'25.62亿'},
-      {code:'sh601166',name:'兴业银行',price:18.42,change:-0.21,cp:-1.13,volume:'2.15亿',turnover:'3.97亿'},
-    ];
-    var h='<thead><tr>';
-    cols.forEach(function(c){
-      h+='<th style="padding:8px 12px;font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.05em;text-align:'+(c.a||'l')+';border-bottom:1px solid var(--border-sub);font-weight:500;white-space:nowrap">'+c.l+'</th>'});
-    h+='</tr></thead><tbody>';
-    rows.forEach(function(r){
-      h+='<tr style="border-bottom:1px solid var(--border-sub)">';
-      cols.forEach(function(c){
-        var val=r[c.k];var cl='';
-        if(c.k==='price')val=val.toFixed(2);
-        else if(c.k==='change'){cl=val>=0?UP:DN;val=(val>0?'+':'')+val.toFixed(2);}
-        else if(c.k==='cp'){cl=val>=0?UP:DN;val=(val>0?'+':'')+val.toFixed(2)+'%';}
-        h+='<td style="padding:8px 12px;font-size:12px;text-align:'+(c.a||'l')+';'+(c.k==='code'?'font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--text-tertiary)':'')+(cl?'color:'+cl+';font-family:\'JetBrains Mono\',monospace;font-variant-numeric:tabular-nums':'')+'">'+val+'</td>'});
-      h+='</tr>'});
-    h+='</tbody>';
-    el.innerHTML=h;
-  })();
-
-  // ============ BADGES / CARDS ============
-  (function(){
-    var c1=UP,c2=DN,c3='#9e9e9e';
-    document.getElementById('badge1').outerHTML='<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 11px;border-radius:5px;font-size:11px;font-weight:600;background:'+c1+'1e;color:'+c1+'">↑ +2.13%</span>';
-    document.getElementById('badge2').outerHTML='<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 11px;border-radius:5px;font-size:11px;font-weight:600;background:'+c2+'1e;color:'+c2+'">↓ -1.34%</span>';
-    document.getElementById('badge3').outerHTML='<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 11px;border-radius:5px;font-size:11px;font-weight:600;background:'+c3+'1e;color:'+c3+'">— 0.00%</span>';
-    document.getElementById('pricedisplay1').outerHTML=
-      '<div style="display:flex;flex-direction:column;gap:2px;padding:12px 16px;border-radius:8px;border:1px solid var(--border-sub);background:var(--bg-input);min-width:160px">'+
-        '<span style="font-size:10px;color:var(--text-secondary);letter-spacing:.05em;text-transform:uppercase">紫金矿业</span>'+
-        '<span style="font-size:22px;font-weight:700;font-family:\'JetBrains Mono\',monospace;color:'+c1+'">15.50</span>'+
-        '<span style="font-size:12px;font-family:\'JetBrains Mono\',monospace;color:'+c1+'">+0.28 (+1.84%)</span>'+
-        '<span style="font-size:10px;color:var(--text-tertiary)">开 15.38 / 高 15.55 / 低 15.20</span>'+
-      '</div>';
-    document.getElementById('stockcard1').outerHTML=
-      '<div style="display:flex;flex-direction:column;gap:3px;padding:14px 18px;border-radius:10px;border:1px solid var(--border-sub);background:var(--bg-input);min-width:185px">'+
-        '<div style="display:flex;align-items:center;gap:10px;justify-content:space-between">'+
-          '<span style="font-weight:600;font-size:14px">紫金矿业</span>'+
-          '<span style="font-size:10px;color:var(--text-tertiary);font-family:\'JetBrains Mono\',monospace">sh601899</span></div>'+
-        '<div style="display:flex;align-items:baseline;gap:8px">'+
-          '<span style="font-size:22px;font-weight:700;font-family:\'JetBrains Mono\',monospace;color:'+c1+'">15.50</span>'+
-          '<span style="font-size:12px;font-family:\'JetBrains Mono\',monospace;color:'+c1+'">+1.84%</span></div>'+
-        '<div style="display:flex;gap:16px;font-size:10px;color:var(--text-tertiary)">'+
-          '<span>成交 2.56亿</span><span>换手 0.35%</span><span>市值 4,080亿</span></div>'+
-      '</div>';
-    document.getElementById('stockcard2').outerHTML=
-      '<div style="display:flex;flex-direction:column;gap:3px;padding:14px 18px;border-radius:10px;border:1px solid var(--border-sub);background:var(--bg-input);min-width:185px">'+
-        '<div style="display:flex;align-items:center;gap:10px;justify-content:space-between">'+
-          '<span style="font-weight:600;font-size:14px">宁德时代</span>'+
-          '<span style="font-size:10px;color:var(--text-tertiary);font-family:\'JetBrains Mono\',monospace">sz300750</span></div>'+
-        '<div style="display:flex;align-items:baseline;gap:8px">'+
-          '<span style="font-size:22px;font-weight:700;font-family:\'JetBrains Mono\',monospace;color:'+c2+'">196.35</span>'+
-          '<span style="font-size:12px;font-family:\'JetBrains Mono\',monospace;color:'+c2+'">-2.87%</span></div>'+
-        '<div style="display:flex;gap:16px;font-size:10px;color:var(--text-tertiary)">'+
-          '<span>成交 10.25亿</span><span>换手 0.87%</span><span>市值 4,287亿</span></div>'+
-      '</div>';
-  })();
+// ============================================================
+//  真实数据：紫金矿业 日内分时（腾讯 API — 2026-07-16）
+// ============================================================
+var INTRADAY_RAW = "0930 28.82 14270 41126140.00 0931 28.95 50637 146126143.00 0932 29.07 94380 273109741.56 0933 28.93 120356 348417124.64 0934 28.94 158924 460211626.71 0935 28.90 180832 523594906.67 0936 28.96 200119 579432091.68 0937 28.98 215526 624046957.68 0938 28.95 242135 701165450.70 0939 28.87 257375 745218299.68 0940 28.99 291532 844243553.29 0941 29.05 307778 891406979.26 0942 29.03 327553 948863967.22 0943 29.15 373491 1082492512.12 0944 29.27 432391 1254678794.55 0945 29.21 509249 1479613717.57 0946 29.18 543723 1580273633.34 0947 29.20 578418 1681584526.12 0948 29.24 601376 1748685975.97 0949 29.28 623281 1812749182.82 0950 29.38 679843 1978540573.12 0951 29.49 724572 2110239378.96 0952 29.45 751457 2189452111.44 0953 29.38 766407 2233387398.64 0954 29.40 794869 2317174777.57 0955 29.39 809347 2359710004.51 0956 29.45 820840 2393518045.80 0957 29.39 834377 2433342577.91 0958 29.34 854333 2491939003.05 0959 29.25 869591 2536630206.11 1000 29.23 883514 2577350531.82 1001 29.29 897536 2618373401.61 1002 29.29 912439 2662057468.71 1003 29.27 923190 2693533395.76 1004 29.21 931623 2718172843.78 1005 29.31 939483 2741179596.20 1006 29.25 947262 2763953202.54 1007 29.22 953135 2781122411.53 1008 29.24 965050 2815923286.85 1009 29.26 972566 2837908911.84 1010 29.27 978675 2855792529.84 1011 29.18 992858 2897201619.83 1012 29.14 1002321 2924786196.84 1013 29.13 1011753 2952262165.84 1014 29.05 1024553 2989498175.86 1015 29.05 1036818 3025117734.88 1016 29.08 1046122 3052170729.89 1017 29.05 1052977 3072094211.90 1018 28.99 1073472 3131540158.94 1019 29.06 1081827 3155792370.95 1020 29.05 1088968 3176540897.96 1021 29.01 1095329 3194995646.97 1022 29.08 1102460 3215704133.98 1023 29.11 1106526 3227531244.98 1024 29.13 1112291 3244317504.99 1025 29.24 1119401 3265083809.98 1026 29.27 1126172 3284886581.98 1027 29.22 1131606 3300768917.97 1028 29.19 1135224 3311337599.97 1029 29.23 1138917 3322118136.97 1030 29.28 1145569 3341576862.97 1031 29.38 1162195 3390359920.94 1032 29.42 1180477 3444084163.90 1033 29.49 1218263 3555432175.79 1034 29.56 1277012 3728789191.18 1035 29.45 1293688 3778049377.32 1036 29.54 1310689 3828206389.44 1037 29.55 1325404 3871636447.54 1038 29.51 1342311 3921549149.66 1039 29.51 1354176 3956585986.75 1040 29.40 1366617 3993220805.81 1041 29.39 1379327 4030622647.89 1042 29.44 1385713 4049413389.89 1043 29.43 1390270 4062830554.89 1044 29.41 1396355 4080736803.90 1045 29.38 1403527 4101827222.90 1046 29.44 1412046 4126879785.01 1047 29.49 1424706 4164202458.08 1048 29.45 1433512 4190163543.13 1049 29.43 1441328 4213160493.16 1050 29.36 1446675 4228872774.18 1051 29.42 1453422 4248719018.21 1052 29.34 1461526 4272536634.24 1053 29.33 1467800 4290946389.25 1054 29.33 1475922 4314774573.27 1055 29.40 1481039 4329807616.28 1056 29.48 1488625 4352145516.32 1057 29.38 1494785 4370277803.34 1058 29.40 1497695 4378836452.35 1059 29.40 1502763 4393736968.37 1100 29.32 1508893 4411721244.38 1101 29.40 1514042 4426844404.40 1102 29.44 1520347 4445402908.42 1103 29.41 1524382 4457271420.44 1104 29.48 1540909 4505985311.51 1105 29.47 1545696 4520099943.54 1106 29.56 1578601 4617281102.00 1107 29.55 1601024 4683594216.67 1108 29.53 1607867 4703816134.73 1109 29.52 1612497 4717492266.77 1110 29.52 1619343 4737708854.82 1111 29.56 1626520 4758920989.88 1112 29.53 1631619 4773982867.92 1113 29.51 1635785 4786277669.95 1114 29.51 1641983 4804560856.99 1115 29.47 1646810 4818800085.03 1116 29.50 1654942 4842797224.08 1117 29.49 1660921 4860439619.12 1118 29.42 1664623 4871342427.14 1119 29.43 1668021 4881346264.16 1120 29.40 1674805 4901300370.19 1121 29.38 1680825 4918995991.21 1122 29.41 1685063 4931454992.22 1123 29.42 1690954 4948778730.24 1124 29.42 1697167 4967048553.27 1125 29.41 1700870 4977938317.28 1126 29.45 1704561 4988807941.30 1127 29.46 1708905 5001605688.32 1128 29.45 1711058 5007947426.33 1129 29.49 1715004 5019576629.36 1130 29.46 1719085 5031606730.38 1301 29.45 1736104 5081738179.46 1302 29.39 1742766 5101329574.49 1303 29.40 1748548 5118317883.50 1304 29.42 1754254 5135099534.52 1305 29.42 1759297 5149940417.55 1306 29.37 1764289 5164622323.56 1307 29.35 1773870 5192742110.58 1308 29.32 1780287 5211558103.59 1309 29.35 1784412 5223658063.60 1310 29.32 1789526 5238668569.61 1311 29.34 1795121 5255072894.61 1312 29.38 1799769 5268723872.62 1313 29.34 1803901 5280861496.64 1314 29.37 1807660 5291895618.64 1315 29.38 1811759 5303936417.65 1316 29.38 1815757 5315677402.66 1317 29.37 1819232 5325881068.67 1318 29.35 1823264 5337722452.68 1319 29.36 1826370 5346838915.69 1320 29.35 1829546 5356164340.69 1321 29.40 1833191 5366871969.90 1322 29.39 1839625 5385780429.89 1323 29.38 1842646 5394651425.89 1324 29.34 1847087 5407684496.89 1325 29.31 1854289 5428799523.89 1326 29.32 1860027 5445623319.89 1327 29.34 1864049 5457421409.89 1328 29.37 1870659 5476832333.89 1329 29.32 1876519 5494027354.89 1330 29.27 1892734 5541525446.89 1331 29.31 1898470 5558329486.89 1332 29.35 1904963 5577377380.89 1333 29.30 1911235 5595769341.89 1334 29.33 1915951 5609590045.89 1335 29.39 1923752 5632492563.89 1336 29.39 1931258 5654550572.88 1337 29.35 1942542 5687696241.88 1338 29.39 1950105 5709912561.88 1339 29.38 1957805 5732528941.88 1340 29.37 1965184 5754201828.88 1341 29.32 1971768 5773500050.88 1342 29.39 1979549 5796350299.88 1343 29.40 1984894 5812061299.87 1344 29.40 1990221 5827717967.62 1345 29.45 2004967 5871136651.36 1346 29.46 2013527 5896346878.65 1347 29.44 2022335 5922283657.04 1348 29.42 2032125 5951097440.02 1349 29.45 2040583 5975990976.57 1350 29.45 2049375 6001885919.59 1351 29.41 2055765 6020686211.61 1352 29.42 2063745 6044171437.62 1353 29.37 2069996 6062544254.63 1354 29.38 2074351 6075337280.64 1355 29.38 2079974 6091844611.64 1356 29.40 2085926 6109340990.65 1357 29.39 2091957 6127071067.66 1358 29.39 2096000 6138952539.67 1359 29.38 2101884 6156237770.67 1400 29.31 2106638 6170190118.68 1401 29.33 2113676 6190839262.68 1402 29.35 2116576 6199347762.69 1403 29.32 2121702 6214383125.69 1404 29.29 2130167 6239191045.69 1405 29.30 2135606 6255123909.69 1406 29.35 2139525 6266619378.69 1407 29.37 2145416 6283913065.50 1408 29.41 2154582 6310851923.52 1409 29.42 2166078 6344664746.45 1410 29.43 2174908 6370644819.42 1411 29.45 2190799 6417426319.00 1412 29.43 2199050 6441712100.00 1413 29.44 2207737 6467287625.00 1414 29.46 2218689 6499539301.00 1415 29.44 2233644 6543590170.00 1416 29.41 2241492 6566682307.00 1417 29.37 2249269 6589540475.00 1418 29.38 2254914 6606120415.00 1419 29.39 2259528 6619678692.00 1420 29.35 2264616 6634623316.00 1421 29.39 2269746 6649698476.00 1422 29.36 2276392 6669212362.00 1423 29.40 2286876 6700011955.00 1424 29.40 2292584 6716787341.00 1425 29.37 2297461 6731118868.00 1426 29.37 2301899 6744157374.00 1427 29.37 2307123 6759499559.00 1428 29.34 2315792 6784942475.00 1429 29.35 2320845 6799767957.00 1430 29.36 2330566 6828324719.00 1431 29.33 2336456 6845610290.00 1432 29.28 2356019 6902931723.00 1433 29.28 2364766 6928547142.00 1434 29.24 2376665 6963367617.00 1435 29.19 2391385 7006363618.00 1436 29.16 2402812 7039705311.00 1437 29.14 2411456 7064905074.00 1438 29.13 2423157 7098991546.00 1439 29.10 2436768 7138604219.00 1440 29.14 2448420 7172509455.00 1441 29.19 2463754 7217259358.00 1442 29.14 2472154 7241756462.00 1443 29.20 2480624 7266447286.00 1444 29.18 2491096 7297019496.00 1445 29.20 2498969 7319992962.00 1446 29.18 2507941 7346180623.00 1447 29.18 2514892 7366465528.00 1448 29.15 2524369 7394104358.00 1449 29.13 2536001 7427987710.00 1450 29.12 2544653 7453181214.00 1451 29.13 2554940 7483133078.40 1452 29.14 2567059 7518418871.41 1453 29.13 2576154 7544912986.41 1454 29.16 2585899 7573312252.42 1455 29.18 2604893 7628709731.43 1456 29.22 2617460 7665413384.43 1457 29.24 2629843 7701603244.85 1458 29.25 2629989 7702030226.85 1500 29.25 2654390 7773403151.84";
+var tsTokens = INTRADAY_RAW.trim().split(/\s+/);
+var INTRADAY = [];
+for (var ti = 0; ti + 3 < tsTokens.length; ti += 4) {
+  var hhmm = tsTokens[ti];
+  var price = +tsTokens[ti+1];
+  var vol = +tsTokens[ti+2] * 100;
+  var amt = +tsTokens[ti+3];
+  var hour = +hhmm.substring(0,2);
+  var min = +hhmm.substring(2);
+  if (hour < 9 || (hour === 9 && min < 30) || (hour === 11 && min > 30) || hour > 15) continue;
+  if (hour === 11 && min > 30) continue;
+  if (hour >= 15 && min > 0 && min < 30) continue;
+  var label = hour + ':' + (min < 10 ? '0' : '') + min;
+  INTRADAY.push({ t: label, p: price, v: vol, a: amt });
 }
+// 计算均价 = 累积成交额 / 累积成交量
+var cumAmt = 0, cumVol = 0;
+INTRADAY.forEach(function(d, i) {
+  cumAmt += d.a; cumVol += d.v;
+  d.avg = cumAmt / cumVol;
+});
+
+// ============================================================
+//  渲染工具
+// ============================================================
+var UP='#ef5350', DN='#26a69a', MA5='#f8b500', MA10='#4a6cf7', MA20='#9c27b0';
+var GRID='#1a1a1e', TX3='#a0a0a8', ACC='#f59e0b';
+
+function calcMA(arr, win) {
+  var r = [];
+  for (var i = 0; i < arr.length; i++) {
+    var s = arr.slice(Math.max(0, i - win + 1), i + 1);
+    r.push(s.reduce(function(a,b){return a+b}, 0) / s.length);
+  }
+  return r;
+}
+
+// 周/月聚合
+function getISOWeek(dateStr) {
+  var d = new Date(dateStr);
+  d.setHours(0,0,0,0);
+  var dayNum = (d.getDay() + 6) % 7;
+  d.setDate(d.getDate() - dayNum + 3);
+  var jan4 = new Date(d.getFullYear(), 0, 4);
+  var weekNum = Math.round((d - jan4) / 86400000 / 7) + 1;
+  return d.getFullYear() + '-W' + (weekNum < 10 ? '0' : '') + weekNum;
+}
+
+function aggregateBy(data, keyFn) {
+  var groups = {};
+  data.forEach(function(d) {
+    var k = keyFn(d);
+    if (!groups[k]) groups[k] = { o: d.open, h: d.high, l: d.low, c: d.close, v: d.volume, n: 1, firstDay: d.day };
+    else {
+      if (d.high > groups[k].h) groups[k].h = d.high;
+      if (d.low < groups[k].l) groups[k].l = d.low;
+      groups[k].c = d.close;
+      groups[k].v += d.volume;
+      groups[k].n++;
+    }
+  });
+  return groups;
+}
+
+function getPeriodData(period) {
+  if (period === 'daily') return KLINE_DATA.map(function(d){ return { o:d.open, h:d.high, l:d.low, c:d.close, v:d.volume, day:d.day }; });
+  var lastIdx = {};
+  if (period === 'weekly') {
+    var grouped = aggregateBy(KLINE_DATA, function(d){ return getISOWeek(d.day); });
+    var result = [];
+    for (var k in grouped) result.push(grouped[k]);
+    result.sort(function(a,b){ return a.firstDay < b.firstDay ? -1 : 1; });
+    return result;
+  }
+  if (period === 'monthly') {
+    var grouped = aggregateBy(KLINE_DATA, function(d){ return d.day.substring(0,7); });
+    var result = [];
+    for (var k in grouped) result.push(grouped[k]);
+    result.sort(function(a,b){ return a.firstDay < b.firstDay ? -1 : 1; });
+    return result;
+  }
+  return KLINE_DATA;
+}
+
+// ============================================================
+//  渲染 K 线
+// ============================================================
+function renderKLine(period) {
+  var allData = getPeriodData(period);
+  var maxBars = 72;
+  var data = allData.slice(-maxBars);
+  var el = document.getElementById('klineChart'), W = 720, H = 380;
+  var cH = H * 0.72, vH = H * 0.22, pt = 16, pr = 20, pb = 4, pl = 52;
+  var iw = W - pl - pr, ih = cH - pt - pb;
+
+  var minP = Infinity, maxP = -Infinity, minV = Infinity, maxV = -Infinity;
+  data.forEach(function(d){
+    if (d.l < minP) minP = d.l;
+    if (d.h > maxP) maxP = d.h;
+    if (d.v < minV) minV = d.v;
+    if (d.v > maxV) maxV = d.v;
+  });
+  var padP = (maxP - minP) * 0.06 || 1; minP -= padP; maxP += padP;
+
+  var closes = data.map(function(d){ return d.c; });
+  var vols = data.map(function(d){ return d.v; });
+  var ma5 = calcMA(closes, 5);
+  var ma10 = calcMA(closes, 10);
+  var ma20 = calcMA(closes, 20);
+
+  var cw = Math.max(2, iw / data.length - 1);
+  var toX = function(i) { return pl + i * (cw + 1) + cw / 2; };
+  var toY = function(v) { return pt + ih - ((v - minP) / (maxP - minP)) * ih; };
+  var toVolY = function(v) { return cH + vH - ((v - minV) / (maxV - minV || 1)) * vH; };
+
+  var periodLabel = { daily: '日K', weekly: '周K', monthly: '月K' }[period] || 'K';
+  document.getElementById('klineSub').textContent = '紫金矿业 sh601899 · ' + periodLabel + ' · MA5/10/20 · ' + data.length + ' 条';
+
+  var s = '';
+  [0, 0.25, 0.5, 0.75, 1].forEach(function(r) {
+    var y = pt + ih * (1 - r);
+    s += '<line x1="' + pl + '" y1="' + y + '" x2="' + (W - pr) + '" y2="' + y + '" stroke="' + GRID + '" stroke-width="0.5"/>';
+    s += '<text x="' + (pl - 8) + '" y="' + (y + 3) + '" text-anchor="end" font-size="9" fill="' + TX3 + '">' + (minP + (maxP - minP) * r).toFixed(2) + '</text>';
+  });
+
+  data.forEach(function(d, i) {
+    var x = toX(i), isUp = d.c >= d.o, c = isUp ? UP : DN;
+    s += '<line x1="' + x + '" y1="' + toY(d.h) + '" x2="' + x + '" y2="' + toY(d.l) + '" stroke="' + c + '" stroke-width="1"/>';
+    s += '<rect x="' + (x - cw / 2) + '" y="' + toY(Math.max(d.o, d.c)) + '" width="' + cw + '" height="' + Math.max(1, Math.abs(toY(d.o) - toY(d.c))) + '" fill="' + c + '"/>';
+    var volC = isUp ? 'rgba(239,83,80,0.4)' : 'rgba(38,166,154,0.4)';
+    s += '<rect x="' + (x - cw / 2) + '" y="' + toVolY(d.v) + '" width="' + cw + '" height="' + Math.max(1, toVolY(0) - toVolY(d.v)) + '" fill="' + volC + '"/>';
+  });
+
+  [[ma5, MA5, ''], [ma10, MA10, '3,2'], [ma20, MA20, '4,3']].forEach(function(ln) {
+    var pts = [];
+    ln[0].forEach(function(v, i) { if (!isNaN(v)) pts.push(toX(i) + ',' + toY(v)); });
+    if (pts.length) s += '<polyline points="' + pts.join(' ') + '" fill="none" stroke="' + ln[1] + '" stroke-width="1" stroke-dasharray="' + ln[2] + '"/>';
+  });
+
+  el.innerHTML = s;
+}
+
+// ============================================================
+//  渲染分时图
+// ============================================================
+function renderTimeShare() {
+  var data = INTRADAY;
+  var el = document.getElementById('tsChart'), W = 720, H = 320;
+  var cH = H * 0.76, vH = H * 0.18, pt = 16, pr = 20, pb = 28, pl = 52;
+  var iw = W - pl - pr, ih = cH - pt - pb;
+
+  var minP = Infinity, maxP = -Infinity, maxV = -Infinity;
+  data.forEach(function(d) {
+    if (d.p < minP) minP = d.p;
+    if (d.p > maxP) maxP = d.p;
+    if (d.v > maxV) maxV = d.v;
+  });
+  var padP = (maxP - minP) * 0.12 || 1; minP -= padP; maxP += padP;
+
+  var s = '';
+
+  // 中间线（昨收参考线）
+  var prevClose = 28.83;
+  var midY = pt + ih - ((prevClose - minP) / (maxP - minP)) * ih;
+  s += '<line x1="' + pl + '" y1="' + midY + '" x2="' + (W - pr) + '" y2="' + midY + '" stroke="' + GRID + '" stroke-width="0.5" stroke-dasharray="4,3"/>';
+
+  // 价格刻度
+  [0, 0.25, 0.5, 0.75, 1].forEach(function(r) {
+    var y = pt + ih * (1 - r);
+    s += '<line x1="' + pl + '" y1="' + y + '" x2="' + (W - pr) + '" y2="' + y + '" stroke="' + GRID + '" stroke-width="0.5"/>';
+    s += '<text x="' + (pl - 8) + '" y="' + (y + 3) + '" text-anchor="end" font-size="9" fill="' + TX3 + '">' + (minP + (maxP - minP) * r).toFixed(2) + '</text>';
+  });
+
+  // 成交量柱（灰色，A股规范）
+  data.forEach(function(d, i) {
+    var x = pl + (i / (data.length - 1)) * iw;
+    var bw = Math.max(1, iw / data.length - 1);
+    var bh = (d.v / maxV) * vH;
+    s += '<rect x="' + (x - bw / 2) + '" y="' + (cH + vH - bh) + '" width="' + bw + '" height="' + bh + '" fill="rgba(160,160,168,0.35)"/>';
+  });
+
+  // 价格线（白色）
+  var pricePts = data.map(function(d, i) {
+    var x = pl + (i / (data.length - 1)) * iw;
+    var y = pt + ih - ((d.p - minP) / (maxP - minP)) * ih;
+    return x + ',' + y;
+  }).join(' ');
+  s += '<polyline points="' + pricePts + '" fill="none" stroke="#ffffff" stroke-width="1.5"/>';
+
+  // 均价线（黄色）
+  var avgPts = data.map(function(d, i) {
+    var x = pl + (i / (data.length - 1)) * iw;
+    var y = pt + ih - ((d.avg - minP) / (maxP - minP)) * ih;
+    return x + ',' + y;
+  }).join(' ');
+  s += '<polyline points="' + avgPts + '" fill="none" stroke="#fdd835" stroke-width="1" stroke-dasharray="3,2"/>';
+
+  // 时间轴标签
+  var timeLabels = ['09:30','10:00','10:30','11:00','11:30','13:30','14:00','14:30','15:00'];
+  timeLabels.forEach(function(t) {
+    for (var i = 0; i < data.length; i++) {
+      if (data[i].t === t || (i === 0 && t === '09:30') || (i === data.length - 1 && t === '15:00')) {
+        var x = pl + (i / (data.length - 1)) * iw;
+        s += '<text x="' + x + '" y="' + (H - 8) + '" text-anchor="middle" font-size="9" fill="' + TX3 + '">' + t + '</text>';
+        break;
+      }
+    }
+  });
+
+  el.innerHTML = s;
+}
+
+// ============================================================
+//  渲染深度图
+// ============================================================
+function renderDepth() {
+  var bidLevels = [
+    {p:28.90,v:500},{p:28.92,v:800},{p:28.94,v:1200},{p:28.96,v:600},{p:28.98,v:1500},
+    {p:29.00,v:900},{p:29.02,v:1100},{p:29.04,v:700},{p:29.06,v:1300},{p:29.08,v:850},
+    {p:29.10,v:600},{p:29.12,v:1100},{p:29.14,v:400},{p:29.16,v:900},{p:29.18,v:1200}
+  ];
+  var askLevels = [
+    {p:29.28,v:452},{p:29.27,v:213},{p:29.26,v:944},{p:29.25,v:2841},{p:29.24,v:1062},
+    {p:29.23,v:908},{p:29.22,v:780},{p:29.21,v:1665},{p:29.20,v:1625},
+    {p:29.30,v:700},{p:29.32,v:500},{p:29.34,v:800},{p:29.36,v:600},{p:29.38,v:1000},
+    {p:29.40,v:1200}
+  ];
+  var el = document.getElementById('depthChart'), W = 520, H = 300, pt = 16, pr = 20, pb = 28, pl = 52;
+  var iw = W - pl - pr, ih = H - pt - pb;
+
+  var bidCum = 0, bidPts = [];
+  [].concat(bidLevels).sort(function(a,b){return b.p - a.p}).forEach(function(d){ bidCum += d.v; bidPts.push({p:d.p, v:bidCum}); });
+
+  var askCum = 0, askPts = [];
+  [].concat(askLevels).sort(function(a,b){return a.p - b.p}).forEach(function(d){ askCum += d.v; askPts.push({p:d.p, v:askCum}); });
+
+  var all = bidLevels.concat(askLevels);
+  var minP = all.reduce(function(a,b){return Math.min(a,b.p)}, Infinity);
+  var maxP = all.reduce(function(a,b){return Math.max(a,b.p)}, -Infinity);
+  var padP = (maxP - minP) * 0.02; minP -= padP; maxP += padP;
+  var maxV = Math.max(bidCum, askCum) * 1.1;
+
+  var sx = function(p) { return pl + ((p - minP) / (maxP - minP || 1)) * iw; };
+  var sy = function(v) { return pt + ih - (v / maxV) * ih; };
+
+  var s = '';
+  [0, 0.5, 1].forEach(function(r) {
+    var y = pt + ih * (1 - r);
+    s += '<line x1="' + pl + '" y1="' + y + '" x2="' + (W - pr) + '" y2="' + y + '" stroke="' + GRID + '" stroke-width="0.5"/>';
+    s += '<text x="' + (pl - 8) + '" y="' + (y + 3) + '" text-anchor="end" font-size="9" fill="' + TX3 + '">' + (maxV * r).toFixed(0) + '</text>';
+  });
+
+  // 买盘（绿/蓝色系）
+  var bidStr = sx(bidPts[0].p) + ',' + sy(0) + ' ' + bidPts.map(function(d){ return sx(d.p) + ',' + sy(d.v); }).join(' ') + ' ' + sx(bidPts[bidPts.length-1].p) + ',' + sy(0);
+  s += '<polygon points="' + bidStr + '" fill="rgba(38,166,154,0.25)"/>';
+  s += '<polyline points="' + bidStr + '" fill="none" stroke="' + DN + '" stroke-width="1.5"/>';
+
+  // 卖盘（红）
+  var askStr = sx(askPts[0].p) + ',' + sy(0) + ' ' + askPts.map(function(d){ return sx(d.p) + ',' + sy(d.v); }).join(' ') + ' ' + sx(askPts[askPts.length-1].p) + ',' + sy(0);
+  s += '<polygon points="' + askStr + '" fill="rgba(239,83,80,0.25)"/>';
+  s += '<polyline points="' + askStr + '" fill="none" stroke="' + UP + '" stroke-width="1.5"/>';
+
+  // 价格标签
+  [minP, (minP+maxP)/2, maxP].forEach(function(p, i) {
+    s += '<text x="' + sx(p) + '" y="' + (H - 8) + '" text-anchor="middle" font-size="9" fill="' + TX3 + '">' + p.toFixed(2) + '</text>';
+  });
+
+  var mid = (bidPts[0].p + askPts[0].p) / 2;
+  s += '<line x1="' + sx(mid) + '" y1="' + pt + '" x2="' + sx(mid) + '" y2="' + (pt + ih) + '" stroke="' + ACC + '" stroke-width="1" stroke-dasharray="3,3"/>';
+  s += '<text x="' + sx(mid) + '" y="' + (pt - 6) + '" text-anchor="middle" font-size="9" fill="' + ACC + '">' + mid.toFixed(2) + '</text>';
+
+  el.innerHTML = s;
+}
+
+// ============================================================
+//  渲染行情表格
+// ============================================================
+function renderStockTable() {
+  var el = document.getElementById('stockTable');
+  var cols = [
+    {k:'code', l:'代码', w:100}, {k:'name', l:'名称', w:120},
+    {k:'price', l:'最新价', w:110, a:'r'},
+    {k:'change', l:'涨跌额', w:100, a:'r'},
+    {k:'cp', l:'涨跌幅', w:100, a:'r'},
+    {k:'volume', l:'成交量', w:110, a:'r'},
+    {k:'turnover', l:'成交额', w:110, a:'r'}
+  ];
+  var rows = [
+    {code:'sh601899', name:'紫金矿业', price:29.25, change:0.42, cp:1.46, volume:'26.54亿', turnover:'77.73亿'},
+    {code:'sh600519', name:'贵州茅台', price:1689.50, change:-15.20, cp:-0.89, volume:'1.23亿', turnover:'207.91亿'},
+    {code:'sz000858', name:'五粮液', price:142.80, change:-1.94, cp:-1.34, volume:'4.10亿', turnover:'5.85亿'},
+    {code:'sh601398', name:'工商银行', price:5.89, change:0.03, cp:0.51, volume:'7.33亿', turnover:'4.32亿'},
+    {code:'sz300750', name:'宁德时代', price:196.35, change:-5.80, cp:-2.87, volume:'10.25亿', turnover:'20.13亿'},
+    {code:'sz002594', name:'比亚迪', price:287.60, change:1.82, cp:0.64, volume:'8.91亿', turnover:'25.62亿'},
+    {code:'sh601166', name:'兴业银行', price:18.42, change:-0.21, cp:-1.13, volume:'2.15亿', turnover:'3.97亿'},
+  ];
+  var h = '<thead><tr>';
+  cols.forEach(function(c){
+    h += '<th style="padding:8px 12px;font-size:10px;color:#a0a0a8;text-transform:uppercase;letter-spacing:.05em;text-align:'+(c.a||'l')+';border-bottom:1px solid #1c1c20;font-weight:500;white-space:nowrap">'+c.l+'</th>';
+  });
+  h += '</tr></thead><tbody>';
+  rows.forEach(function(r){
+    h += '<tr style="border-bottom:1px solid #1c1c20">';
+    cols.forEach(function(c){
+      var val = r[c.k]; var cl = '';
+      if (c.k === 'price') val = val.toFixed(2);
+      else if (c.k === 'change') { cl = val >= 0 ? UP : DN; val = (val > 0 ? '+' : '') + val.toFixed(2); }
+      else if (c.k === 'cp') { cl = val >= 0 ? UP : DN; val = (val > 0 ? '+' : '') + val.toFixed(2) + '%'; }
+      h += '<td style="padding:8px 12px;font-size:12px;text-align:'+(c.a||'l')+';' +
+        (c.k==='code' ? 'font-family:\'JetBrains Mono\',monospace;font-size:11px;color:#a0a0a8' : '') +
+        (cl ? 'color:'+cl+';font-family:\'JetBrains Mono\',monospace;font-variant-numeric:tabular-nums' : '') + '">' + val + '</td>';
+    });
+    h += '</tr>';
+  });
+  h += '</tbody>';
+  el.innerHTML = h;
+}
+
+// ============================================================
+//  渲染 Badges / Cards
+// ============================================================
+function renderBadges() {
+  var c1 = UP, c2 = DN, c3 = '#9e9e9e';
+  document.getElementById('badge1').outerHTML = '<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 11px;border-radius:5px;font-size:11px;font-weight:600;background:'+c1+'1e;color:'+c1+'">↑ +2.13%</span>';
+  document.getElementById('badge2').outerHTML = '<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 11px;border-radius:5px;font-size:11px;font-weight:600;background:'+c2+'1e;color:'+c2+'">↓ -1.34%</span>';
+  document.getElementById('badge3').outerHTML = '<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 11px;border-radius:5px;font-size:11px;font-weight:600;background:'+c3+'1e;color:'+c3+'">— 0.00%</span>';
+
+  document.getElementById('pricedisplay1').outerHTML =
+    '<div style="display:flex;flex-direction:column;gap:2px;padding:12px 16px;border-radius:8px;border:1px solid #1c1c20;background:#1c1c20;min-width:160px">'+
+      '<span style="font-size:10px;color:#c8c8d0;letter-spacing:.05em;text-transform:uppercase">紫金矿业</span>'+
+      '<span style="font-size:22px;font-weight:700;font-family:\'JetBrains Mono\',monospace;color:'+c1+'">29.25</span>'+
+      '<span style="font-size:12px;font-family:\'JetBrains Mono\',monospace;color:'+c1+'">+0.42 (+1.46%)</span>'+
+      '<span style="font-size:10px;color:#a0a0a8">开 28.82 / 高 29.59 / 低 28.79</span>'+
+    '</div>';
+
+  document.getElementById('stockcard1').outerHTML =
+    '<div style="display:flex;flex-direction:column;gap:3px;padding:14px 18px;border-radius:10px;border:1px solid #1c1c20;background:#1c1c20;min-width:185px">'+
+      '<div style="display:flex;align-items:center;gap:10px;justify-content:space-between">'+
+        '<span style="font-weight:600;font-size:14px">紫金矿业</span>'+
+        '<span style="font-size:10px;color:#a0a0a8;font-family:\'JetBrains Mono\',monospace">sh601899</span></div>'+
+      '<div style="display:flex;align-items:baseline;gap:8px">'+
+        '<span style="font-size:22px;font-weight:700;font-family:\'JetBrains Mono\',monospace;color:'+c1+'">29.25</span>'+
+        '<span style="font-size:12px;font-family:\'JetBrains Mono\',monospace;color:'+c1+'">+1.46%</span></div>'+
+      '<div style="display:flex;gap:16px;font-size:10px;color:#a0a0a8">'+
+        '<span>成交 26.54亿</span><span>换手 1.29%</span><span>市值 7,778亿</span></div>'+
+    '</div>';
+
+  document.getElementById('stockcard2').outerHTML =
+    '<div style="display:flex;flex-direction:column;gap:3px;padding:14px 18px;border-radius:10px;border:1px solid #1c1c20;background:#1c1c20;min-width:185px">'+
+      '<div style="display:flex;align-items:center;gap:10px;justify-content:space-between">'+
+        '<span style="font-weight:600;font-size:14px">宁德时代</span>'+
+        '<span style="font-size:10px;color:#a0a0a8;font-family:\'JetBrains Mono\',monospace">sz300750</span></div>'+
+      '<div style="display:flex;align-items:baseline;gap:8px">'+
+        '<span style="font-size:22px;font-weight:700;font-family:\'JetBrains Mono\',monospace;color:'+c2+'">196.35</span>'+
+        '<span style="font-size:12px;font-family:\'JetBrains Mono\',monospace;color:'+c2+'">-2.87%</span></div>'+
+      '<div style="display:flex;gap:16px;font-size:10px;color:#a0a0a8">'+
+        '<span>成交 10.25亿</span><span>换手 0.87%</span><span>市值 4,287亿</span></div>'+
+    '</div>';
+}
+
+// ============================================================
+//  Period 切换
+// ============================================================
+function initPeriodSwitch() {
+  var btns = document.querySelectorAll('#periodSwitch button');
+  btns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      btns.forEach(function(b){ b.classList.remove('on'); });
+      btn.classList.add('on');
+      renderKLine(btn.getAttribute('data-period'));
+    });
+  });
+}
+
+// ============================================================
+//  顶部信息头
+// ============================================================
+function renderTopInfo() {
+  var last = KLINE_DATA[KLINE_DATA.length - 1];
+  var prev = KLINE_DATA[KLINE_DATA.length - 2];
+  var chg = (last.close - prev.close);
+  var pct = (chg / prev.close * 100);
+  var cls = chg >= 0 ? 'up' : 'dn';
+  document.getElementById('topPrice').textContent = last.close.toFixed(2);
+  document.getElementById('topPrice').className = 'price ' + cls;
+  document.getElementById('topChg').textContent = (chg > 0 ? '+' : '') + chg.toFixed(2) + ' ' + (pct > 0 ? '+' : '') + pct.toFixed(2) + '%';
+  document.getElementById('topChg').className = 'chg ' + cls;
+  document.getElementById('topMeta').textContent = '高 ' + last.high.toFixed(2) + '  低 ' + last.low.toFixed(2) + '  开 ' + last.open.toFixed(2) + '  昨收 ' + prev.close.toFixed(2) + '  量 ' + (last.volume/100000000).toFixed(2) + '亿  额 ' + (last.volume * last.close / 100000000).toFixed(0) + '亿';
+}
+
+// ============================================================
+//  启动
+// ============================================================
+renderTopInfo();
+renderKLine('daily');
+renderTimeShare();
+renderDepth();
+renderStockTable();
+renderBadges();
+initPeriodSwitch();
 </script>
 </body>
 </html>

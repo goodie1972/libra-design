@@ -271,7 +271,6 @@ h3{font-size:14px;font-weight:500;color:var(--text-secondary);margin-bottom:14px
     </div>
     <a class="nav-btn" href="#why">价值</a>
     <a class="nav-btn" href="#screenshots">截图</a>
-    <a class="nav-btn" href="#vs">对比</a>
     <a class="nav-btn" href="#features">特性</a>
     <a class="nav-btn" href="#components">组件</a>
     <a class="nav-btn" href="#themes">主题</a>
@@ -394,115 +393,6 @@ h3{font-size:14px;font-weight:500;color:var(--text-secondary);margin-bottom:14px
           <div class="ss-tags"><span>涨跌标签</span><span>价格卡片</span><span>股票卡片</span><span>OHLC</span></div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- ============= 实盘对比：东财 vs Libra ============= -->
-<div class="sec" id="vs">
-  <div class="wrap">
-    <div class="sl fade-up">实盘对比</div>
-    <h2 class="fade-up delay-1">Libra 渲染 vs 东方财富实盘截图</h2>
-    <p class="desc fade-up delay-2">数据源：腾讯 &amp; 新浪 API 实时数据 · 样本：<strong>紫金矿业（sh601899）</strong> 2026-07-16 收盘价 <span class="up">29.25</span> <span class="up">+0.42 +1.46%</span></p>
-
-    <div class="cmp-real fade-up delay-2">
-      <table>
-        <tr class="hdr"><td>日期</td><td>开盘</td><td>最高</td><td>最低</td><td>收盘</td><td>成交量</td><td>MA5</td><td>MA10</td></tr>
-        <tr><td>07-10</td><td>28.00</td><td>28.45</td><td>27.08</td><td>27.72</td><td>2,657,100</td><td>27.72</td><td>26.88</td></tr>
-        <tr><td>07-13</td><td>27.23</td><td>27.63</td><td>26.74</td><td>27.36</td><td>2,130,238</td><td>27.54</td><td>27.03</td></tr>
-        <tr><td>07-14</td><td>26.88</td><td>29.29</td><td>26.75</td><td class="up">29.06</td><td>3,803,205</td><td>27.82</td><td>27.43</td></tr>
-        <tr><td>07-15</td><td>29.06</td><td>29.34</td><td>28.56</td><td>28.83</td><td>2,683,491</td><td>28.12</td><td>27.80</td></tr>
-        <tr><td>07-16</td><td>28.82</td><td>29.59</td><td>28.79</td><td class="up">29.25</td><td>2,654,390</td><td>28.44</td><td>28.09</td></tr>
-      </table>
-      <div style="margin-top:8px;color:var(--text-tertiary);font-size:11px">来源：新浪财经 API · 30 根日 K 线（2026-06-04 至 07-16）</div>
-    </div>
-
-    <!-- K 线图对比 -->
-    <h3 class="fade-up" style="margin-top:28px">K 线图对比</h3>
-    <div class="cmp-vs fade-up delay-1">
-      <div class="cmp-side">
-        <div class="cmp-side-img">
-          <span class="label em">EM</span>
-          <img src="images/eastmoney-kline.png" alt="东方财富 K 线" loading="lazy">
-        </div>
-        <div class="cmp-side-body">
-          <h4>东方财富 · 紫金矿业 K 线</h4>
-          <p>浏览器全页截图 · Canvas 渲染 · 日 K + 成交量</p>
-        </div>
-      </div>
-      <div class="cmp-divider">VS</div>
-      <div class="cmp-side">
-        <div class="cmp-side-img">
-          <span class="label lb">Libra</span>
-          <img src="images/kline-chart.png" alt="Libra K 线" loading="lazy">
-        </div>
-        <div class="cmp-side-body">
-          <h4>Libra KLineChart</h4>
-          <p>纯 SVG 渲染 · OHLCV + MA5/10/20 · 成交量柱 · 零外部依赖</p>
-        </div>
-      </div>
-    </div>
-    <ul class="cmp-diff fade-up delay-2">
-      <li><strong>渲染方式</strong>：东财 Canvas → 位图，放大模糊；Libra SVG → 矢量无限缩放，适合高清屏 / 打印</li>
-      <li><strong>体积</strong>：东财全页 7.3MB（含广告/框架）；Libra 组件 &lt;5KB gzip</li>
-      <li><strong>可控性</strong>：东财不可定制；Libra Props 驱动（蜡烛颜色、均线数、精度、宽度）</li>
-      <li><strong>嵌入</strong>：东财只能 iframe 引用，无法集成到自有系统；Libra 一行 <code>&lt;KLineChart data={kData} /&gt;</code> 直接渲染</li>
-    </ul>
-
-    <!-- 分时图对比 -->
-    <h3 class="fade-up" style="margin-top:28px">分时图对比</h3>
-    <div class="cmp-vs fade-up delay-1">
-      <div class="cmp-side">
-        <div class="cmp-side-img">
-          <span class="label em">EM</span>
-          <img src="images/eastmoney-viewport.png" alt="东方财富分时" loading="lazy">
-        </div>
-        <div class="cmp-side-body">
-          <h4>东方财富 · 日内分时</h4>
-          <p>Canvas 渲染 · 白色价格线 + 黄色均价线 + 灰色成交量柱</p>
-        </div>
-      </div>
-      <div class="cmp-divider">VS</div>
-      <div class="cmp-side">
-        <div class="cmp-side-img">
-          <span class="label lb">Libra</span>
-          <img src="images/timeshare-chart.png" alt="Libra 分时" loading="lazy">
-        </div>
-        <div class="cmp-side-body">
-          <h4>Libra TimeShareChart</h4>
-          <p>SVG 渲染 · 价格线 + 均价线 + 成交量柱 · 可配色可交互</p>
-        </div>
-      </div>
-    </div>
-    <ul class="cmp-diff fade-up delay-2">
-      <li><strong>实时响应</strong>：东财页面刷新才更新；Libra 组件可对接 WebSocket 实时推流</li>
-      <li><strong>样式定制</strong>：Libra 均价线颜色/粗细/虚线、价格线涨跌色、成交量柱透明度全部 Props 可控</li>
-      <li><strong>轻量</strong>：Libra 分时组件 &lt;3KB；东财一页加载 200+ 个 HTTP 请求</li>
-      <li><strong>集成灵活</strong>：可嵌入 Modal、侧边栏、Dashboard 任意位置</li>
-    </ul>
-
-    <!-- 深度图对比 -->
-    <h3 class="fade-up" style="margin-top:28px">深度图对比</h3>
-    <div class="cmp-vs fade-up delay-1">
-      <div class="cmp-side">
-        <div class="cmp-side-img">
-          <span class="label lb">Libra</span>
-          <img src="images/depth-chart.png" alt="Libra 深度图" loading="lazy">
-        </div>
-        <div class="cmp-side-body">
-          <h4>Libra DepthChart</h4>
-          <p>买卖盘口累积深度 · 价差标记 · 纯 SVG</p>
-        </div>
-      </div>
-    </div>
-    <ul class="cmp-diff fade-up delay-2">
-      <li><strong>买卖盘聚合</strong>：买盘（绿）卖盘（红）累积曲线，交叉点为最优价</li>
-      <li><strong>可定制深度</strong>：支持自定义价格精度和 lot 大小</li>
-      <li><strong>对比优势</strong>：东财深度图仅限特定页面；Libra 可嵌入下单面板、风控页面任意位置</li>
-    </ul>
-
-    <div style="margin-top:24px;padding:16px 20px;background:var(--bg-input);border:1px solid var(--border-sub);border-radius:10px;font-size:13px;color:var(--text-secondary);line-height:1.8">
-      <strong style="color:var(--accent)">核心结论：</strong>Libra 组件在<strong>渲染质量</strong>（SVG 矢量 vs Canvas 位图）、<strong>集成成本</strong>（一行代码 vs 整页 iframe）、<strong>定制灵活度</strong>（Props vs 不可控）、<strong>性能体积</strong>（&lt;5KB vs 数 MB）四个维度全面优于使用第三方行情网站截图嵌入的方式。对于自建交易终端的团队，Libra 是比"去东财截个图"更专业的工程化选择。
     </div>
   </div>
 </div>
